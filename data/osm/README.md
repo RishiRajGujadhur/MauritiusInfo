@@ -4,6 +4,10 @@
 
 This folder is a bulk map-derived research inventory, separate from the curated, review-backed tables in the parent folder. A mapped place is not a verified accessible destination. Shops, restaurants, accommodation, health/public services, leisure sites and offices are included when named. Unnamed objects, ordinary buildings, roads, bus-stop nodes, benches and waste bins are not counted to inflate the total.
 
+## Shop subset
+
+[shops.csv](shops.csv) filters existing places to category=shop: **2,371 records**, preserving source IDs and statuses. Do not append this subset to places.csv or count it as extra places. [Separate branch research](../shops/README.md) tracks entrance and wheelchair-parking evidence with unresolved scope explicitly marked. Regenerate the subset using scripts/export_shops.py.
+
 ## Office subset
 
 [offices.csv](offices.csv) filters the existing places table to category=office: **382 mapped records**, with identical record IDs and access statuses. Do not append it to places.csv or add it to the national count. [Separate office research](../offices/README.md) documents 12 researched branches with evidence-based accessibility levels. Regenerate the subset using scripts/export_offices.py.
