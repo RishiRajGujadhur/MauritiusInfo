@@ -4,6 +4,18 @@ A practical, source-linked guide to wheelchair access at places in Mauritius.
 
 **Web sources checked: 12 November 2026 (Mauritius time).** This is desk research, not an on-site access audit. The date means the source was checked, not that a facility was inspected or is working today. Summaries are paraphrased from public web pages and PDFs; original pages and photographs are not copied into this repository.
 
+## Festivals and event accessibility
+
+The [festival guide](data/festivals/README.md) adds **14 edition/component records across 12 festival series**, **24 observations** and **15 sources**, checked 12 November 2026.
+
+[Download festival events CSV](data/festivals/events.csv). Filter by edition year, region, venue and accessibility evidence level in Power BI. Event-level entrance, wheelchair parking, drop-off, toilet, viewing area and companion-ticket fields are separate from general venue features.
+
+This batch includes La Isla 2068, MAMA JAZ, Afric Vibes, Japanese Film Festival, Chinatown Food and Cultural Festival, Rang Barse, Awake, Mystik, Festival Internasional Kreol, Maha Shivaratree, Grand Diwali Night and Festival Seggae Zwe. Three 2025 Kreol rows describe separate venue/day components, not three festival series. Past listings are labelled separately from advertised future events.
+
+**No festival is rated fully accessible on the available evidence.** Caudan Arts Centre's general facilities are recorded as venue-only context for the Kokuho screening. Elsewhere, wheelchair arrangements need confirmation; ordinary parking, free entry and general seating do not establish access.
+
+Festival records and place records have different grains and must not be added as unique venue totals.
+
 ## Bulk inventory — 6,965 mapped records
 
 [Download the large Power BI CSV](data/osm/places.csv) · [Import guide and licence](data/osm/README.md) · [Snapshot details](data/osm/import_manifest.json)
