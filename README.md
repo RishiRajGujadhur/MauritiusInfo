@@ -4,6 +4,14 @@ A practical, source-linked guide to wheelchair access at places in Mauritius.
 
 **Web sources checked: 12 November 2026 (Mauritius time).** This is desk research, not an on-site access audit. The date means the source was checked, not that a facility was inspected or is working today. Summaries are paraphrased from public web pages and PDFs; original pages and photographs are not copied into this repository.
 
+## Individual shops and wheelchair parking
+
+The [shop guide](data/shops/README.md) covers **12 researched branches**, **29 observations**, **13 sources** and one historical shared parking facility. [Download shop records](data/shops/shops.csv) or [parking facilities](data/shops/parking_facilities.csv).
+
+Shop-level labels are separate from dedicated shop bays and shared-site provision. **No dedicated shop-owned bays are confirmed in this batch.** Directory labels do not establish bay location, ownership, dimensions, availability or the continuous route to the shop. Victoria Urban Terminal's 2022 statement is a historical shared-site lead, not parking reserved for Winners.
+
+The [2,371-shop OSM subset](data/osm/shops.csv) filters existing inventory records and does not add to the 6,965 national total. Its broad wheelchair-access values are 7 mapped_yes, 6 mapped_limited, 18 mapped_no and 2,340 unknown. Do not add overlapping curated and mapped branch counts as unique shops.
+
 ## Offices and public service counters
 
 The [office guide](data/offices/README.md) adds **12 researched office/branch records**, **23 observations** and **8 sources**. [Download the researched offices CSV](data/offices/offices.csv).
@@ -61,7 +69,7 @@ The bulk inventory and the **35 curated places below** are separate datasets and
 
 ## Download curated tables for Power BI
 
-The [data folder](data/) contains **35 places**, **72 feature-level observations** and **29 sources**. It includes individual tenant branches and separates ordinary parking from wheelchair parking.
+The [data folder](data/) contains **35 places**, **75 feature-level observations** and **30 sources**. It includes individual tenant branches and separates ordinary parking from wheelchair parking.
 
 | Download | Use |
 | --- | --- |
@@ -238,12 +246,12 @@ Read the [beach evidence limits](#beach-evidence-limits) before planning a visit
 
 | Individual store / branch | Parent mall | Category | Branch identity evidence | Tenant entrance, wheelchair parking and toilet |
 | --- | --- | --- | --- | --- |
-| Intermart — Bagatelle | Bagatelle Mall | Supermarket | Operator key tenants [S27] | Unknown at tenant level |
+| Intermart — Bagatelle | Bagatelle Mall | Supermarket | Operator identity [S27]; branch labels [S30] | Entrance, toilet and parking directory labels; ownership and route unresolved |
 | Food Lover's Market — Bagatelle | Bagatelle Mall | Supermarket | Operator key tenants [S27] | Unknown at tenant level |
 | Votre Pote Age — Bagatelle | Bagatelle Mall | Grocery store | Operator key tenants [S27] | Unknown at tenant level |
 | Winners — Tribeca | Tribeca Mall | Supermarket | Official branch page [S28]; +230 202 0700 | Unknown at tenant level |
 
-These are individual branch records, not accessible recommendations. Shared mall facilities can be researched through the parent link. Col'Cacchio also has its own restaurant row linked to Tribeca in the CSV.
+These are individual branch records, not accessible recommendations. Intermart Bagatelle now has branch-specific directory evidence [S30], detailed in the [shop dataset](data/shops/README.md). Shared mall facilities can be researched through the parent link. Col'Cacchio also has its own restaurant row linked to Tribeca in the CSV.
 
 #### Ebene Commercial Centre
 
@@ -416,6 +424,7 @@ All sources below were consulted on **2026-11-12**. “Undated” means no relia
 | S27 | [Ascencia — Bagatelle key tenants][S27] | Operator directory; tenant identities only |
 | S28 | [Tribeca — Winners branch][S28] | Operator branch page; identity/contact only |
 | S29 | [Tribeca — About us][S29] | Operator; general parking, no designated wheelchair-bay detail |
+| S30 | [Intermart Bagatelle — branch directory][S30] | Entrance, toilet and parking labels; ownership and route unverified |
 
 ### Method and gaps
 
@@ -458,3 +467,5 @@ For an update, provide the venue, a public source or dated first-hand observatio
 [S27]: https://www.ascenciacorporate.com/malls/bagatelle-mall
 [S28]: https://tribecamall.mu/stores/winners-tribeca/
 [S29]: https://tribecamall.mu/about-us/
+
+[S30]: https://www.top-rated.online/cities/Moka/place/p/9304501/Intermart%2BBagatelle
