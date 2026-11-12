@@ -1,5 +1,9 @@
 # Data guide and Power BI import
 
+## Repairs and healthcare services
+
+[Services tables](services/) cover repair shops, mechanics, pharmacies, doctors, clinics and hospitals, separating branch access from actual service-room access. The [415-record mapped view](osm/services.csv) is an overlapping subset of the national inventory; it does not add 415 unique places. [Import guide](services/README.md).
+
 ## Entertainment venues
 
 The [entertainment tables](entertainment/) contain 16 cinema/track/performance-site records and explicitly distinguish spectator access, activity participation, operation uncertainty and wheelchair facilities. Use [venues.csv](entertainment/venues.csv) for a flat import; read the [guide](entertainment/README.md) before treating a site lead as an operating venue.
