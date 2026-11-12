@@ -1,0 +1,36 @@
+place_id,place_name,region,locality,location_type,parent_place_id,identity_source_id,phone_international_digits,wheelchair_access,step_free_entrance,wheelchair_parking,general_parking,wheelchair_toilet,lift,ramp,wheelchair_seating,parking_to_entrance_route,wheelchair_parking_bay_count,parking_bay_width_m,entrance_clear_width_m,toilet_door_width_m,last_web_check,field_verified,notes
+MU0001,Le Caudan Waterfront,Port Louis,Port Louis,waterfront,,S1,2302119500,unknown,unknown,reported_yes,reported_yes,unknown,reported_yes,reported_yes,unknown,partial,,,,,2026-11-12,false,
+MU0002,Caudan Arts Centre,Port Louis,Port Louis,arts_centre,MU0001,S2,,unknown,unknown,unknown,reported_yes,unknown,reported_yes,reported_yes,reported_yes,unknown,,,,,2026-11-12,false,
+MU0003,Odysseo Oceanarium,Port Louis,Les Salines,oceanarium,,S3,2306598000,reported_yes,unknown,unknown,reported_yes,unknown,unknown,unknown,unknown,unknown,,,,,2026-11-12,false,
+MU0004,Aapravasi Ghat and Interpretation Centre,Port Louis,Port Louis,heritage_site,,S4,2302177770,reported_yes,unknown,unknown,reported_no,reported_yes,unknown,unknown,unknown,unknown,,,,,2026-11-12,false,
+MU0005,Wapalapam La Place,Port Louis,Port Louis,restaurant,,S15,23058522902,unknown,listed_yes,listed_yes,unknown,listed_yes,unknown,unknown,listed_yes,unknown,,,,,2026-11-12,false,
+MU0006,L'Aventure du Sucre,North,Beau Plan,museum,,S5,2302437900,partial,unknown,unknown,unknown,unknown,unknown,unknown,unknown,unknown,,,,,2026-11-12,false,
+MU0007,SSR Botanic Garden,North,Pamplemousses,garden,,S16,,reported_barrier,unknown,unknown,unknown,unknown,unknown,unknown,unknown,unknown,,,,,2026-11-12,false,
+MU0008,Riche Terre Mall,North,Riche Terre,shopping_mall,,S7,,reported_yes,unknown,unknown,reported_yes,unknown,unknown,unknown,unknown,unknown,,,,,2026-11-12,false,
+MU0009,Grand Baie La Croisette,North,Grand Baie,shopping_mall,,S17,2302092000,unknown,listed_yes,listed_yes,unknown,listed_yes,unknown,unknown,unknown,unknown,,,,,2026-11-12,false,
+MU0010,Mont Choisy,North,Mont Choisy,beach,,S13,,unknown,unknown,unknown,unknown,unknown,unknown,unknown,unknown,historical_reported_yes,,,,,2026-11-12,false,
+MU0011,La Cuvette,North,Grand Baie,beach,,S13,,unknown,unknown,unknown,unknown,unknown,unknown,unknown,unknown,historical_reported_yes,,,,,2026-11-12,false,
+MU0012,Bain Boeuf,North,Bain Boeuf,beach,,S13,,unknown,unknown,unknown,unknown,unknown,unknown,unknown,unknown,historical_reported_yes,,,,,2026-11-12,false,
+MU0013,Bagatelle Mall,Central plateau and Moka,Moka,shopping_mall,,S7,,reported_yes,unknown,unknown,reported_yes,unknown,unknown,unknown,unknown,unknown,,,,,2026-11-12,false,
+MU0014,Phoenix Mall,Central plateau and Moka,Phoenix,shopping_mall,,S7,,reported_yes,unknown,unknown,reported_yes,unknown,unknown,unknown,unknown,unknown,,,,,2026-11-12,false,
+MU0015,So'flo,Central plateau and Moka,Floreal,shopping_mall,,S7,,reported_yes,unknown,unknown,reported_yes,unknown,unknown,unknown,unknown,unknown,,,,,2026-11-12,false,
+MU0016,Kendra,Central plateau and Moka,St Pierre,shopping_mall,,S7,,reported_yes,unknown,unknown,reported_yes,unknown,unknown,unknown,unknown,unknown,,,,,2026-11-12,false,
+MU0017,Les Allees,Central plateau and Moka,Moka,shopping_mall,,S7,,reported_yes,unknown,unknown,reported_yes,unknown,unknown,unknown,unknown,unknown,,,,,2026-11-12,false,
+MU0018,Ebene Commercial Centre,Central plateau and Moka,Ebene,shopping_mall,,S18,,unknown,listed_yes,listed_yes,unknown,listed_yes,unknown,unknown,unknown,unknown,,,,,2026-11-12,false,
+MU0019,Food Republic,Central plateau and Moka,Quatre Bornes,restaurant,,S19,2304639898,reported_no,reported_barrier,unknown,reported_yes,reported_no,reported_no,reported_no,unknown,unknown,,,,,2026-11-12,false,
+MU0020,Gourmet Avenue,Central plateau and Moka,Beau Bassin-Rose Hill,restaurant,,S22,23058040687,conditional,unknown,unknown,unknown,unknown,unknown,unknown,listed_yes,unknown,,,,,2026-11-12,false,
+MU0021,Col'Cacchio - Tribeca Mall,Central plateau and Moka,Trianon,restaurant,MU0031,S23,2304713178,listed_yes,unknown,unknown,unknown,unknown,unknown,unknown,unknown,unknown,,,,,2026-11-12,false,Mall shared facilities can be inspected through parent_place_id; no automatic inheritance.
+MU0022,Belle Mare,East,Belle Mare,beach,,S13,,unknown,unknown,unknown,unknown,unknown,unknown,unknown,unknown,historical_reported_yes,,,,,2026-11-12,false,
+MU0023,Symon's Restaurant,East,Poste de Flacq,restaurant,,S24,2304151135,unknown,listed_yes,listed_yes,unknown,listed_yes,unknown,unknown,listed_yes,unknown,,,,,2026-11-12,false,
+MU0024,Ebony Forest,West and south-west,Chamarel,nature_park,,S8,,partial,unknown,unknown,reported_yes,reported_yes,unknown,unknown,unknown,unknown,,,,,2026-11-12,false,
+MU0025,Casela Nature Parks,West and south-west,Cascavelle,nature_park,,S9,2304016500,partial,unknown,unknown,unknown,unknown,unknown,unknown,unknown,unknown,,,,,2026-11-12,false,
+MU0026,Chamarel 7 Coloured Earth Geopark,West and south-west,Chamarel,nature_park,,S10,2304834298,partial,unknown,unknown,unknown,unknown,unknown,unknown,unknown,unknown,,,,,2026-11-12,false,
+MU0027,Saphire Bar & Resto,West and south-west,Flic en Flac,bar_restaurant,,S25,23057051387,listed_yes,provisional_barrier,unknown,unknown,unknown,unknown,unknown,unknown,unknown,,,,,2026-11-12,false,
+MU0028,Bo'Valon Mall,South and south-east,Mahebourg area,shopping_mall,,S7,,reported_yes,unknown,unknown,reported_yes,unknown,unknown,unknown,unknown,unknown,,,,,2026-11-12,false,
+MU0029,Saint Felix,South and south-east,Saint Felix,beach,,S13,,unknown,unknown,unknown,unknown,unknown,unknown,unknown,unknown,historical_reported_yes,,,,,2026-11-12,false,
+MU0030,Blue Bay,South and south-east,Blue Bay,beach,,S13,,unknown,unknown,unknown,unknown,unknown,unknown,unknown,unknown,historical_reported_yes,,,,,2026-11-12,false,
+MU0031,Tribeca Mall,Central plateau and Moka,Trianon,shopping_mall,,S29,2304603888,unknown,unknown,unknown,reported_yes,unknown,unknown,unknown,unknown,unknown,,,,,2026-11-12,false,General welcoming/accessibility marketing does not establish step-free access or wheelchair parking.
+MU0032,Intermart - Bagatelle,Central plateau and Moka,Moka,supermarket,MU0013,S27,,unknown,unknown,unknown,unknown,unknown,unknown,unknown,unknown,unknown,,,,,2026-11-12,false,"Branch identity confirmed only. Parent mall access, toilets and parking must not be inherited as tenant facts."
+MU0033,Food Lover's Market - Bagatelle,Central plateau and Moka,Moka,supermarket,MU0013,S27,,unknown,unknown,unknown,unknown,unknown,unknown,unknown,unknown,unknown,,,,,2026-11-12,false,"Branch identity confirmed only. Parent mall access, toilets and parking must not be inherited as tenant facts."
+MU0034,Votre Pote Age - Bagatelle,Central plateau and Moka,Moka,grocery_store,MU0013,S27,,unknown,unknown,unknown,unknown,unknown,unknown,unknown,unknown,unknown,,,,,2026-11-12,false,"Branch identity confirmed only. Parent mall access, toilets and parking must not be inherited as tenant facts."
+MU0035,Winners - Tribeca,Central plateau and Moka,Trianon,supermarket,MU0031,S28,2302020700,unknown,unknown,unknown,unknown,unknown,unknown,unknown,unknown,unknown,,,,,2026-11-12,false,"Branch identity confirmed only. Parent mall access, toilets and parking must not be inherited as tenant facts."
