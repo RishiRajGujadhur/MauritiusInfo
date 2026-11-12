@@ -1,5 +1,9 @@
 # Data guide and Power BI import
 
+## Office accessibility
+
+The [office guide](offices/) provides [12 researched office records](offices/offices.csv), observations and sources. The [382-office OSM subset](osm/offices.csv) is a filtered copy of existing mapped records, not new national coverage. Keep these tables separate until cross-source duplicates are reconciled.
+
 ## Festival events
 
 A separate [festival dataset](festivals/) adds **14 edition/component rows for 12 festival series**, with [events.csv](festivals/events.csv), scoped observations and sources. Import it separately from place tables; its [guide](festivals/README.md) explains dates, access levels and venue-only evidence.
