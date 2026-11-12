@@ -1,6 +1,50 @@
 # Individual shop access and wheelchair parking
 
-Checked **12 November 2026**. This batch contains **12 researched branch records**, **29 observations**, **13 sources** and **one historical shared parking facility**. [The 2,371-shop map subset](../osm/shops.csv) is a filtered view of places already in the bulk inventory, not new national coverage.
+Checked **12 November 2026**. This batch contains **39 branch records**, **56 observations**, **14 sources** and **one historical shared parking facility**. [The 2,371-shop map subset](../osm/shops.csv) is a filtered view of places already in the bulk inventory, not new national coverage.
+
+## Expanded coverage: unknowns and reported barriers
+
+Start with the [2,371-row shop access register](../osm/shop_access_register.csv). It includes **18 reported_not_accessible**, **6 reported_limited**, **7 mapped_accessible** and **2,340 unknown** records. These are existing mapped shops with clearer filter fields, not 2,371 newly found shops. [View the 24 mapped barrier reports](../osm/shop_barrier_reports.csv).
+
+The researched branch table now includes **27 additional Winners branches from its official directory**, with accessibility and wheelchair parking explicitly unknown. Existing positive directory labels are preserved. The official directory verifies identity only; no chain-wide access claim is assigned.
+
+The map register includes 153 supermarkets, 8 department-store objects, 52 electronics shops, 47 furniture shops, 16 DIY shops and 156 hardware shops. These categories help investigate mainstream retail, but **shop_size is unknown** without measured floor area or an explicit size source. No category automatically means medium or large.
+
+Use accessibility_status and retail_category_group in Power BI. A mapped negative report applies to one OSM object/branch, not a whole brand. Missing tags are not converted to negative reports. Sources can be old, branches may have changed, and all require confirmation before visiting.
+
+### Additional operator-listed branches
+
+| Branch | Physical accessibility | Wheelchair parking |
+| --- | --- | --- |
+| Winners - Souillac | unknown | unknown |
+| Winners - Bel Air | unknown | unknown |
+| Winners - Chemin Grenier | unknown | unknown |
+| Winners - Triolet | unknown | unknown |
+| Winners - Roches Brunes | unknown | unknown |
+| Winners - Flacq La Source | unknown | unknown |
+| Winners - Saint Pierre | unknown | unknown |
+| Winners - Coromandel | unknown | unknown |
+| Winners - Terre Rouge | unknown | unknown |
+| Winners - Goodlands | unknown | unknown |
+| Winners - Forest Side | unknown | unknown |
+| Winners - Plaine Magnien | unknown | unknown |
+| Winners - Bambous | unknown | unknown |
+| Winners - Rose Hill | unknown | unknown |
+| Winners - Riviere du Rempart | unknown | unknown |
+| Winners - Saint Paul | unknown | unknown |
+| Winners - Pereybere | unknown | unknown |
+| Winners - Boulet Rouge | unknown | unknown |
+| Winners - Candos | unknown | unknown |
+| Winners - Rose Belle | unknown | unknown |
+| Winners - Cascavelle | unknown | unknown |
+| Winners - Trianon | unknown | unknown |
+| Winners - Garden Tower | unknown | unknown |
+| Winners - Tribeca | unknown | unknown |
+| Winners - Orchard | unknown | unknown |
+| Winners - Manhattan, Curepipe | unknown | unknown |
+| Winners - Windsor | unknown | unknown |
+
+Branch names/localities follow operator labels. Orchard and Windsor remain region Unknown until their location is resolved. Floor areas, exact branch sizes, contact numbers and access measurements were not invented. Branch identities can overlap the map table; no cross-source unique total is claimed.
 
 ## Branch evidence
 
@@ -47,7 +91,7 @@ A wheelchair-accessible entrance directory label is not a measured step-free acc
 
 | File | Grain | Key |
 | --- | --- | --- |
-| [shops.csv](shops.csv) | One researched shop branch | shop_id |
+| [shops.csv](shops.csv) | One branch with access evidence or an explicit identity-only lead | shop_id |
 | [accessibility_observations.csv](accessibility_observations.csv) | One branch claim or scoped concern | observation_id |
 | [parking_facilities.csv](parking_facilities.csv) | One shared parking facility | parking_facility_id |
 | [sources.csv](sources.csv) | One source page | source_id |
@@ -65,10 +109,11 @@ Intermart Bagatelle links to MU0032. Its original curated place row is updated w
 
 | Field | Meaning |
 | --- | --- |
+| shop_size | unknown for every current branch; measured size not established. |
 | shop_id, shop_name, shop_type | Stable physical branch identifier/name and retail category. Preserve IDs on rename. |
 | locality, region, parent_site_name | Branch location and named containing site where established; no automatic access inheritance. |
 | related_curated_place_id | Optional identity link to data/places.csv. |
-| accessibility_level | directory_labels_only or shared_site_historical_lead; evidence categories, not grades. |
+| accessibility_level | directory_labels_only, shared_site_historical_lead or unknown; evidence categories, not grades. |
 | wheelchair_access | Broad whole-shop claim; unknown unless explicitly established. |
 | step_free_entrance | listed_yes only for accessible-entrance label, otherwise unknown. |
 | wheelchair_toilet, wheelchair_seating | Branch listing labels; precise facility location/ownership unresolved. |
@@ -102,3 +147,15 @@ These are map statements about individual objects, not field-verified ratings or
 ## Confirm before visiting
 
 Ask for the exact wheelchair-bay location, whether it is shared or reserved, a photo showing transfer clearance, and the complete route to that branch's entrance. Check kerbs, thresholds, ramp surface/gradient, door width, aisle clearance, usable toilet location and any required lift. Keep a confirmed drop-off alternative where bay availability is uncertain.
+
+## Expanded register fields and licence
+
+The OSM access register preserves every column from the existing shop subset, plus:
+- accessibility_status: reported_not_accessible (wheelchair=no), reported_limited (limited), mapped_accessible (yes/designated), or unknown.
+- status_evidence: community_map_tag for explicit mapped values; no_usable_map_tag for unknown.
+- shop_size: unknown; no measured floor area inferred.
+- retail_category_group: grocery, hardware_diy, furniture_home, electronics_appliances, fashion or other, derived from the mapped shop subtype. This is a retail grouping, not a size rating.
+
+These added columns are Text. Coordinates remain Decimal number, dates retain the types described in the OSM guide, and empty counts remain null. Count distinct record_id. Do not append the register, barrier-only extract and original shops.csv subset together: they share the same OSM IDs. Separate tables under data/shops use shop_id and can overlap with OSM.
+
+The access register and barrier extract are OSM-derived and available under ODbL 1.0, with attribution to © OpenStreetMap contributors. They preserve the existing import/source dates. They do not contain fresh Google reviews or field inspections. The 39-row web branch table remains a separate maintained dataset. scripts/build_shop_access_register.py reproduces the OSM views.
