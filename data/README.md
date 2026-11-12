@@ -1,5 +1,11 @@
 # Data guide and Power BI import
 
+## Public directory import
+
+[Directory places](directory/places.csv) contains 1,282 source records across 11 categories. [Read the data guide](directory/README.md) for fields, CC-BY-SA attribution and missing-data handling. Import IDs and phones as text. Do not add these counts to the OSM/health totals as unique venues; source overlap is not reconciled. All accessibility fields in this import are unknown.
+
+[Category counts](directory/category_counts.csv) and [source-district/category counts](directory/district_category_counts.csv) support Power BI coverage analysis. Missing districts and coordinates remain explicit; source grouping is unverified.
+
 ## Repairs and healthcare services
 
 [Services tables](services/) cover repair shops, mechanics, pharmacies, doctors, clinics and hospitals, separating branch access from actual service-room access. The [415-record mapped view](osm/services.csv) is an overlapping subset of the national inventory; it does not add 415 unique places. [Import guide](services/README.md).
