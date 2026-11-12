@@ -1,0 +1,70 @@
+district,category,osm_record_count
+Unresolved,amenity,5
+Unresolved,leisure,6
+Unresolved,natural,25
+Unresolved,tourism,41
+Black River,amenity,385
+Black River,healthcare,6
+Black River,leisure,33
+Black River,natural,7
+Black River,office,28
+Black River,shop,184
+Black River,tourism,255
+Flacq,amenity,185
+Flacq,healthcare,2
+Flacq,leisure,19
+Flacq,natural,4
+Flacq,office,14
+Flacq,shop,107
+Flacq,tourism,93
+Grand Port,amenity,207
+Grand Port,healthcare,3
+Grand Port,leisure,20
+Grand Port,natural,3
+Grand Port,office,21
+Grand Port,shop,160
+Grand Port,tourism,102
+Moka,amenity,162
+Moka,healthcare,2
+Moka,leisure,11
+Moka,office,39
+Moka,shop,122
+Moka,tourism,22
+Pamplemousses,amenity,207
+Pamplemousses,healthcare,2
+Pamplemousses,leisure,21
+Pamplemousses,natural,4
+Pamplemousses,office,10
+Pamplemousses,shop,127
+Pamplemousses,tourism,116
+Plaines Wilhems,amenity,832
+Plaines Wilhems,healthcare,20
+Plaines Wilhems,leisure,64
+Plaines Wilhems,office,146
+Plaines Wilhems,shop,849
+Plaines Wilhems,tourism,42
+Port Louis,amenity,421
+Port Louis,healthcare,2
+Port Louis,leisure,24
+Port Louis,office,73
+Port Louis,shop,514
+Port Louis,tourism,35
+Riviere du Rempart,amenity,265
+Riviere du Rempart,healthcare,2
+Riviere du Rempart,leisure,20
+Riviere du Rempart,natural,4
+Riviere du Rempart,office,18
+Riviere du Rempart,shop,155
+Riviere du Rempart,tourism,160
+Rodrigues,amenity,133
+Rodrigues,leisure,15
+Rodrigues,natural,16
+Rodrigues,office,32
+Rodrigues,shop,135
+Rodrigues,tourism,77
+Savanne,amenity,75
+Savanne,leisure,12
+Savanne,natural,1
+Savanne,office,1
+Savanne,shop,18
+Savanne,tourism,44
