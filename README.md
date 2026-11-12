@@ -4,6 +4,12 @@ A practical, source-linked guide to wheelchair access at places in Mauritius.
 
 **Web sources checked: 12 November 2026 (Mauritius time).** This is desk research, not an on-site access audit. The date means the source was checked, not that a facility was inspected or is working today. Summaries are paraphrased from public web pages and PDFs; original pages and photographs are not copied into this repository.
 
+## Additional directory locations
+
+The [directory import](data/directory/README.md) adds **1,282 source records across 11 categories** from 64 public pages attributed to Open Data Mauritius via cyber.mu: 264 community/social-service points, 258 ATMs, 181 schools, 172 shopping locations, 151 petrol stations, 102 post offices, 79 police/coast-guard posts, 26 utility offices, 23 sports facilities, 15 embassies/high commissions and 11 fire stations. [Download the flat CSV](data/directory/places.csv).
+
+The source groups include nine districts, Rodrigues and Agalega; 306 records have no stated district and 564 have no coordinates. All access features remain unknown for this import. The source snapshot is 6 September 2026, retrieved 12 November 2026. Counts are source records and can overlap OSM, health and researched tables; they are not a net-new unique venue total. [Category counts](data/directory/category_counts.csv) · [District/category counts](data/directory/district_category_counts.csv) · [Sources and licence](data/directory/sources.json).
+
 ## National coverage expansion
 
 The [national coverage guide](data/national/README.md) adds **169 health-facility source records across all nine districts**, with coordinates, contact details, licensing and explicit unknown accessibility fields. [Download the health directory](data/national/health_facilities.csv).
