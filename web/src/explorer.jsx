@@ -1,6 +1,6 @@
 import React, { lazy, Suspense, useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
-import { Button, IconButton, Link, SegmentedControl, Skeleton, Switch, Table, TextField, Theme, Tooltip } from '@radix-ui/themes';
-import { AccessibilityIcon, ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpIcon, CaretSortIcon, Cross2Icon, DashboardIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon, DownloadIcon, DrawingPinIcon, ExternalLinkIcon, GlobeIcon, InfoCircledIcon, LayersIcon, MagnifyingGlassIcon, MixIcon, MoonIcon, ResetIcon, RowsIcon, SizeIcon, SunIcon, TableIcon } from '@radix-ui/react-icons';
+import { Button, Dialog, IconButton, Link, SegmentedControl, Skeleton, Switch, Table, TextField, Theme, Tooltip } from '@radix-ui/themes';
+import { AccessibilityIcon, ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpIcon, CaretSortIcon, ChevronRightIcon, Cross2Icon, DashboardIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon, DownloadIcon, DrawingPinIcon, ExternalLinkIcon, GlobeIcon, InfoCircledIcon, LayersIcon, MagnifyingGlassIcon, MixIcon, MoonIcon, ResetIcon, RowsIcon, SizeIcon, SunIcon, TableIcon } from '@radix-ui/react-icons';
 import { flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
 import { DATASETS, filterRecords } from '../../data-core.mjs';
 import SearchSelect from './search-select';
@@ -61,6 +61,7 @@ export default function Explorer() {
   const [loading, setLoading] = useState(true);
   const [retry, setRetry] = useState(0);
   const [selectedKey, setSelectedKey] = useState(initial.record);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const detailTrigger = useRef(null);
   const searchInput = useRef(null);
   const deferredFilters = useDeferredValue(filters);
@@ -150,6 +151,17 @@ export default function Explorer() {
     history.replaceState(null, '', location.pathname + (query.size ? `?${query}` : ''));
   }, [filters, sorting, pageIndex, pagination.pageSize, selectedKey]);
 
+  function scrollToResults() {
+    if (matchMedia('(max-width: 700px)').matches) {
+      document.getElementById('results')?.scrollIntoView({ block: 'start' });
+    } else {
+      document.querySelector('.grid-scroll')?.scrollTo({ top: 0 });
+    }
+  }
+  function goToPage(index) {
+    table.setPageIndex(index);
+    scrollToResults();
+  }
   function updateFilter(key, value) {
     setFilters(current => ({ ...current, [key]: value }));
     setPagination(current => ({ ...current, pageIndex: 0 }));
@@ -176,12 +188,15 @@ export default function Explorer() {
   const activeFilters = FILTERS.filter(filter => filters[filter.key]);
   const visibleRows = table.getRowModel().rows;
   const start = matches.length ? pageIndex * pagination.pageSize + 1 : 0;
+  function filterControls() {
+    return FILTERS.map(filter => <SearchSelect key={filter.key} {...filter} getOptionIcon={filter.key === 'category' ? getCategoryIcon : undefined} value={filters[filter.key]} options={options[filter.key]} onChange={value => updateFilter(filter.key, value)} />);
+  }
   const mobileSortOptions = Object.entries(COLUMN_LABELS).flatMap(([key, label]) => [[`${key}:asc`, `${label} · ascending`], [`${key}:desc`, `${label} · descending`]]);
 
   return <Theme className="app-theme" appearance={appearance} accentColor="blue" grayColor="slate" radius="medium">
     <Link className="skip-link" href="#results">Skip to places</Link>
     <header className="site-header"><div className="shell header-inner">
-      <Link href={BASE} className="brand"><GlobeIcon className="brand-icon" width="23" height="23" />Access Mauritius</Link>
+      <Link href={BASE} className="brand"><GlobeIcon className="brand-icon" width="23" height="23" /><span className="desktop-brand">Access Mauritius</span><span className="mobile-brand">Places</span></Link>
       <div className="header-actions"><Link href="https://github.com/RishiRajGujadhur/MauritiusInfo" className="data-link"><LayersIcon />Data<ExternalLinkIcon /></Link><label className="theme-switch"><span className="sr-only">Dark mode</span>{appearance === 'dark' ? <MoonIcon /> : <SunIcon />}<Switch size="1" aria-label="Dark mode" checked={appearance === 'dark'} onCheckedChange={checked => setAppearance(checked ? 'dark' : 'light')} /></label></div>
     </div></header>
     <main className="shell">
@@ -189,12 +204,21 @@ export default function Explorer() {
         <div className="search-toolbar"><h1><DrawingPinIcon />Find a place</h1><TextField.Root ref={searchInput} aria-label="Search places" type="search" className="main-search" size="3" placeholder="Place, town or address" value={filters.search} onChange={event => updateFilter('search', event.target.value)}>
           <TextField.Slot><MagnifyingGlassIcon width="19" height="19" /></TextField.Slot><TextField.Slot side="right">{filters.search ? <IconButton size="1" variant="ghost" color="gray" aria-label="Clear search" onClick={() => { updateFilter('search', ''); searchInput.current?.focus(); }}><Cross2Icon /></IconButton> : <kbd>/</kbd>}</TextField.Slot>
         </TextField.Root><Tooltip content="Access can change. Confirm the facilities you need with the venue before visiting."><IconButton variant="ghost" color="gray" aria-label="About access reports"><InfoCircledIcon width="18" height="18" /></IconButton></Tooltip></div>
-        <div className="filters">{FILTERS.map(filter => <SearchSelect key={filter.key} {...filter} getOptionIcon={filter.key === 'category' ? getCategoryIcon : undefined} value={filters[filter.key]} options={options[filter.key]} onChange={value => updateFilter(filter.key, value)} />)}<Tooltip content="Clear search and filters"><IconButton variant="ghost" color="gray" aria-label="Reset filters" disabled={!activeFilters.length && !filters.search} onClick={reset}><ResetIcon /></IconButton></Tooltip></div>
+        <div className="filters">{filterControls()}<Tooltip content="Clear search and filters"><IconButton variant="ghost" color="gray" aria-label="Reset filters" disabled={!activeFilters.length && !filters.search} onClick={reset}><ResetIcon /></IconButton></Tooltip></div>
         {activeFilters.length > 0 && <div className="active-filters" aria-label="Active filters">{activeFilters.map(filter => <Button key={filter.key} size="1" variant="soft" onClick={() => updateFilter(filter.key, '')} aria-label={`Remove ${filter.label} filter`}><filter.icon />{filter.label} · {options[filter.key].find(([key]) => key === filters[filter.key])?.[1] || filters[filter.key]}<Cross2Icon /></Button>)}</div>}
+      </section>
+      <section className="mobile-controls" aria-label="Place filters">
+        <div className="mobile-filter-strip">
+          {filterControls()}
+          <SearchSelect label="Sort" icon={CaretSortIcon} value={`${sorting[0]?.id || 'name'}:${sorting[0]?.desc ? 'desc' : 'asc'}`} options={mobileSortOptions} placeholder="Name · ascending" allowAll={false} onChange={value => { const [id, direction] = value.split(':'); table.setSorting([{ id, desc: direction === 'desc' }]); }} />
+          <SearchSelect label="Rows" icon={TableIcon} value={String(pagination.pageSize)} options={['25', '50', '100'].map(value => [value, value])} placeholder="25" allowAll={false} onChange={value => table.setPageSize(Number(value))} />
+          {(activeFilters.length > 0 || filters.search) && <Button className="mobile-reset" variant="ghost" color="gray" onClick={reset} aria-label="Reset filters"><ResetIcon />Clear</Button>}
+        </div>
+        {filters.search && <div className="mobile-query"><Button variant="ghost" color="gray" onClick={() => setMobileSearchOpen(true)}><MagnifyingGlassIcon /><span>{filters.search}</span></Button><IconButton variant="ghost" color="gray" aria-label="Clear search" onClick={() => updateFilter('search', '')}><Cross2Icon /></IconButton></div>}
       </section>
       {failures.length > 0 && <div className="load-error" role="alert"><InfoCircledIcon /><span>Some sources could not load. {records.length.toLocaleString()} records available.</span><Tooltip content={failures.join(', ')}><Button size="1" variant="soft" onClick={() => setRetry(value => value + 1)}><ResetIcon />Retry</Button></Tooltip></div>}
       <section id="results" tabIndex={-1} aria-label="Places">
-        <div className="grid-toolbar"><p role="status" aria-live="polite">{loading ? 'Loading places…' : <><strong>{matches.length.toLocaleString()}</strong> results <span>· {records.length.toLocaleString()} source records</span></>}</p><div className="grid-actions"><Tooltip content="Row spacing"><SegmentedControl.Root size="1" value={density} aria-label="Row density" onValueChange={setDensity}><SegmentedControl.Item value="compact" aria-label="Compact rows"><RowsIcon /></SegmentedControl.Item><SegmentedControl.Item value="comfortable" aria-label="Comfortable rows"><SizeIcon /></SegmentedControl.Item></SegmentedControl.Root></Tooltip><Tooltip content="Download all filtered results in sort order"><Button variant="ghost" color="gray" size="1" disabled={loading || !matches.length} onClick={() => downloadRows(table.getSortedRowModel().rows)}><DownloadIcon /><span>Export CSV</span></Button></Tooltip></div></div>
+        <div className="grid-toolbar"><p role="status" aria-live="polite">{loading ? 'Loading places…' : <><strong>{matches.length.toLocaleString()}</strong> results <span>· {records.length.toLocaleString()} source records</span></>}</p><div className="grid-actions"><Tooltip content="Row spacing"><SegmentedControl.Root size="1" value={density} aria-label="Row density" onValueChange={setDensity}><SegmentedControl.Item value="compact" aria-label="Compact rows"><RowsIcon /></SegmentedControl.Item><SegmentedControl.Item value="comfortable" aria-label="Comfortable rows"><SizeIcon /></SegmentedControl.Item></SegmentedControl.Root></Tooltip><Tooltip content="Download all filtered results in sort order"><Button variant="ghost" color="gray" size="1" aria-label="Export CSV" disabled={loading || !matches.length} onClick={() => downloadRows(table.getSortedRowModel().rows)}><DownloadIcon /><span>Export CSV</span></Button></Tooltip></div></div>
         <div className="mobile-sort"><SearchSelect label="Sort" icon={CaretSortIcon} value={`${sorting[0]?.id || 'name'}:${sorting[0]?.desc ? 'desc' : 'asc'}`} options={mobileSortOptions} placeholder="Name · ascending" allowAll={false} onChange={value => { const [id, direction] = value.split(':'); table.setSorting([{ id, desc: direction === 'desc' }]); }} /></div>
         <div className={`grid-scroll ${density}`} tabIndex={0} role="region" aria-label="Location grid" aria-busy={loading}>
           <Table.Root className="places-table" variant="surface" size="1"><Table.Header>{table.getHeaderGroups().map(group => <Table.Row key={group.id}>{group.headers.map(header => {
@@ -207,10 +231,39 @@ export default function Explorer() {
           </Table.Body></Table.Root>
           {!loading && !matches.length && <div className="empty"><MagnifyingGlassIcon width="27" height="27" /><h2>No matching places</h2><p>Try another name or remove a filter.</p><Button variant="soft" onClick={reset}><ResetIcon />Reset filters</Button></div>}
         </div>
-        <nav className="pagination" aria-label="Results pages"><span className="page-range">{start}–{Math.min(start + visibleRows.length - (start ? 1 : 0), matches.length)} of {matches.length.toLocaleString()}</span><div className="page-navigation"><IconButton variant="soft" color="gray" size="1" aria-label="First page" disabled={loading || !pageIndex} onClick={() => table.setPageIndex(0)}><DoubleArrowLeftIcon /></IconButton><IconButton variant="soft" color="gray" size="1" aria-label="Previous page" disabled={loading || !pageIndex} onClick={() => table.previousPage()}><ArrowLeftIcon /></IconButton><label className="page-jump">Page<TextField.Root size="1" aria-label="Page number" type="number" min="1" max={pageCount} value={pageIndex + 1} onChange={event => table.setPageIndex(Math.min(pageCount - 1, Math.max(0, Number(event.target.value) - 1 || 0)))} /></label><span>of {pageCount}</span><IconButton variant="soft" color="gray" size="1" aria-label="Next page" disabled={loading || pageIndex >= pageCount - 1} onClick={() => table.nextPage()}><ArrowRightIcon /></IconButton><IconButton variant="soft" color="gray" size="1" aria-label="Last page" disabled={loading || pageIndex >= pageCount - 1} onClick={() => table.setPageIndex(pageCount - 1)}><DoubleArrowRightIcon /></IconButton></div><SearchSelect label="Rows" icon={TableIcon} value={String(pagination.pageSize)} options={['25', '50', '100'].map(value => [value, value])} placeholder="25" allowAll={false} onChange={value => table.setPageSize(Number(value))} /></nav>
+        <div className="mobile-place-list" aria-label="Place list" aria-busy={loading}>
+          {loading && !records.length ? Array.from({ length: 5 }, (_, index) => <div className="mobile-place-skeleton" key={index}><Skeleton height="22px" width="65%" /><Skeleton height="16px" width="80%" /><Skeleton height="20px" width="45%" /></div>) : visibleRows.map(({ original: record }) => {
+            const CategoryIcon = getCategoryIcon(record.category);
+            const area = record.area === 'Not Stated' ? record.address || 'Area unknown' : record.area;
+            return <article className="mobile-place" key={record.key}>
+              <Button variant="ghost" color="gray" className="mobile-place-main" onClick={event => openDetails(record, event)}>
+                <span className="mobile-category-icon"><CategoryIcon aria-hidden="true" /></span>
+                <span className="mobile-place-text"><strong>{record.name}</strong><span>{record.type || record.category} · {area}</span></span>
+                <ChevronRightIcon className="mobile-place-chevron" />
+              </Button>
+              <div className="mobile-place-status"><span>Access <ReportBadge value={record.access} /></span><span>Parking <ReportBadge value={record.parking} /></span></div>
+            </article>;
+          })}
+          {!loading && !matches.length && <div className="empty"><MagnifyingGlassIcon width="28" height="28" /><h2>No places found</h2><p>Try another search or clear your filters.</p><Button variant="soft" onClick={reset}>Clear filters</Button></div>}
+        </div>
+        <nav className="pagination" aria-label="Results pages"><span className="page-range">{start}–{Math.min(start + visibleRows.length - (start ? 1 : 0), matches.length)} of {matches.length.toLocaleString()}</span><div className="page-navigation"><IconButton variant="soft" color="gray" size="1" aria-label="First page" disabled={loading || !pageIndex} onClick={() => goToPage(0)}><DoubleArrowLeftIcon /></IconButton><IconButton variant="soft" color="gray" size="1" aria-label="Previous page" disabled={loading || !pageIndex} onClick={() => goToPage(pageIndex - 1)}><ArrowLeftIcon /></IconButton><label className="page-jump">Page<TextField.Root size="1" aria-label="Page number" type="number" min="1" max={pageCount} value={pageIndex + 1} onChange={event => table.setPageIndex(Math.min(pageCount - 1, Math.max(0, Number(event.target.value) - 1 || 0)))} /></label><span className="desktop-page-total">of {pageCount}</span><span className="mobile-page-indicator">Page {pageIndex + 1} of {pageCount}</span><IconButton variant="soft" color="gray" size="1" aria-label="Next page" disabled={loading || pageIndex >= pageCount - 1} onClick={() => goToPage(pageIndex + 1)}><ArrowRightIcon /></IconButton><IconButton variant="soft" color="gray" size="1" aria-label="Last page" disabled={loading || pageIndex >= pageCount - 1} onClick={() => goToPage(pageCount - 1)}><DoubleArrowRightIcon /></IconButton></div><SearchSelect label="Rows" icon={TableIcon} value={String(pagination.pageSize)} options={['25', '50', '100'].map(value => [value, value])} placeholder="25" allowAll={false} onChange={value => table.setPageSize(Number(value))} /></nav>
       </section>
       <footer><span className="footer-note">Source records may overlap. Unknown means details are missing.</span><Link href="https://github.com/RishiRajGujadhur/MauritiusInfo#readme">Sources & licences<ExternalLinkIcon /></Link><span className="footer-copyright">© OpenStreetMap contributors · ODbL. Open Data Mauritius via cyber.mu · CC BY-SA 4.0.</span></footer>
     </main>
+    <Dialog.Root open={mobileSearchOpen} onOpenChange={setMobileSearchOpen}>
+      <nav className="mobile-bottom-bar" aria-label="Mobile search"><Dialog.Trigger><Button className="mobile-search-button" size="3" variant="surface"><MagnifyingGlassIcon width="22" height="22" />Search places</Button></Dialog.Trigger></nav>
+      <Dialog.Content className="mobile-search-sheet" maxWidth="520px">
+        <div className="mobile-search-heading"><Dialog.Title>Search places</Dialog.Title><Dialog.Close><IconButton variant="ghost" color="gray" aria-label="Close search"><Cross2Icon /></IconButton></Dialog.Close></div>
+        <Dialog.Description className="sr-only">Search by place name, town or address. Your selected filters also apply.</Dialog.Description>
+        <form onSubmit={event => { event.preventDefault(); setMobileSearchOpen(false); scrollToResults(); }}>
+          <TextField.Root size="3" type="search" enterKeyHint="search" aria-label="Search places on mobile" placeholder="Place, town or address" value={filters.search} onChange={event => updateFilter('search', event.target.value)}>
+            <TextField.Slot><MagnifyingGlassIcon width="21" height="21" /></TextField.Slot>
+            {filters.search && <TextField.Slot side="right"><IconButton type="button" variant="ghost" color="gray" aria-label="Clear mobile search" onClick={() => updateFilter('search', '')}><Cross2Icon /></IconButton></TextField.Slot>}
+          </TextField.Root>
+          <Button className="mobile-search-submit" type="submit" size="3">Show {matches.length.toLocaleString()} results<ArrowRightIcon /></Button>
+        </form>
+      </Dialog.Content>
+    </Dialog.Root>
     <Suspense fallback={selectedKey ? <div className="detail-loading" role="status">Loading place details…</div> : null}>{selectedRecord && <PlaceDetails record={selectedRecord} onClose={() => setSelectedKey(null)} triggerRef={detailTrigger} />}</Suspense>
   </Theme>;
 }

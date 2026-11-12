@@ -32,7 +32,7 @@ export default function SearchSelect({ label, icon: Icon, value, options, onChan
     if (event.key === 'End' && event.ctrlKey) { event.preventDefault(); setActive(matches.length - 1); }
   }
 
-  return <div className="filter-control">
+  return <div className="filter-control" data-selected={Boolean(value && allowAll)}>
     <Popover.Root open={open} onOpenChange={next => { setOpen(next); if (next) { setQuery(''); setActive(0); } }}>
       <Popover.Trigger><Button variant={value && allowAll ? 'soft' : 'surface'} color={value && allowAll ? 'blue' : 'gray'} className="filter-trigger" aria-label={`${label}: ${selected}`}>
         <TriggerIcon /><span className="filter-caption">{label}</span><span className="filter-value">{value && allowAll ? `${label} · ${selected}` : selected}</span><ChevronDownIcon className="chevron" />
