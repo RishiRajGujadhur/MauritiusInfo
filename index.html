@@ -8,15 +8,15 @@
   <title>Access Mauritius · Location explorer</title>
   <link rel="stylesheet" href="./styles.css">
   <script type="module" src="./app.js"></script>
-</head>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('mu-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')}catch{}</script></head>
 <body>
 <a class="skip" href="#results">Skip to results</a>
-<header class="masthead"><div class="shell masthead-inner"><a class="brand" href="./"><span class="brand-icon" aria-hidden="true">↗</span> Access Mauritius</a><a class="repo-link" href="https://github.com/RishiRajGujadhur/MauritiusInfo">View the data <span aria-hidden="true">↗</span></a></div></header>
+<header class="masthead"><div class="shell masthead-inner"><a class="brand" href="./"><span class="brand-icon" aria-hidden="true"><svg class="pin" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-8 8-14a8 8 0 0 0-16 0c0 6 8 14 8 14Z"/><circle cx="12" cy="8" r="2"/></svg></span> Access Mauritius</a><a class="repo-link" href="https://github.com/RishiRajGujadhur/MauritiusInfo">Data ↗</a><button id="theme" type="button" aria-label="Dark mode" aria-pressed="false"><svg class="" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 15A9 9 0 0 1 9 4a9 9 0 1 0 11 11Z"/></svg> Dark mode</button></div></header>
 <main class="shell">
-  <section class="intro" aria-labelledby="title"><p class="eyebrow">MAURITIUS LOCATION EXPLORER</p><h1 id="title">A little more clarity.<br>Before you go.</h1><p class="lede">Find places across Mauritius and explore what’s reported about wheelchair access.</p><div class="intro-meta"><span class="live-dot" aria-hidden="true"></span><span id="inventory">Loading the repository data…</span></div></section>
-  <aside class="notice"><span class="info-icon" aria-hidden="true">i</span><p><strong>A listing isn’t an access guarantee.</strong> Reports may be old, incomplete or overlap across sources. Unknown means we have no evidence. Confirm the facilities you need before travelling.</p></aside>
+  <section class="intro" aria-labelledby="title"><h1 id="title">Find a place</h1><p class="lede">Wheelchair access and parking across Mauritius.</p><div class="intro-meta"><span class="live-dot" aria-hidden="true"></span><span id="inventory">Loading the repository data…</span></div></section>
+  <aside class="notice"><span class="info-icon" aria-hidden="true">i</span><p>Access can change. Check with the venue before visiting.</p></aside>
   <form id="filters" class="filters" role="search">
-    <div class="search-row"><label class="search-box"><span class="search-icon" aria-hidden="true">⌕</span><span class="sr-only">Search places, addresses and types</span><input id="search" type="search" placeholder="Search a place, town or address…" autocomplete="off"></label><button class="button quiet" type="button" id="reset">Reset filters</button></div>
+    <div class="search-row"><label class="search-box"><span class="search-icon" aria-hidden="true"><svg class="" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6"/></svg></span><span class="sr-only">Search places, addresses and types</span><input id="search" type="search" placeholder="Search a place, town or address…" autocomplete="off"></label><button class="button quiet" type="button" id="reset">Reset filters</button></div>
     <div class="filter-grid">
       <label>Area<select id="area"><option value="">All areas</option></select></label>
       <label>Category<select id="category"><option value="">All categories</option></select></label>
@@ -32,7 +32,7 @@
     <nav class="pagination" aria-label="Results pages"><p id="page-summary"></p><div><button id="previous" class="button quiet" type="button" disabled>← Previous</button><label class="page-label">Page <input id="page-number" type="number" min="1" value="1" aria-label="Page number"></label><span id="page-total"></span><button id="next" class="button quiet" type="button" disabled>Next →</button></div></nav>
   </section>
 </main>
-<footer class="shell footer"><p>Made for more informed journeys in Mauritius.</p><p>Source records, not unique venue totals. <a href="https://github.com/RishiRajGujadhur/MauritiusInfo#readme">Methodology &amp; source licences ↗</a></p><p>Map records: © OpenStreetMap contributors · <a href="https://opendatacommons.org/licenses/odbl/1-0/">ODbL</a>. Open-data directories: Open Data Mauritius via cyber.mu · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Research tables retain their linked source provenance.</p></footer>
+<footer class="shell footer"><p>Source records, not unique venue totals. <a href="https://github.com/RishiRajGujadhur/MauritiusInfo#readme">Methodology &amp; source licences ↗</a></p><p>Map records: © OpenStreetMap contributors · <a href="https://opendatacommons.org/licenses/odbl/1-0/">ODbL</a>. Open-data directories: Open Data Mauritius via cyber.mu · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Research tables retain their linked source provenance.</p></footer>
 <dialog id="detail" aria-labelledby="detail-title"><div class="dialog-top"><span class="eyebrow">SOURCE RECORD</span><button id="close-detail" class="close-button" type="button" aria-label="Close details">×</button></div><div id="detail-body"></div></dialog>
-</body>
+<script>{const b=document.getElementById('theme'),root=document.documentElement;function sync(){b.setAttribute('aria-pressed',String(root.dataset.theme==='dark'))}sync();b.onclick=()=>{root.dataset.theme=root.dataset.theme==='dark'?'light':'dark';sync();try{localStorage.setItem('mu-theme',root.dataset.theme)}catch{}}}</script></body>
 </html>
