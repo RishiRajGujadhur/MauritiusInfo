@@ -14,9 +14,13 @@ Coverage includes MCine branches, three outdoor-cinema locations, Caudan Arts Ce
 
 ## Individual shops and wheelchair parking
 
-The [shop guide](data/shops/README.md) covers **12 researched branches**, **29 observations**, **13 sources** and one historical shared parking facility. [Download shop records](data/shops/shops.csv) or [parking facilities](data/shops/parking_facilities.csv).
+The [shop guide](data/shops/README.md) covers **39 branch records**, **56 observations**, **14 sources** and one historical shared parking facility. [Download shop records](data/shops/shops.csv) or [parking facilities](data/shops/parking_facilities.csv).
 
 Shop-level labels are separate from dedicated shop bays and shared-site provision. **No dedicated shop-owned bays are confirmed in this batch.** Directory labels do not establish bay location, ownership, dimensions, availability or the continuous route to the shop. Victoria Urban Terminal's 2022 statement is a historical shared-site lead, not parking reserved for Winners.
+
+The [shop access register](data/osm/shop_access_register.csv) makes all **2,371 mapped shop objects** filterable as 18 reported_not_accessible, 6 reported_limited, 7 mapped_accessible and 2,340 unknown. [Read the 24 branch/object barrier reports](data/shops/BARRIER_REPORTS.md). These are community map reports, not fresh inspections or whole-brand judgements.
+
+The branch table includes 27 additional official Winners listings with unknown physical access and parking. Shop size remains unknown without evidence; supermarket, department-store, furniture, hardware and electronics filters support broader retail research.
 
 The [2,371-shop OSM subset](data/osm/shops.csv) filters existing inventory records and does not add to the 6,965 national total. Its broad wheelchair-access values are 7 mapped_yes, 6 mapped_limited, 18 mapped_no and 2,340 unknown. Do not add overlapping curated and mapped branch counts as unique shops.
 
