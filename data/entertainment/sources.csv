@@ -1,0 +1,13 @@
+source_id,title,url,evidence_type,retrieval_scope,checked_date
+EN001,Cinema.mu - cinema directory,https://cinema.mu/cinema-movie-theatres-in-mauritius/,cinema_directory,full_page_text,2026-11-12
+EN002,MCine Trianon - branch labels,https://loop.mu/services/listings/mcine-trianon,directory_label,full_page_text,2026-11-12
+EN003,Cine Sous Les Etoiles - locations and FAQ,https://cinesouslesetoiles.cinema.mu/faq.php,operator,full_page_text,2026-11-12
+EN004,Cine Sous Les Etoiles - ticket and seat types,https://cinesouslesetoiles.cinema.mu/tickets.php,operator,search_excerpt,2026-11-12
+EN005,Cote d'Or - stadium and athletics facilities,https://cotedorsports.mu/facilities/,operator,full_page_text,2026-11-12
+EN006,Champ de Mars - government land communique,https://gis.govmu.org/Communique/year%202022/May/20.05/Champ%20de%20Mars.pdf,historical_government_identity,pdf_text,2026-11-12
+EN007,Cascavelle Karting by Casela - seller listing,https://mauritiusattractions.com/cascavelle-karting-casela-p-1102.html,activity_seller,search_excerpt_only_product_content_not_reliably_retrieved,2026-11-12
+EN008,Strike City Bagatelle - listing,https://restaurantguru.com/Strike-City-Bagatelle-Moka,directory_label,full_page_text,2026-11-12
+EN009,Caudan Arts Centre - mobility facilities,https://caudan.com/caudan-arts-centre/cac-about-us/,operator,full_page_text,2026-11-12
+EN010,Valle - Mountain Luge Kart access restrictions,https://deals.mu/mountain-luge-kart-valle-advenature-park/,activity_seller,full_page_text,2026-11-12
+EN011,GIS archive - Anjalay motorsport refurbishment site visit,https://gis.govmu.org/gis/?id=181&page_id=4356,government_archive,search_excerpt_only_full_page_timeout,2026-11-12
+EN012,Lexpress - Star permanent closure report,https://lexpress.mu/s/les-cinemas-star-ferment-definitivement-leurs-portes-555512,news_report,page_and_search_excerpt,2026-11-12
