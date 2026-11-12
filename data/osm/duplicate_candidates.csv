@@ -1,0 +1,107 @@
+suppressed_osm_type,suppressed_osm_id,retained_record_id,name,distance_m,rule,suppressed_source_url,suppressed_accessibility_tags_json
+way,777416758,OSM-way-508897406,Résidence La Plage,15.3,normalised_name_category_within_100m,https://www.openstreetmap.org/way/777416758,{}
+way,777416759,OSM-way-508897406,Résidence La Plage,29.9,normalised_name_category_within_100m,https://www.openstreetmap.org/way/777416759,{}
+way,777416760,OSM-way-508897406,Résidence La Plage,43.4,normalised_name_category_within_100m,https://www.openstreetmap.org/way/777416760,{}
+way,777416761,OSM-way-508897406,Résidence La Plage,36.3,normalised_name_category_within_100m,https://www.openstreetmap.org/way/777416761,{}
+way,1222478425,OSM-way-1222478424,Vacoas Police Station parking,11.1,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1222478425,"{""parking_space"":""normal""}"
+node,7162088485,OSM-node-4875709590,Subway,8.5,normalised_name_category_within_100m,https://www.openstreetmap.org/node/7162088485,{}
+way,133131981,OSM-way-133131980,Gorges Viewpoint,16.3,normalised_name_category_within_100m,https://www.openstreetmap.org/way/133131981,{}
+way,1304907711,OSM-node-12085912948,Mauritius GTS Car Rental,3.7,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1304907711,{}
+node,9285772683,OSM-way-1006452819,Fond du Sac Village Hall,0.2,normalised_name_category_within_100m,https://www.openstreetmap.org/node/9285772683,{}
+way,1227722038,OSM-way-1227722037,Gare routière de Vacoas,36.3,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1227722038,{}
+node,4160298790,OSM-way-1073725578,La Boutique Du Chateau,3.2,normalised_name_category_within_100m,https://www.openstreetmap.org/node/4160298790,{}
+node,4425223596,OSM-way-445064383,Mauritius Commercial Bank,1.7,normalised_name_category_within_100m,https://www.openstreetmap.org/node/4425223596,{}
+node,4991720626,OSM-way-510078695,Ruben Racing,3.9,normalised_name_category_within_100m,https://www.openstreetmap.org/node/4991720626,{}
+node,4995043029,OSM-node-4995164300,St. Jean Pharmacy,42.9,normalised_name_category_within_100m,https://www.openstreetmap.org/node/4995043029,{}
+node,5726873315,OSM-way-133131980,Gorges viewpoint,66.3,normalised_name_category_within_100m,https://www.openstreetmap.org/node/5726873315,{}
+node,10805169335,OSM-way-1161769622,Dodo Resto,18.4,normalised_name_category_within_100m,https://www.openstreetmap.org/node/10805169335,{}
+node,11738916704,OSM-node-4995258237,HSBC,59.0,normalised_name_category_within_100m,https://www.openstreetmap.org/node/11738916704,{}
+way,492582383,OSM-node-4314158885,Salle du Royaume des Témoins de Jéhovah de Forest Side,6.4,normalised_name_category_within_100m,https://www.openstreetmap.org/way/492582383,{}
+way,1000614720,OSM-way-495918548,Shell,10.9,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1000614720,{}
+way,1011636146,OSM-node-2905470057,Mapou Post Office,5.8,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1011636146,{}
+way,1170973384,OSM-way-495756518,Galaxy,69.2,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1170973384,{}
+way,1215303565,OSM-node-11259616124,Vacaos Senior Care home,2.2,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1215303565,{}
+node,2999810909,OSM-way-1008795090,Riche Mare Community Centre,6.0,normalised_name_category_within_100m,https://www.openstreetmap.org/node/2999810909,{}
+node,4875777175,OSM-node-4875777174,Citadel,7.4,normalised_name_category_within_100m,https://www.openstreetmap.org/node/4875777175,{}
+node,4990494993,OSM-way-509933107,Restaurant Brigitte,4.9,normalised_name_category_within_100m,https://www.openstreetmap.org/node/4990494993,{}
+node,5638036695,OSM-way-1191538452,Total,70.3,normalised_name_category_within_100m,https://www.openstreetmap.org/node/5638036695,{}
+node,9446307854,OSM-node-6480270058,Domaine des Rosiers,48.1,normalised_name_category_within_100m,https://www.openstreetmap.org/node/9446307854,{}
+node,9446307855,OSM-node-6480270058,Domaine des Rosiers,82.4,normalised_name_category_within_100m,https://www.openstreetmap.org/node/9446307855,{}
+node,9890710517,OSM-way-580820960,Pizz’a Gogo,35.9,normalised_name_category_within_100m,https://www.openstreetmap.org/node/9890710517,{}
+node,9890710518,OSM-way-580820960,Pizz’a Gogo,67.7,normalised_name_category_within_100m,https://www.openstreetmap.org/node/9890710518,{}
+node,13849831854,OSM-way-1320383708,New Moka Eye Hospital,17.4,normalised_name_category_within_100m,https://www.openstreetmap.org/node/13849831854,{}
+way,741845876,OSM-way-361459655,Hennessy Park Hotel,12.9,normalised_name_category_within_100m,https://www.openstreetmap.org/way/741845876,{}
+way,1005648185,OSM-node-4588997090,District Council of Pamplemousses,3.7,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1005648185,{}
+way,1326431882,OSM-way-510792341,Ocean,15.2,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1326431882,{}
+way,1559861051,OSM-way-1008792371,Patisserie Tang,17.3,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1559861051,{}
+way,1559861052,OSM-way-1008792371,Patisserie Tang,54.6,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1559861052,{}
+way,1559861053,OSM-way-1008792371,Patisserie Tang,62.4,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1559861053,{}
+way,1559861054,OSM-way-1008792371,Patisserie Tang,60.1,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1559861054,{}
+way,1559861055,OSM-way-1008792371,Patisserie Tang,47.7,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1559861055,{}
+way,1559861056,OSM-way-1008792371,Patisserie Tang,74.6,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1559861056,{}
+way,1559869817,OSM-node-2147655630,Shell,4.2,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1559869817,{}
+node,2999810919,OSM-node-2999810918,Temple,41.5,normalised_name_category_within_100m,https://www.openstreetmap.org/node/2999810919,{}
+node,4610092289,OSM-way-677858664,Eden Villa,2.9,normalised_name_category_within_100m,https://www.openstreetmap.org/node/4610092289,{}
+node,4875777178,OSM-node-4875777176,Adopt,6.0,normalised_name_category_within_100m,https://www.openstreetmap.org/node/4875777178,{}
+node,4875806021,OSM-node-4875799918,Afrasia,36.4,normalised_name_category_within_100m,https://www.openstreetmap.org/node/4875806021,{}
+node,6347069951,OSM-way-677858681,Raj Super Snack,2.1,normalised_name_category_within_100m,https://www.openstreetmap.org/node/6347069951,{}
+node,6953932013,OSM-node-6953916379,DPlumec,19.7,normalised_name_category_within_100m,https://www.openstreetmap.org/node/6953932013,"{""wheelchair"":""no""}"
+node,9285772690,OSM-way-1006452820,Petit Raffray Village Hall,0.9,normalised_name_category_within_100m,https://www.openstreetmap.org/node/9285772690,{}
+node,11061520910,OSM-node-4981754251,Flic-en-Flac Pharmacy,45.3,normalised_name_category_within_100m,https://www.openstreetmap.org/node/11061520910,{}
+node,11259649690,OSM-way-438261469,Visitation Church,3.9,normalised_name_category_within_100m,https://www.openstreetmap.org/node/11259649690,{}
+node,11259697705,OSM-way-1215306427,Shri Marathi Dharmic Sabha,13.3,normalised_name_category_within_100m,https://www.openstreetmap.org/node/11259697705,{}
+node,11259719910,OSM-node-11259672764,Eglise Chretienne de Vacoas,0.8,normalised_name_category_within_100m,https://www.openstreetmap.org/node/11259719910,{}
+way,371851055,OSM-node-3753991177,Primary School,14.1,normalised_name_category_within_100m,https://www.openstreetmap.org/way/371851055,{}
+way,421801000,OSM-way-223529939,Central Electricity Board,61.4,normalised_name_category_within_100m,https://www.openstreetmap.org/way/421801000,{}
+way,607974380,OSM-node-2998127769,Flacq Youth Centre,11.5,normalised_name_category_within_100m,https://www.openstreetmap.org/way/607974380,{}
+way,784223084,OSM-node-2153376271,Clinique du Nord,4.5,normalised_name_category_within_100m,https://www.openstreetmap.org/way/784223084,{}
+way,784242066,OSM-node-3754148453,The Vale Area Health Centre,4.8,normalised_name_category_within_100m,https://www.openstreetmap.org/way/784242066,{}
+way,784244087,OSM-node-3754488545,Triolet Medi Clinic,16.8,normalised_name_category_within_100m,https://www.openstreetmap.org/way/784244087,{}
+way,1005549841,OSM-node-1782461777,Piton Post Office,4.6,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1005549841,{}
+way,1024423368,OSM-way-299632885,Water Resources Unit,15.1,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1024423368,{}
+way,1112538881,OSM-way-1112538880,Beau Songe Community Centre(S.I.L.W.F),11.9,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1112538881,{}
+way,1119291308,OSM-way-1119291307,Domaine Izi,40.8,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1119291308,{}
+way,1119291309,OSM-way-1119291307,Domaine Izi,28.4,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1119291309,{}
+way,1119291310,OSM-way-1119291307,Domaine Izi,28.5,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1119291310,{}
+way,1213560008,OSM-node-4990240021,London Way,22.0,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1213560008,{}
+way,1318385195,OSM-way-495232022,Université des Mascareignes,31.2,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1318385195,{}
+way,1326431873,OSM-way-1326431872,Phoenix Car Gallery,19.4,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1326431873,{}
+way,1326431874,OSM-way-1326431872,Phoenix Car Gallery,10.4,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1326431874,{}
+way,1326431875,OSM-way-1326431872,Phoenix Car Gallery,16.1,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1326431875,{}
+way,1326431876,OSM-way-1326431872,Phoenix Car Gallery,14.8,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1326431876,{}
+way,1326431877,OSM-way-1326431872,Phoenix Car Gallery,12.3,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1326431877,{}
+way,1329113984,OSM-node-3758574421,Rose Hill police station,12.8,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1329113984,{}
+node,439701364,OSM-way-372014724,Auberge Anse aux Anglais,20.4,normalised_name_category_within_100m,https://www.openstreetmap.org/node/439701364,{}
+node,440651071,OSM-way-761291072,Frederik Hendrik Museum,22.5,normalised_name_category_within_100m,https://www.openstreetmap.org/node/440651071,{}
+node,1006773233,OSM-way-761291079,Vieux Grand Port Police Station,15.6,normalised_name_category_within_100m,https://www.openstreetmap.org/node/1006773233,{}
+node,3808719421,OSM-node-420257545,Chamarel Waterfalls Viewpoint,83.0,normalised_name_category_within_100m,https://www.openstreetmap.org/node/3808719421,{}
+node,4612335549,OSM-way-784247368,Mahebourg Hospital,5.7,normalised_name_category_within_100m,https://www.openstreetmap.org/node/4612335549,{}
+node,4621711885,OSM-way-784247534,Primary Health Care,3.3,normalised_name_category_within_100m,https://www.openstreetmap.org/node/4621711885,{}
+node,4660094179,OSM-way-1005526920,Riviere Du Rempart Police Station,7.7,normalised_name_category_within_100m,https://www.openstreetmap.org/node/4660094179,{}
+node,4840974480,OSM-node-4612233335,Auberge Le Saladier,57.5,normalised_name_category_within_100m,https://www.openstreetmap.org/node/4840974480,{}
+node,4875869125,OSM-node-4875789066,feu rouge,7.6,normalised_name_category_within_100m,https://www.openstreetmap.org/node/4875869125,{}
+node,5250362796,OSM-node-5250362795,MCB,2.4,normalised_name_category_within_100m,https://www.openstreetmap.org/node/5250362796,{}
+node,5310627624,OSM-node-5310151724,Central Flacq Taxi Stand,96.4,normalised_name_category_within_100m,https://www.openstreetmap.org/node/5310627624,{}
+node,5594495771,OSM-node-4873896716,Intermart,39.4,normalised_name_category_within_100m,https://www.openstreetmap.org/node/5594495771,{}
+node,6948295650,OSM-way-742178431,Roots Spirits,7.1,normalised_name_category_within_100m,https://www.openstreetmap.org/node/6948295650,{}
+node,9278547771,OSM-way-1005648186,Esperance Trébuchet Village Hall,0.4,normalised_name_category_within_100m,https://www.openstreetmap.org/node/9278547771,{}
+node,9278547772,OSM-way-1005648187,Plaine des Roches Village Hall,3.3,normalised_name_category_within_100m,https://www.openstreetmap.org/node/9278547772,{}
+node,9307757633,OSM-way-1008787526,Montagne Longue Village Hall,0.6,normalised_name_category_within_100m,https://www.openstreetmap.org/node/9307757633,{}
+node,10243378129,OSM-way-607465040,Grand Baie Public Beach,67.9,normalised_name_category_within_100m,https://www.openstreetmap.org/node/10243378129,{}
+node,11259332712,OSM-way-1215253594,Bliss Ladies Massage Spa,3.4,normalised_name_category_within_100m,https://www.openstreetmap.org/node/11259332712,{}
+node,11259332714,OSM-way-1215229362,Rustique Spa,0.5,normalised_name_category_within_100m,https://www.openstreetmap.org/node/11259332714,{}
+node,11259697693,OSM-way-1214462461,SAM Driving school,10.8,normalised_name_category_within_100m,https://www.openstreetmap.org/node/11259697693,{}
+node,11259731199,OSM-way-1214403411,Action Familiale (Mauritius),25.2,normalised_name_category_within_100m,https://www.openstreetmap.org/node/11259731199,{}
+node,11259798333,OSM-way-1215273902,Quinze Cantons Municipal Gymnasium,4.9,normalised_name_category_within_100m,https://www.openstreetmap.org/node/11259798333,{}
+node,13413359501,OSM-node-13413350001,Ah Chin Store,0.0,normalised_name_category_within_100m,https://www.openstreetmap.org/node/13413359501,{}
+way,125955410,OSM-way-870706737,London Way,1.0,normalised_name_category_within_100m,https://www.openstreetmap.org/way/125955410,{}
+way,306153026,OSM-node-2998127767,Mahatma Gandhi Secondary School Flacq,30.5,normalised_name_category_within_100m,https://www.openstreetmap.org/way/306153026,{}
+way,413653878,OSM-way-1108376838,Villas Caroline,40.8,normalised_name_category_within_100m,https://www.openstreetmap.org/way/413653878,{}
+way,445163992,OSM-node-4426353912,Dr Maurice Cure State Secondary School,12.9,normalised_name_category_within_100m,https://www.openstreetmap.org/way/445163992,{}
+way,742178452,OSM-node-1808440936,La Mariposa,19.3,normalised_name_category_within_100m,https://www.openstreetmap.org/way/742178452,{}
+way,1011057320,OSM-way-1011057319,Sir Seewoosagur Ramgoolam Medical College,36.5,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1011057320,{}
+way,1011057321,OSM-way-1011057319,Sir Seewoosagur Ramgoolam Medical College,74.3,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1011057321,{}
+way,1011057322,OSM-way-1011057319,Sir Seewoosagur Ramgoolam Medical College,88.0,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1011057322,{}
+way,1215016920,OSM-node-11243330962,Seewa Bappoo State Secondary School,6.7,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1215016920,{}
+way,1282467222,OSM-node-11886588753,Camp de Masque,94.2,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1282467222,{}
+way,1329434528,OSM-way-1329434525,Place Taxi Margeot,68.2,normalised_name_category_within_100m,https://www.openstreetmap.org/way/1329434528,{}
