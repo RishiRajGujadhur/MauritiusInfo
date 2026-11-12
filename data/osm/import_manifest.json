@@ -1,0 +1,48 @@
+{
+  "import_date": "2026-11-12",
+  "extract_url": "https://download.geofabrik.de/africa/mauritius-latest.osm.pbf",
+  "extract_data_timestamp": "2026-11-11T21:22:47Z",
+  "pbf_sha256": "fc666e15ed349c68c43a793c00bcc069ceb5bf52b15c4763051fe0585264d5f6",
+  "licence": "ODbL-1.0",
+  "licence_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+  "attribution": "© OpenStreetMap contributors",
+  "raw_selected_objects": 7071,
+  "retained_records": 6965,
+  "suppressed_duplicate_candidates": 106,
+  "rows_with_accessibility_tags": 103,
+  "accessibility_tag_observations": 107,
+  "regions": {
+    "West and south-west": 898,
+    "East": 424,
+    "Port Louis": 1069,
+    "Central plateau and Moka": 2311,
+    "North": 1111,
+    "South and south-east": 667,
+    "Rodrigues": 408,
+    "Unknown": 77
+  },
+  "categories": {
+    "amenity": 2877,
+    "tourism": 987,
+    "office": 382,
+    "shop": 2371,
+    "leisure": 245,
+    "natural": 64,
+    "healthcare": 39
+  },
+  "geometry_errors": {},
+  "boundary_names": [
+    "Rodrigues",
+    "Agaléga",
+    "Saint Brandon",
+    "Plaines Wilhems",
+    "Moka",
+    "Flacq",
+    "Savanne",
+    "Riviere du Rempart",
+    "Pamplemousses",
+    "Grand Port",
+    "Port Louis",
+    "Black River"
+  ]
+}
