@@ -1,5 +1,9 @@
 # Data guide and Power BI import
 
+## Shop and wheelchair parking research
+
+The [shop dataset](shops/) records 12 branches with separate entrance, toilet, parking-label, dedicated-bay and shared-facility fields. Its [Power BI guide](shops/README.md) explains the joins and how to avoid counting shared bays for every tenant. The [2,371-shop OSM view](osm/shops.csv) is a subset of existing mapped places, not added national coverage.
+
 ## Office accessibility
 
 The [office guide](offices/) provides [12 researched office records](offices/offices.csv), observations and sources. The [382-office OSM subset](osm/offices.csv) is a filtered copy of existing mapped records, not new national coverage. Keep these tables separate until cross-source duplicates are reconciled.
