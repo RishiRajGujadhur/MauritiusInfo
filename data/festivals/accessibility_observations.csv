@@ -1,0 +1,25 @@
+observation_id,record_id,feature,status,scope,source_id,checked_date,summary
+FEOBS0001,EVT0001,event_wheelchair_access,unknown,edition_component,FS001,2026-11-12,"No event-specific wheelchair access plan established in the retrieved material. This is a research gap, not evidence of inaccessibility."
+FEOBS0002,EVT0002,event_wheelchair_access,unknown,edition_component,FS002,2026-11-12,"No event-specific wheelchair access plan established in the retrieved material. This is a research gap, not evidence of inaccessibility."
+FEOBS0003,EVT0003,event_wheelchair_access,unknown,edition_component,FS003,2026-11-12,"No event-specific wheelchair access plan established in the retrieved material. This is a research gap, not evidence of inaccessibility."
+FEOBS0004,EVT0004,event_wheelchair_access,unknown,edition_component,FS004,2026-11-12,"No event-specific wheelchair access plan established in the retrieved material. This is a research gap, not evidence of inaccessibility."
+FEOBS0005,EVT0005,event_wheelchair_access,unknown,edition_component,FS006,2026-11-12,"No event-specific wheelchair access plan established in the retrieved material. This is a research gap, not evidence of inaccessibility."
+FEOBS0006,EVT0006,event_wheelchair_access,unknown,edition_component,FS007,2026-11-12,"No event-specific wheelchair access plan established in the retrieved material. This is a research gap, not evidence of inaccessibility."
+FEOBS0007,EVT0007,event_wheelchair_access,unknown,edition_component,FS008,2026-11-12,"No event-specific wheelchair access plan established in the retrieved material. This is a research gap, not evidence of inaccessibility."
+FEOBS0008,EVT0008,event_wheelchair_access,unknown,edition_component,FS009,2026-11-12,"No event-specific wheelchair access plan established in the retrieved material. This is a research gap, not evidence of inaccessibility."
+FEOBS0009,EVT0009,event_wheelchair_access,unknown,edition_component,FS011,2026-11-12,"No event-specific wheelchair access plan established in the retrieved material. This is a research gap, not evidence of inaccessibility."
+FEOBS0010,EVT0010,event_wheelchair_access,unknown,edition_component,FS011,2026-11-12,"No event-specific wheelchair access plan established in the retrieved material. This is a research gap, not evidence of inaccessibility."
+FEOBS0011,EVT0011,event_wheelchair_access,unknown,edition_component,FS011,2026-11-12,"No event-specific wheelchair access plan established in the retrieved material. This is a research gap, not evidence of inaccessibility."
+FEOBS0012,EVT0012,event_wheelchair_access,unknown,edition_component,FS012,2026-11-12,"No event-specific wheelchair access plan established in the retrieved material. This is a research gap, not evidence of inaccessibility."
+FEOBS0013,EVT0013,event_wheelchair_access,unknown,edition_component,FS014,2026-11-12,"No event-specific wheelchair access plan established in the retrieved material. This is a research gap, not evidence of inaccessibility."
+FEOBS0014,EVT0014,event_wheelchair_access,unknown,edition_component,FS015,2026-11-12,"No event-specific wheelchair access plan established in the retrieved material. This is a research gap, not evidence of inaccessibility."
+FEOBS0015,EVT0004,venue_ramp,operator_reported_yes,venue_general,FS005,2026-11-12,General venue facilities reported by Caudan Arts Centre; not confirmation for this screening.
+FEOBS0016,EVT0004,venue_lift,operator_reported_yes,venue_general,FS005,2026-11-12,General venue facilities reported by Caudan Arts Centre; not confirmation for this screening.
+FEOBS0017,EVT0004,venue_wheelchair_seating,operator_reported_yes,venue_general,FS005,2026-11-12,General venue facilities reported by Caudan Arts Centre; not confirmation for this screening.
+FEOBS0018,EVT0003,general_parking,directory_reported_yes,venue_general,FS013,2026-11-12,"Venue directory reports ordinary parking, not reserved wheelchair bays or event-day availability."
+FEOBS0019,EVT0006,personal_chair_policy,clarification_needed,edition_component,FS007,2026-11-12,Personal chairs restricted; mobility aids not explicitly addressed in reviewed wording.
+FEOBS0020,EVT0008,general_parking,reported_limited,edition_component,FS009,2026-11-12,Ticket listing warns of limited parking. No designated wheelchair-bay allocation stated.
+FEOBS0021,EVT0008,general_seating,reported_yes,edition_component,FS009,2026-11-12,Garden seating/lounge areas advertised; wheelchair space and step-free routes unconfirmed.
+FEOBS0022,EVT0008,event_hours,conflicting,edition_component,FS010,2026-11-12,Sway displays 12:00-20:30 while Ticketbox displays 15:00-23:30. Confirm directly; no single time encoded.
+FEOBS0023,EVT0012,general_parking,reported_yes,edition_traffic_plan,FS012,2026-11-12,"Police publishes several parking areas and traffic controls, without establishing wheelchair bays or a wheelchair route."
+FEOBS0024,EVT0013,rooftop_location,reported_yes,edition_component,FS014,2026-11-12,Rooftop venue advertised; lift provision unknown.
