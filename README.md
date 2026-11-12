@@ -8,6 +8,8 @@ A practical, source-linked guide to wheelchair access at places in Mauritius.
 
 - **Operator-reported:** the venue or its operator publishes an access statement. Specific facilities are listed only where supported.
 - **Partial / barriers reported:** the operator describes restrictions, terrain problems or accessible areas within a larger site.
+- **Visitor-reported:** a public review describes access; it may reflect one visit, chair or entrance. Dates and whether the original review was inspected are recorded.
+- **Directory label only:** a third-party listing flags a feature; no detailed access assessment was retrieved.
 - **Historical lead:** older official information worth following up; current condition is unconfirmed.
 - **Unknown:** the reviewed source does not establish the feature. It does not mean inaccessible.
 
@@ -19,11 +21,11 @@ These are practical outing regions, not administrative district boundaries. Cham
 
 | Region | Location types covered | Named places |
 | --- | --- | ---: |
-| [Port Louis](#port-louis) | Waterfront shopping, culture, heritage, oceanarium | 4 |
-| [North](#north) | Museum, shopping mall, historical beach leads | 5 |
-| [Central plateau and Moka](#central-plateau-and-moka) | Shopping malls | 5 |
-| [East](#east) | Historical beach lead | 1 |
-| [West and south-west](#west-and-south-west) | Nature attractions with limitations | 3 |
+| [Port Louis](#port-louis) | Waterfront, culture, heritage, oceanarium, restaurant | 5 |
+| [North](#north) | Museum, garden, shopping malls, historical beach leads | 7 |
+| [Central plateau and Moka](#central-plateau-and-moka) | Shopping malls, restaurants | 9 |
+| [East](#east) | Restaurant, historical beach lead | 2 |
+| [West and south-west](#west-and-south-west) | Nature attractions, bar/restaurant | 4 |
 | [South and south-east](#south-and-south-east) | Shopping mall, historical beach leads | 3 |
 
 ## Browse by location type
@@ -34,6 +36,9 @@ These are practical outing regions, not administrative district boundaries. Cham
 - **Oceanarium:** [Odysseo](#odysseo-oceanarium).
 - **Nature parks / viewpoints:** [west and south-west attractions](#west-and-south-west). Each has reported limitations.
 - **Beaches:** historical leads in the [north](#north-beaches), [east](#east-beaches), and [south/south-east](#south-beaches); read the [evidence limits](#beach-evidence-limits).
+
+- **Restaurants / cafés:** [Port Louis](#port-louis-dining), [central plateau](#central-dining), [east](#east-dining), [west](#west-dining). Evidence includes barriers and unverified directory leads.
+- **Gardens:** [SSR Botanic Garden](#ssr-botanic-garden).
 
 ## Port Louis
 
@@ -88,6 +93,15 @@ These are practical outing regions, not administrative district boundaries. Cham
 - **Contact:** +230 217 7770, as listed in the factsheet; confirm the current contact and closest drop-off.
 - **Confirm:** the step-free entrance, route around the historic site and current toilet condition.
 
+<a id="port-louis-dining"></a>
+### Restaurants — directory lead
+
+#### Wapalapam La Place
+
+**Location:** 6 Sir William Newton Street, Port Louis. **Status:** directory label only. **Source:** [S15].
+
+The listing flags a wheelchair-accessible entrance, toilet, seating and parking. No access-specific visitor review was retrieved; these labels do not establish dimensions or a continuous route. Confirm the drop-off and parking arrangement, especially given the street location. **Contact:** +230 5852 2902. The listing displays an update date of 29 November 2025, not an inspection date.
+
 ## North
 
 ### Museums
@@ -103,6 +117,14 @@ These are practical outing regions, not administrative district boundaries. Cham
 - **Contact:** +230 243 7900; administration@aventuredusucre.com.
 - **Confirm:** which exhibits are excluded, accessible toilet details and the route to any restaurant you intend to use.
 
+### Gardens — conflicting evidence
+
+#### SSR Botanic Garden
+
+**Location:** Pamplemousses. **Status:** visitor-reported barriers; current workable route unresolved. **Source:** [S16].
+
+A Tripadvisor review dated **February 2026**, displayed in translation, reports that the visitor could not complete the visit because access arrangements/equipment were unsuitable or deteriorated and assistance was not provided. This is one visitor's account, not a whole-site audit. Ask the garden to confirm the current wheelchair route, surface, equipment operation, toilets and assistance before travelling. A botanical garden's broad paths or generic accessibility label do not settle these questions.
+
 <a id="north-shopping"></a>
 ### Shopping malls
 
@@ -110,7 +132,13 @@ These are practical outing regions, not administrative district boundaries. Cham
 | --- | --- | --- |
 | Riche Terre Mall | Riche Terre | Operator's general wheelchair-access claim [S7] |
 
-See [mall evidence limits](#mall-evidence-limits) for what this establishes.
+#### Grand Baie La Croisette
+
+**Location:** Twenty-Foot Road, Grand Baie. **Status:** directory label only. **Source:** [S17].
+
+The listing flags a wheelchair-accessible entrance, restroom and parking. No access-specific visitor review was retrieved. Confirm the particular tenant, toilet layout, parking route and any required lift. **Contact:** +230 209 2000. The page displays 19 August 2026 as its update date; this is not a facility inspection.
+
+See [mall evidence limits](#mall-evidence-limits) for the limits of Riche Terre's operator claim.
 
 <a id="north-beaches"></a>
 ### Beaches — historical leads
@@ -136,7 +164,37 @@ Read the [beach evidence limits](#beach-evidence-limits) before planning a visit
 | Kendra | St Pierre | Operator's general wheelchair-access claim [S7] |
 | Les Allées | Moka | Operator's general wheelchair-access claim [S7] |
 
-See [mall evidence limits](#mall-evidence-limits). No separate restaurant, tenant or venue-level toilet assessment has been completed.
+#### Ebene Commercial Centre
+
+**Location:** Ebene. **Status:** directory label only. **Source:** [S18].
+
+The retrieved listing flags wheelchair-accessible entrance, restroom and parking. No dated access-specific review was available in the retrieved page. Toilet layout, step-free route and lift operation remain unverified; ask about these rather than relying on the labels.
+
+See [mall evidence limits](#mall-evidence-limits) for the five Ascencia malls above.
+
+<a id="central-dining"></a>
+### Restaurants — reviews and directory leads
+
+#### Food Republic
+
+**Location:** Remy Ollier Avenue, Quatre Bornes. **Status:** visitor-reported barriers, checked directly on Google Maps. **Sources:** [S19], [S20]; mirrored dates [S21].
+
+- One reviewer describes an entrance step that makes wheelchair entry difficult. A second reports no wheelchair access, no adapted toilet and no lift/ramp; designated wheelchair parking was uncertain.
+- Both original Google reviews were opened and inspected on **12 November 2026**. Google displayed **“a year ago”**. Wanderlog displays **4 November 2025** and **8 March 2025**, respectively; these exact dates are mirror metadata, not independently confirmed original timestamps.
+- Ordinary parking and a clean toilet do not establish wheelchair parking or an adapted toilet. Confirm whether a step-free alternative has since been installed.
+- **Contact:** +230 463 9898. The original Google place details establish Quatre Bornes; the mirror's Port Louis categorisation should not be used for navigation.
+
+#### Gourmet Avenue
+
+**Location:** Subramanien Bharati Road, Beau Bassin–Rose Hill. **Status:** conditional visitor report via a review mirror. **Source:** [S22].
+
+A Google-attributed review says wheelchair access might be workable, while wheelchair parking and adapted toilet provision are uncertain. The listing also flags accessible seating, which does not establish entrance or toilet access. The review's date was not established; the page's **31 January 2026** update date is separate. The original Google review was not independently inspected. **Contact:** +230 5804 0687. Ask for entrance and toilet photographs.
+
+#### Col’Cacchio — Tribeca Mall
+
+**Location:** Shop A76, Tribeca Mall, Trianon. **Status:** directory label only. **Source:** [S23].
+
+Restaurant Guru flags wheelchair accessibility without describing the route or toilet. No access-specific visitor account was retrieved. Confirm restaurant seating/entrance and the usable mall toilet separately. **Contact:** +230 471 3178.
 
 ## East
 
@@ -148,6 +206,15 @@ See [mall evidence limits](#mall-evidence-limits). No separate restaurant, tenan
 | Belle Mare | Historical route report [S13] |
 
 Read the [beach evidence limits](#beach-evidence-limits). Further research is needed for other eastern venues.
+
+<a id="east-dining"></a>
+### Restaurants — directory lead
+
+#### Symon's Restaurant
+
+**Location:** Coastal Road, Poste de Flacq; the directory groups it under Belle Mare. **Status:** directory label only. **Source:** [S24].
+
+The listing flags an accessible entrance, toilet, seating and parking. No access-specific visitor review was retrieved. A general review praising toilet cleanliness is not evidence of wheelchair toilet suitability. **Contact:** +230 415 1135. Page update shown: 15 January 2026; facility inspection date unknown.
 
 ## West and south-west
 
@@ -182,6 +249,15 @@ Read the [beach evidence limits](#beach-evidence-limits). Further research is ne
 - **Confirm:** current path surface, slopes, viewing areas and the nearest usable drop-off before purchasing tickets.
 - **Contact:** +230 483 4298; info@chamarel7colouredearth.com. [S11]
 - **Separate activity:** the operator explicitly says its Coffee Plantation Experience is not accessible to visitors with reduced mobility because of uneven paths and physical barriers. Do not treat this as included in a general Geopark access claim. [S12]
+
+<a id="west-dining"></a>
+### Bars and restaurants — conflicting / incomplete evidence
+
+#### Saphire Bar & Resto
+
+**Location:** Flic en Flac, plus code P9C9+5CJ. **Status:** directory label conflicts with an indexed visitor report. **Sources:** [S25], [S26].
+
+The English directory page flags wheelchair accessibility. A search-indexed review excerpt on its Spanish version describes ground-floor areas but steps into the main bar. The full review and its date were not retrieved; treat this as a **provisional barrier lead**, not a verified current assessment. Ask which seating areas have a continuous step-free route and whether an adapted toilet exists. **Contact:** +230 5705 1387.
 
 ## South and south-east
 
@@ -244,12 +320,24 @@ All sources below were consulted on **2026-11-12**. “Undated” means no relia
 | S12 | [Chamarel — Coffee Plantation Experience][S12] | Operator; undated; mobility exclusion |
 | S13 | [Mauritius National Assembly — Hansard, 19 April 2022][S13] | Historical official beach-access statement; search PDF for “Mont Choisy” |
 | S14 | [Ministry of Housing — Public beach and Access to the Sea][S14] | Official public-access map; not wheelchair certification |
+| S15 | [Wapalapam La Place — Top-Rated.online][S15] | Directory flags; no access-specific review retrieved |
+| S16 | [SSR Botanic Garden — Tripadvisor reviews][S16] | Visitor account, February 2026; displayed translation |
+| S17 | [La Croisette — Top-Rated.online][S17] | Directory flags; page update 19 August 2026 |
+| S18 | [Ebene Commercial Centre — Top-Rated.online][S18] | Directory flags; access-review date unknown |
+| S19 | [Food Republic — original Google Maps review (entrance step)][S19] | Directly inspected; Google displays a year ago |
+| S20 | [Food Republic — original Google Maps review (facility checklist)][S20] | Directly inspected; Google displays a year ago |
+| S21 | [Food Republic — Wanderlog mirror][S21] | Mirror review dates; geographic categorisation corrected using Google |
+| S22 | [Gourmet Avenue — Top-Rated.online][S22] | Google-attributed conditional review; review date unknown |
+| S23 | [Col’Cacchio Tribeca Mall — Restaurant Guru][S23] | Generic directory accessibility label only |
+| S24 | [Symon's Restaurant — Top-Rated.online][S24] | Directory flags; page update 15 January 2026 |
+| S25 | [Saphire Bar & Resto — Restaurant Guru (English)][S25] | Generic directory label; full barrier review not retrieved |
+| S26 | [Saphire Bar & Resto — Restaurant Guru (Spanish)][S26] | Search-index excerpt only; review date unknown |
 
 ### Method and gaps
 
-Public pages and PDF text were located through web searches and extracted for their accessibility statements. The guide paraphrases relevant facts rather than mirroring websites. Operator and government sources were preferred over generic travel lists. A broad “accessible” claim is not converted into invented measurements or toilet details. No field inspections, telephone checks, user reviews or live map imports were performed.
+Public pages and PDF text were located through web searches and extracted for their accessibility statements. The guide paraphrases relevant facts rather than mirroring websites. Operator and government sources were preferred over generic travel lists. A broad “accessible” claim is not converted into invented measurements or toilet details. Public visitor reviews and third-party accessibility labels were also checked. Two original Food Republic reviews and its address were inspected directly on Google Maps; other Google-attributed reviews are mirrors unless explicitly stated otherwise. No bulk Maps dataset was imported, and no field inspections or telephone checks were performed. Relative review dates are preserved as displayed; directory update dates are not treated as visit dates. Search-index-only evidence is explicitly provisional.
 
-This first edition covers **21 named places**: five detailed venue entries, seven malls, three nature attractions and six historical beach leads. It is not a complete directory of Mauritius. Restaurants, specific mall tenants, hotels, transport operators and Rodrigues need further research. The coffee plantation is an exclusion note, not an accessible recommendation.
+This edition covers **30 named places**, grouped by region and location type. Nine additions include restaurants, a garden and shopping centres; some are directory-only leads or reported barriers, not accessible recommendations. It is not a complete directory of Mauritius. Hotels, transport operators, Rodrigues and many individual tenants still need research. The coffee plantation is an exclusion note, not an accessible recommendation.
 
 ### Corrections
 
@@ -269,3 +357,16 @@ For an update, provide the venue, a public source or dated first-hand observatio
 [S12]: https://chamarel7colouredearth.com/experiences/coffee-plantation-mauritius/
 [S13]: https://mauritiusassembly.govmu.org/mauritiusassembly/index.php/download/33/2022/13275/debate-no-04-of-2022-tuesday-19-april-2022.pdf
 [S14]: https://housing.govmu.org/Pages/Public-beach-and-Access-to-the-Sea.aspx
+
+[S15]: https://www.top-rated.online/cities/Port%2BLouis/place/p/8623336/Wapalapam%2BLa%2BPlace
+[S16]: https://www.tripadvisor.co.uk/Attraction_Review-g804550-d2020531-Reviews-or30-SSR_Botanic_Garden-Pamplemousses.html
+[S17]: https://www.top-rated.online/cities/Upper%2BVale/place/p/2538926/La%2BCroisette
+[S18]: https://www.top-rated.online/cities/Quatre%2BBornes/place/p/2538879/Ebene%2BCommercial%2BCentre
+[S19]: https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2tSRlZsWkNNakV0YjBWYWVtUmZaRWwyU1hCWFpYYxAB!2m1!1s0x217c5b166ebf5e83:0x4487a55210214edb!3m1!1s2
+[S20]: https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sChZDSUhNMG9nS0VJQ0FnTURRbUlQaldnEAE!2m1!1s0x217c5b166ebf5e83:0x4487a55210214edb!3m1!1s2
+[S21]: https://wanderlog.com/place/details/10770993/food-republic
+[S22]: https://www.top-rated.online/cities/Beau%2BBassin-Rose%2BHill/place/p/2539383/Gourmet%2BAvenue
+[S23]: https://restaurantguru.com/ColCacchio-Tribeca-Mall-Quatre-Bornes
+[S24]: https://www.top-rated.online/cities/Belle%2BMare/place/p/2842160/Symon%27s%2BRestaurant
+[S25]: https://restaurantguru.com/Saphire-Bar-and-Resto-Flic-en-Flac
+[S26]: https://es.restaurantguru.com/Saphire-Bar-and-Resto-Flic-en-Flac
