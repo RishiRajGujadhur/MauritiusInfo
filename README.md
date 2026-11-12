@@ -4,6 +4,14 @@ A practical, source-linked guide to wheelchair access at places in Mauritius.
 
 **Web sources checked: 12 November 2026 (Mauritius time).** This is desk research, not an on-site access audit. The date means the source was checked, not that a facility was inspected or is working today. Summaries are paraphrased from public web pages and PDFs; original pages and photographs are not copied into this repository.
 
+## Offices and public service counters
+
+The [office guide](data/offices/README.md) adds **12 researched office/branch records**, **23 observations** and **8 sources**. [Download the researched offices CSV](data/offices/offices.csv).
+
+A [separate 382-office map subset](data/osm/offices.csv) makes existing government, diplomatic, company, insurance, IT and professional-office records easier to filter. These are already part of the 6,965-place inventory, not 382 additional places. Nine have mapped wheelchair-access values; 373 remain unknown.
+
+Accessibility levels distinguish operator-published features, historical operator information, directory labels and unknown evidence. Wheelchair parking, entrances, ramps, lifts and adapted toilets are separate fields. Office visiting permission and employee workplace accessibility are not assumed from a map label.
+
 ## Festivals and event accessibility
 
 The [festival guide](data/festivals/README.md) adds **14 edition/component records across 12 festival series**, **24 observations** and **15 sources**, checked 12 November 2026.
