@@ -1,0 +1,27 @@
+observation_id,venue_id,feature,status,scope,source_id,checked_date,summary
+ENOBS0001,ENT0001,wheelchair_seating_assessment,unknown,venue_or_hall,EN001,2026-11-12,No specific wheelchair seating/position established; unknown is not evidence of absence.
+ENOBS0002,ENT0002,wheelchair_seating_assessment,unknown,venue_or_hall,EN001,2026-11-12,No specific wheelchair seating/position established; unknown is not evidence of absence.
+ENOBS0003,ENT0003,wheelchair_seating_assessment,unknown,venue_or_hall,EN001,2026-11-12,No specific wheelchair seating/position established; unknown is not evidence of absence.
+ENOBS0004,ENT0004,wheelchair_seating_assessment,unknown,venue_or_hall,EN001,2026-11-12,No specific wheelchair seating/position established; unknown is not evidence of absence.
+ENOBS0005,ENT0005,wheelchair_seating_assessment,unknown,venue_or_hall,EN001,2026-11-12,No specific wheelchair seating/position established; unknown is not evidence of absence.
+ENOBS0006,ENT0006,wheelchair_seating_assessment,unknown,venue_or_hall,EN001,2026-11-12,No specific wheelchair seating/position established; unknown is not evidence of absence.
+ENOBS0007,ENT0007,wheelchair_seating_assessment,unknown,venue_or_hall,EN003,2026-11-12,No specific wheelchair seating/position established; unknown is not evidence of absence.
+ENOBS0008,ENT0008,wheelchair_seating_assessment,unknown,venue_or_hall,EN003,2026-11-12,No specific wheelchair seating/position established; unknown is not evidence of absence.
+ENOBS0009,ENT0009,wheelchair_seating_assessment,unknown,venue_or_hall,EN003,2026-11-12,No specific wheelchair seating/position established; unknown is not evidence of absence.
+ENOBS0010,ENT0010,wheelchair_seating_assessment,unknown,venue_or_hall,EN006,2026-11-12,No specific wheelchair seating/position established; unknown is not evidence of absence.
+ENOBS0011,ENT0011,wheelchair_seating_assessment,unknown,venue_or_hall,EN007,2026-11-12,No specific wheelchair seating/position established; unknown is not evidence of absence.
+ENOBS0012,ENT0012,wheelchair_seating_assessment,operator_reported_accessible_seating,venue_or_hall,EN005,2026-11-12,General venue seating evidence; reserve an exact position for the event.
+ENOBS0013,ENT0013,wheelchair_seating_assessment,unknown,venue_or_hall,EN008,2026-11-12,No specific wheelchair seating/position established; unknown is not evidence of absence.
+ENOBS0014,ENT0014,wheelchair_seating_assessment,operator_reported_yes,venue_or_hall,EN009,2026-11-12,General venue seating evidence; reserve an exact position for the event.
+ENOBS0015,ENT0015,wheelchair_seating_assessment,unknown,venue_or_hall,EN010,2026-11-12,No specific wheelchair seating/position established; unknown is not evidence of absence.
+ENOBS0016,ENT0016,wheelchair_seating_assessment,unknown,venue_or_hall,EN011,2026-11-12,No specific wheelchair seating/position established; unknown is not evidence of absence.
+ENOBS0017,ENT0001,step_free_entrance,listed_yes,branch_listing,EN002,2026-11-12,Directory label only; exact screen route and parking facility scope unverified.
+ENOBS0018,ENT0001,wheelchair_toilet,listed_yes,branch_listing,EN002,2026-11-12,Directory label only; exact screen route and parking facility scope unverified.
+ENOBS0019,ENT0001,wheelchair_parking,listed_yes,branch_listing,EN002,2026-11-12,Directory label only; exact screen route and parking facility scope unverified.
+ENOBS0020,ENT0012,spectator_access,operator_reported_features,stadium_seating,EN005,2026-11-12,Operator describes seating for physically challenged supporters; wheelchair layout and event allocation unverified.
+ENOBS0021,ENT0013,broad_wheelchair_access,listed_yes,venue_listing,EN008,2026-11-12,Generic venue label; bowling participation/equipment not established.
+ENOBS0022,ENT0014,ramp,operator_reported_yes,general_venue,EN009,2026-11-12,Operator reports facility; confirm operation and event allocation.
+ENOBS0023,ENT0014,lift,operator_reported_yes,general_venue,EN009,2026-11-12,Operator reports facility; confirm operation and event allocation.
+ENOBS0024,ENT0014,wheelchair_seating,operator_reported_yes,general_venue,EN009,2026-11-12,Operator reports facility; confirm operation and event allocation.
+ENOBS0025,ENT0015,dedicated_wheelchair_facilities,seller_reported_no,activity_listing_unspecified_area,EN010,2026-11-12,Seller reports no dedicated wheelchair facilities and limited access at management discretion. No blanket participation approval inferred.
+ENOBS0026,ENT0007,drive_in_sightline,confirmation_required,ticket_product,EN004,2026-11-12,Ticket information cautions that vehicle size/back seats affect visibility. Drive-in format is not wheelchair-access certification.
