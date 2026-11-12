@@ -4,6 +4,10 @@
 
 This folder is a bulk map-derived research inventory, separate from the curated, review-backed tables in the parent folder. A mapped place is not a verified accessible destination. Shops, restaurants, accommodation, health/public services, leisure sites and offices are included when named. Unnamed objects, ordinary buildings, roads, bus-stop nodes, benches and waste bins are not counted to inflate the total.
 
+## Office subset
+
+[offices.csv](offices.csv) filters the existing places table to category=office: **382 mapped records**, with identical record IDs and access statuses. Do not append it to places.csv or add it to the national count. [Separate office research](../offices/README.md) documents 12 researched branches with evidence-based accessibility levels. Regenerate the subset using scripts/export_offices.py.
+
 ## Files and Power BI
 
 | File | Grain | Key |
