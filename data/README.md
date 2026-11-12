@@ -1,5 +1,9 @@
 # Data guide and Power BI import
 
+## Entertainment venues
+
+The [entertainment tables](entertainment/) contain 16 cinema/track/performance-site records and explicitly distinguish spectator access, activity participation, operation uncertainty and wheelchair facilities. Use [venues.csv](entertainment/venues.csv) for a flat import; read the [guide](entertainment/README.md) before treating a site lead as an operating venue.
+
 ## Shop and wheelchair parking research
 
 The [shop dataset](shops/) records 12 branches with separate entrance, toilet, parking-label, dedicated-bay and shared-facility fields. Its [Power BI guide](shops/README.md) explains the joins and how to avoid counting shared bays for every tenant. The [2,371-shop OSM view](osm/shops.csv) is a subset of existing mapped places, not added national coverage.
