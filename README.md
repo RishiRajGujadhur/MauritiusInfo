@@ -4,6 +4,19 @@ A practical, source-linked guide to wheelchair access at places in Mauritius.
 
 **Web sources checked: 12 November 2026 (Mauritius time).** This is desk research, not an on-site access audit. The date means the source was checked, not that a facility was inspected or is working today. Summaries are paraphrased from public web pages and PDFs; original pages and photographs are not copied into this repository.
 
+## Download tables for Power BI
+
+The [data folder](data/) contains **35 places**, **72 feature-level observations** and **29 sources**. It includes individual tenant branches and separates ordinary parking from wheelchair parking.
+
+| Download | Use |
+| --- | --- |
+| [places.csv](data/places.csv) | Start here: one row per place, with separate entrance, wheelchair parking, toilet, ramp, lift and seating statuses |
+| [accessibility_observations.csv](data/accessibility_observations.csv) | Claim-level evidence, dates, sources and scope |
+| [sources.csv](data/sources.csv) | Source IDs and URLs |
+| [Data dictionary and Power BI instructions](data/README.md) | Field types, joins, status definitions and update rules |
+
+**Unknown is not no.** Directory labels, operator claims and visitor reports remain distinct. Parking bay counts and doorway widths are empty where no measurements were found. Parent mall facilities are not automatically assigned to shops.
+
 ## How to read this guide
 
 - **Operator-reported:** the venue or its operator publishes an access statement. Specific facilities are listed only where supported.
@@ -23,7 +36,7 @@ These are practical outing regions, not administrative district boundaries. Cham
 | --- | --- | ---: |
 | [Port Louis](#port-louis) | Waterfront, culture, heritage, oceanarium, restaurant | 5 |
 | [North](#north) | Museum, garden, shopping malls, historical beach leads | 7 |
-| [Central plateau and Moka](#central-plateau-and-moka) | Shopping malls, restaurants | 9 |
+| [Central plateau and Moka](#central-plateau-and-moka) | Shopping malls, restaurants, individual grocery stores | 14 |
 | [East](#east) | Restaurant, historical beach lead | 2 |
 | [West and south-west](#west-and-south-west) | Nature attractions, bar/restaurant | 4 |
 | [South and south-east](#south-and-south-east) | Shopping mall, historical beach leads | 3 |
@@ -163,6 +176,19 @@ Read the [beach evidence limits](#beach-evidence-limits) before planning a visit
 | So'flo | Floréal | Operator's general wheelchair-access claim [S7] |
 | Kendra | St Pierre | Operator's general wheelchair-access claim [S7] |
 | Les Allées | Moka | Operator's general wheelchair-access claim [S7] |
+
+#### Tribeca Mall and individual stores
+
+**Location:** Trianon. The operator reports general surface/underground parking, but the reviewed page does not specify designated wheelchair bays or their dimensions. General welcoming/accessibility wording is not a detailed wheelchair assessment. **Source:** [S29].
+
+| Individual store / branch | Parent mall | Category | Branch identity evidence | Tenant entrance, wheelchair parking and toilet |
+| --- | --- | --- | --- | --- |
+| Intermart — Bagatelle | Bagatelle Mall | Supermarket | Operator key tenants [S27] | Unknown at tenant level |
+| Food Lover's Market — Bagatelle | Bagatelle Mall | Supermarket | Operator key tenants [S27] | Unknown at tenant level |
+| Votre Pote Age — Bagatelle | Bagatelle Mall | Grocery store | Operator key tenants [S27] | Unknown at tenant level |
+| Winners — Tribeca | Tribeca Mall | Supermarket | Official branch page [S28]; +230 202 0700 | Unknown at tenant level |
+
+These are individual branch records, not accessible recommendations. Shared mall facilities can be researched through the parent link. Col'Cacchio also has its own restaurant row linked to Tribeca in the CSV.
 
 #### Ebene Commercial Centre
 
@@ -332,12 +358,15 @@ All sources below were consulted on **2026-11-12**. “Undated” means no relia
 | S24 | [Symon's Restaurant — Top-Rated.online][S24] | Directory flags; page update 15 January 2026 |
 | S25 | [Saphire Bar & Resto — Restaurant Guru (English)][S25] | Generic directory label; full barrier review not retrieved |
 | S26 | [Saphire Bar & Resto — Restaurant Guru (Spanish)][S26] | Search-index excerpt only; review date unknown |
+| S27 | [Ascencia — Bagatelle key tenants][S27] | Operator directory; tenant identities only |
+| S28 | [Tribeca — Winners branch][S28] | Operator branch page; identity/contact only |
+| S29 | [Tribeca — About us][S29] | Operator; general parking, no designated wheelchair-bay detail |
 
 ### Method and gaps
 
 Public pages and PDF text were located through web searches and extracted for their accessibility statements. The guide paraphrases relevant facts rather than mirroring websites. Operator and government sources were preferred over generic travel lists. A broad “accessible” claim is not converted into invented measurements or toilet details. Public visitor reviews and third-party accessibility labels were also checked. Two original Food Republic reviews and its address were inspected directly on Google Maps; other Google-attributed reviews are mirrors unless explicitly stated otherwise. No bulk Maps dataset was imported, and no field inspections or telephone checks were performed. Relative review dates are preserved as displayed; directory update dates are not treated as visit dates. Search-index-only evidence is explicitly provisional.
 
-This edition covers **30 named places**, grouped by region and location type. Nine additions include restaurants, a garden and shopping centres; some are directory-only leads or reported barriers, not accessible recommendations. It is not a complete directory of Mauritius. Hotels, transport operators, Rodrigues and many individual tenants still need research. The coffee plantation is an exclusion note, not an accessible recommendation.
+This edition covers **35 named places**, grouped by region and location type, including a mall and four individual grocery branches added for structured analysis. Some entries are directory-only leads, identity-only tenant records or reported barriers, not accessible recommendations. It is not a complete directory of Mauritius. Hotels, transport operators, Rodrigues and many individual tenants still need research. The coffee plantation is an exclusion note, not an accessible recommendation.
 
 ### Corrections
 
@@ -370,3 +399,7 @@ For an update, provide the venue, a public source or dated first-hand observatio
 [S24]: https://www.top-rated.online/cities/Belle%2BMare/place/p/2842160/Symon%27s%2BRestaurant
 [S25]: https://restaurantguru.com/Saphire-Bar-and-Resto-Flic-en-Flac
 [S26]: https://es.restaurantguru.com/Saphire-Bar-and-Resto-Flic-en-Flac
+
+[S27]: https://www.ascenciacorporate.com/malls/bagatelle-mall
+[S28]: https://tribecamall.mu/stores/winners-tribeca/
+[S29]: https://tribecamall.mu/about-us/
