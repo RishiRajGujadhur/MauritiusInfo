@@ -4,6 +4,14 @@ A practical, source-linked guide to wheelchair access at places in Mauritius.
 
 **Web sources checked: 12 November 2026 (Mauritius time).** This is desk research, not an on-site access audit. The date means the source was checked, not that a facility was inspected or is working today. Summaries are paraphrased from public web pages and PDFs; original pages and photographs are not copied into this repository.
 
+## Repairs, mechanics, pharmacies and healthcare
+
+The [services guide](data/services/README.md) adds **16 researched locations/practices**, **28 observations** and **11 sources**. [Download researched services](data/services/services.csv).
+
+The separate [415-record map view](data/osm/services.csv) includes explicit repair shops/mechanics, pharmacies, hospitals, clinics, doctors, dentists and related healthcare objects already in the national inventory. It preserves 2 mapped_yes, 1 mapped_limited, 5 mapped_no and 407 unknown wheelchair-access values. It is a subset, not 415 additional unique places.
+
+Entrances, wheelchair parking, adapted toilets, lifts and the route to the actual service/consultation room are separate. Parent-site facilities, patient-transfer assistance and clinical equipment access are not assumed. These are physical-access research records, not medical recommendations or verification of current practice availability.
+
 ## Entertainment: cinemas, tracks and spectator access
 
 The [entertainment guide](data/entertainment/README.md) adds **16 venue/site records**, **26 observations** and **12 sources**. [Download the Power BI venue table](data/entertainment/venues.csv).
