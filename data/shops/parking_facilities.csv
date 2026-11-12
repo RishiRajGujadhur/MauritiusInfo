@@ -1,0 +1,2 @@
+parking_facility_id,facility_name,locality,parking_scope,wheelchair_parking_status,historical_reported_bay_count,count_source_date,current_verified_bay_count,source_id,last_web_check,notes
+PK001,Victoria Urban Terminal - shared multi-level parking,Port Louis,shared_terminal,historical_announced_provision,8,2022-04-12,,SH013,2026-11-12,"Parliamentary pre-opening statement describes eight bays, two per parking level. Current delivery, operation and route to Winners not verified. Do not count these as eight dedicated Winners bays."
