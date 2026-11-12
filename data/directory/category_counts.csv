@@ -1,0 +1,12 @@
+category,source_record_count,unique_across_sources,verified_access_records
+atms,258,not_assessed,0
+community,264,not_assessed,0
+embassies,15,not_assessed,0
+fire,11,not_assessed,0
+fuel-stations,151,not_assessed,0
+police,79,not_assessed,0
+post-offices,102,not_assessed,0
+schools,181,not_assessed,0
+shopping,172,not_assessed,0
+sports,23,not_assessed,0
+utilities,26,not_assessed,0
