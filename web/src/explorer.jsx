@@ -62,6 +62,10 @@ export default function Explorer() {
   const [retry, setRetry] = useState(0);
   const [selectedKey, setSelectedKey] = useState(initial.record);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [searchDraft, setSearchDraft] = useState(initial.filters.search);
+  const mobileSearchInput = useRef(null);
+  const mobileFilterStrip = useRef(null);
+  const deferredSearchDraft = useDeferredValue(searchDraft);
   const detailTrigger = useRef(null);
   const searchInput = useRef(null);
   const deferredFilters = useDeferredValue(filters);
@@ -80,12 +84,15 @@ export default function Explorer() {
       const editing = ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName) || document.activeElement?.isContentEditable;
       if (event.key === '/' && !editing && !document.querySelector('[role="dialog"]')) {
         event.preventDefault();
-        searchInput.current?.focus();
+        if (matchMedia('(max-width: 700px)').matches) {
+          setSearchDraft(filters.search);
+          setMobileSearchOpen(true);
+        } else searchInput.current?.focus();
       }
     }
     window.addEventListener('keydown', focusSearch);
     return () => window.removeEventListener('keydown', focusSearch);
-  }, []);
+  }, [filters.search]);
 
   useEffect(() => {
     setLoading(true);
@@ -108,6 +115,7 @@ export default function Explorer() {
   const sourceOptions = useMemo(() => DATASETS.map(dataset => [dataset.id, dataset.name]), []);
   const options = { area: areas, category: categories, access: REPORTS, parking: REPORTS, dataset: sourceOptions };
   const matches = useMemo(() => filterRecords(records, deferredFilters), [records, deferredFilters]);
+  const draftCount = useMemo(() => mobileSearchOpen ? filterRecords(records, { ...filters, search: deferredSearchDraft }).length : 0, [records, filters, deferredSearchDraft, mobileSearchOpen]);
   const columns = useMemo(() => [
     { accessorKey: 'name', header: 'Place', sortingFn: 'alphanumeric' },
     { accessorKey: 'category', header: 'Category' },
@@ -166,7 +174,12 @@ export default function Explorer() {
     setFilters(current => ({ ...current, [key]: value }));
     setPagination(current => ({ ...current, pageIndex: 0 }));
   }
+  function changeMobileSearchOpen(open) {
+    if (open) setSearchDraft(filters.search);
+    setMobileSearchOpen(open);
+  }
   function reset() {
+    mobileFilterStrip.current?.scrollTo({ left: 0 });
     setFilters(DEFAULT_FILTERS);
     setPagination(current => ({ ...current, pageIndex: 0 }));
   }
@@ -197,7 +210,7 @@ export default function Explorer() {
     <Link className="skip-link" href="#results">Skip to places</Link>
     <header className="site-header"><div className="shell header-inner">
       <Link href={BASE} className="brand"><GlobeIcon className="brand-icon" width="23" height="23" /><span className="desktop-brand">Access Mauritius</span><span className="mobile-brand">Places</span></Link>
-      <div className="header-actions"><Link href="https://github.com/RishiRajGujadhur/MauritiusInfo" className="data-link"><LayersIcon />Data<ExternalLinkIcon /></Link><label className="theme-switch"><span className="sr-only">Dark mode</span>{appearance === 'dark' ? <MoonIcon /> : <SunIcon />}<Switch size="1" aria-label="Dark mode" checked={appearance === 'dark'} onCheckedChange={checked => setAppearance(checked ? 'dark' : 'light')} /></label></div>
+      <div className="header-actions">{(activeFilters.length > 0 || filters.search) && <IconButton className="mobile-clear-all" variant="ghost" color="gray" aria-label="Clear all filters" onClick={reset}><ResetIcon /></IconButton>}<Link href="https://github.com/RishiRajGujadhur/MauritiusInfo" className="data-link"><LayersIcon />Data<ExternalLinkIcon /></Link><label className="theme-switch"><span className="sr-only">Dark mode</span>{appearance === 'dark' ? <MoonIcon /> : <SunIcon />}<Switch size="1" aria-label="Dark mode" checked={appearance === 'dark'} onCheckedChange={checked => setAppearance(checked ? 'dark' : 'light')} /></label></div>
     </div></header>
     <main className="shell">
       <section className="workspace" aria-label="Find places">
@@ -208,13 +221,13 @@ export default function Explorer() {
         {activeFilters.length > 0 && <div className="active-filters" aria-label="Active filters">{activeFilters.map(filter => <Button key={filter.key} size="1" variant="soft" onClick={() => updateFilter(filter.key, '')} aria-label={`Remove ${filter.label} filter`}><filter.icon />{filter.label} · {options[filter.key].find(([key]) => key === filters[filter.key])?.[1] || filters[filter.key]}<Cross2Icon /></Button>)}</div>}
       </section>
       <section className="mobile-controls" aria-label="Place filters">
-        <div className="mobile-filter-strip">
+        <div className="mobile-filter-strip" ref={mobileFilterStrip}>
           {filterControls()}
           <SearchSelect label="Sort" icon={CaretSortIcon} value={`${sorting[0]?.id || 'name'}:${sorting[0]?.desc ? 'desc' : 'asc'}`} options={mobileSortOptions} placeholder="Name · ascending" allowAll={false} onChange={value => { const [id, direction] = value.split(':'); table.setSorting([{ id, desc: direction === 'desc' }]); }} />
           <SearchSelect label="Rows" icon={TableIcon} value={String(pagination.pageSize)} options={['25', '50', '100'].map(value => [value, value])} placeholder="25" allowAll={false} onChange={value => table.setPageSize(Number(value))} />
           {(activeFilters.length > 0 || filters.search) && <Button className="mobile-reset" variant="ghost" color="gray" onClick={reset} aria-label="Reset filters"><ResetIcon />Clear</Button>}
         </div>
-        {filters.search && <div className="mobile-query"><Button variant="ghost" color="gray" onClick={() => setMobileSearchOpen(true)}><MagnifyingGlassIcon /><span>{filters.search}</span></Button><IconButton variant="ghost" color="gray" aria-label="Clear search" onClick={() => updateFilter('search', '')}><Cross2Icon /></IconButton></div>}
+        {filters.search && <div className="mobile-query"><Button variant="ghost" color="gray" onClick={() => changeMobileSearchOpen(true)}><MagnifyingGlassIcon /><span>{filters.search}</span></Button><IconButton variant="ghost" color="gray" aria-label="Clear search" onClick={() => updateFilter('search', '')}><Cross2Icon /></IconButton></div>}
       </section>
       {failures.length > 0 && <div className="load-error" role="alert"><InfoCircledIcon /><span>Some sources could not load. {records.length.toLocaleString()} records available.</span><Tooltip content={failures.join(', ')}><Button size="1" variant="soft" onClick={() => setRetry(value => value + 1)}><ResetIcon />Retry</Button></Tooltip></div>}
       <section id="results" tabIndex={-1} aria-label="Places">
@@ -250,17 +263,17 @@ export default function Explorer() {
       </section>
       <footer><span className="footer-note">Source records may overlap. Unknown means details are missing.</span><Link href="https://github.com/RishiRajGujadhur/MauritiusInfo#readme">Sources & licences<ExternalLinkIcon /></Link><span className="footer-copyright">© OpenStreetMap contributors · ODbL. Open Data Mauritius via cyber.mu · CC BY-SA 4.0.</span></footer>
     </main>
-    <Dialog.Root open={mobileSearchOpen} onOpenChange={setMobileSearchOpen}>
+    <Dialog.Root open={mobileSearchOpen} onOpenChange={changeMobileSearchOpen}>
       <nav className="mobile-bottom-bar" aria-label="Mobile search"><Dialog.Trigger><Button className="mobile-search-button" size="3" variant="surface"><MagnifyingGlassIcon width="22" height="22" />Search places</Button></Dialog.Trigger></nav>
-      <Dialog.Content className="mobile-search-sheet" maxWidth="520px">
+      <Dialog.Content className="mobile-search-sheet" maxWidth="520px" onOpenAutoFocus={event => { event.preventDefault(); mobileSearchInput.current?.focus(); }}>
         <div className="mobile-search-heading"><Dialog.Title>Search places</Dialog.Title><Dialog.Close><IconButton variant="ghost" color="gray" aria-label="Close search"><Cross2Icon /></IconButton></Dialog.Close></div>
         <Dialog.Description className="sr-only">Search by place name, town or address. Your selected filters also apply.</Dialog.Description>
-        <form onSubmit={event => { event.preventDefault(); setMobileSearchOpen(false); scrollToResults(); }}>
-          <TextField.Root size="3" type="search" enterKeyHint="search" aria-label="Search places on mobile" placeholder="Place, town or address" value={filters.search} onChange={event => updateFilter('search', event.target.value)}>
+        <form onSubmit={event => { event.preventDefault(); updateFilter('search', searchDraft.trim()); setMobileSearchOpen(false); scrollToResults(); }}>
+          <TextField.Root ref={mobileSearchInput} size="3" type="search" enterKeyHint="search" autoComplete="off" aria-label="Search places on mobile" placeholder="Place, town or address" value={searchDraft} onChange={event => setSearchDraft(event.target.value)}>
             <TextField.Slot><MagnifyingGlassIcon width="21" height="21" /></TextField.Slot>
-            {filters.search && <TextField.Slot side="right"><IconButton type="button" variant="ghost" color="gray" aria-label="Clear mobile search" onClick={() => updateFilter('search', '')}><Cross2Icon /></IconButton></TextField.Slot>}
+            {searchDraft && <TextField.Slot side="right"><IconButton type="button" variant="ghost" color="gray" aria-label="Clear mobile search" onClick={() => { setSearchDraft(''); mobileSearchInput.current?.focus(); }}><Cross2Icon /></IconButton></TextField.Slot>}
           </TextField.Root>
-          <Button className="mobile-search-submit" type="submit" size="3">Show {matches.length.toLocaleString()} results<ArrowRightIcon /></Button>
+          <Button className="mobile-search-submit" type="submit" size="3" disabled={loading}>{loading ? 'Loading places…' : `Show ${draftCount.toLocaleString()} results`}<ArrowRightIcon /></Button>
         </form>
       </Dialog.Content>
     </Dialog.Root>
