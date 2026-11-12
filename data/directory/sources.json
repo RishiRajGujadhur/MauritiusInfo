@@ -1,0 +1,521 @@
+{
+  "original_publisher": "Open Data Mauritius",
+  "retrieved_via": "cyber.mu",
+  "licence_as_stated_by_republisher": "CC-BY-SA-4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "method": "Public directory pages; primary government files not ingested; complete visible lists, not truncated structured-data excerpts",
+  "sources": [
+    {
+      "url": "https://places.cyber.mu/police/",
+      "category": "police",
+      "rows": 79,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "d5be85a231356f05fad19577d87e64e3460eea7a95714f23fde38adb22788bc3"
+    },
+    {
+      "url": "https://places.cyber.mu/fire/",
+      "category": "fire",
+      "rows": 11,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "5dbee9ab4067de1e3b165e14dcb67889b4911a68962e8b47277a043a69ef4020"
+    },
+    {
+      "url": "https://places.cyber.mu/schools/blackriver/",
+      "category": "schools",
+      "rows": 5,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "f3261f39f8cfdb10e58b07a7997c17f72218b7ee4c11ebe22fab703191589a3b"
+    },
+    {
+      "url": "https://places.cyber.mu/schools/flacq/",
+      "category": "schools",
+      "rows": 13,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "e14e98a4cc70e2c1d05776ceb43c5076c8e9c52703835df6b9be354ea1b44bf7"
+    },
+    {
+      "url": "https://places.cyber.mu/schools/grandport/",
+      "category": "schools",
+      "rows": 10,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "195a3b9f18f1424bddcef6fb02d1c2930c32c19c9260ba066426360caebe641d"
+    },
+    {
+      "url": "https://places.cyber.mu/schools/moka/",
+      "category": "schools",
+      "rows": 13,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "1471d587868f902766d8c18a17016df54418bfeb240345190dec3fa644831ed7"
+    },
+    {
+      "url": "https://places.cyber.mu/schools/pamplemousses/",
+      "category": "schools",
+      "rows": 14,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "822e9431835162113a2a23b26c225efe78ca8f4392e6b4e12cf2f1ed03fb7a7d"
+    },
+    {
+      "url": "https://places.cyber.mu/schools/plainewilhems/",
+      "category": "schools",
+      "rows": 59,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "f55f6674c7ca24be88905018bd63a2f131efdf4a3a31cd1a8e36de8bdc9adfe5"
+    },
+    {
+      "url": "https://places.cyber.mu/schools/portlouis/",
+      "category": "schools",
+      "rows": 18,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "1a3c52f69936cde48237bc5557a68506891c22fd21a1e44b27dcd99977686912"
+    },
+    {
+      "url": "https://places.cyber.mu/schools/rivieredurempart/",
+      "category": "schools",
+      "rows": 14,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "3bb9e3498bebae720d76d2d25d5d978e6aaed88dd2230c5efe2625b14400f1f1"
+    },
+    {
+      "url": "https://places.cyber.mu/schools/savanne/",
+      "category": "schools",
+      "rows": 5,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "8238cff0448db8fe0181bdf04a844e5cff5f81714c15b88033f8b210237df448"
+    },
+    {
+      "url": "https://places.cyber.mu/schools/rodrigues/",
+      "category": "schools",
+      "rows": 13,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "8240d4cca9fae74f4cede045eafc64010a67f018ca52e29b83f01572f1bcb907"
+    },
+    {
+      "url": "https://places.cyber.mu/schools/agalega/",
+      "category": "schools",
+      "rows": 2,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "be0fc69227e8801af31fa0bfcd962a3099566a91feedd2c9d690f941d7b5b881"
+    },
+    {
+      "url": "https://places.cyber.mu/schools/unassigned/",
+      "category": "schools",
+      "rows": 15,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "3943bc1c4b0e6b81f33f245938d30cfbb99580617e3e755abf254910f973b91d"
+    },
+    {
+      "url": "https://places.cyber.mu/post-offices/blackriver/",
+      "category": "post-offices",
+      "rows": 1,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "f323e93f43ee0f92c0284fe74cc645c55a9d5ba5d12cfa551f71fdb8e12ae11e"
+    },
+    {
+      "url": "https://places.cyber.mu/post-offices/flacq/",
+      "category": "post-offices",
+      "rows": 1,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "3aba42d1c9009e11e77713bf2b03e72a69f3257619893d7c5df6ecd89f601c48"
+    },
+    {
+      "url": "https://places.cyber.mu/post-offices/grandport/",
+      "category": "post-offices",
+      "rows": 1,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "bf3fbe980cfb880b7df0c1d5b3f6e60598f970264fd9fbcd4209382e414bf429"
+    },
+    {
+      "url": "https://places.cyber.mu/post-offices/moka/",
+      "category": "post-offices",
+      "rows": 4,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "dee468d603b44ec672616af46b7fc476a0b5298cdd31c2fa9305294349d63cd8"
+    },
+    {
+      "url": "https://places.cyber.mu/post-offices/pamplemousses/",
+      "category": "post-offices",
+      "rows": 4,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "69f06e6b58584270731747dab5121356f70b97eaf7420260a5b1dce89f826b4e"
+    },
+    {
+      "url": "https://places.cyber.mu/post-offices/plainewilhems/",
+      "category": "post-offices",
+      "rows": 3,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "dac10f5e4f6cc618690712f664bb126cd41d933eb84db3ce131c6563fa660e40"
+    },
+    {
+      "url": "https://places.cyber.mu/post-offices/savanne/",
+      "category": "post-offices",
+      "rows": 2,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "c661220a4085b22edbca25342e368bb88baff1d7107562d9d7cba9daebbd9ba7"
+    },
+    {
+      "url": "https://places.cyber.mu/post-offices/unassigned/",
+      "category": "post-offices",
+      "rows": 86,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "016e3454f477abfdd9707ffd539bd6f569a5c9e0c0a9ff33bd648d96a4965990"
+    },
+    {
+      "url": "https://places.cyber.mu/atms/blackriver/",
+      "category": "atms",
+      "rows": 13,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "baa0f78207b70a94bb6a618c39568d7c74489b3d05047be19e1a66273ae91c26"
+    },
+    {
+      "url": "https://places.cyber.mu/atms/flacq/",
+      "category": "atms",
+      "rows": 15,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "71fa7f3bd1b1767c9a9afcc435e25ef0d1029b43f4904613ec04de779b089a3b"
+    },
+    {
+      "url": "https://places.cyber.mu/atms/grandport/",
+      "category": "atms",
+      "rows": 17,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "0f7795986220ada1ef3624485714489e00ffe42efc746aeeaaaf3734a2e2fdee"
+    },
+    {
+      "url": "https://places.cyber.mu/atms/moka/",
+      "category": "atms",
+      "rows": 12,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "d09fe1d05c6c666c0e9990327f4bf186c59643abc0a2c9abb0eae354921478e4"
+    },
+    {
+      "url": "https://places.cyber.mu/atms/pamplemousses/",
+      "category": "atms",
+      "rows": 15,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "e17cb94316e236819434bfdc1e66979a5c9f441b627bcc03035cc3e17445fd84"
+    },
+    {
+      "url": "https://places.cyber.mu/atms/plainewilhems/",
+      "category": "atms",
+      "rows": 57,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "98997778c58cd63966ba2110667b2865a98979ff01e10985ff3dd3476c5e7809"
+    },
+    {
+      "url": "https://places.cyber.mu/atms/portlouis/",
+      "category": "atms",
+      "rows": 23,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "0a0f8faeb44f0a3ec33b6800b70ece48196d0e3c2b5fd60a84db5ca98da005af"
+    },
+    {
+      "url": "https://places.cyber.mu/atms/rivieredurempart/",
+      "category": "atms",
+      "rows": 19,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "bebfef6f809f59db3d9b8f670df245bf925287a124679e6934d59caa753f5cb7"
+    },
+    {
+      "url": "https://places.cyber.mu/atms/savanne/",
+      "category": "atms",
+      "rows": 14,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "c4a7f8589b1b233b0b2d62052988aa7c512ccbf92505c624eee3af890bf6a5b6"
+    },
+    {
+      "url": "https://places.cyber.mu/atms/unassigned/",
+      "category": "atms",
+      "rows": 73,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "3dd9f5c5bbbd3a6cd06b120fcde9e0ccc781e68bfad3e75a9a723ee0a47dbd2d"
+    },
+    {
+      "url": "https://places.cyber.mu/fuel-stations/blackriver/",
+      "category": "fuel-stations",
+      "rows": 9,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "6f136eedf89d6d5f46895073bd910ade875c997df68f57f5c1e570ff8f2504f3"
+    },
+    {
+      "url": "https://places.cyber.mu/fuel-stations/flacq/",
+      "category": "fuel-stations",
+      "rows": 20,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "01df78d961ba7c67f1910cc8e2acb7859412088dd6726c7efab32421016bab00"
+    },
+    {
+      "url": "https://places.cyber.mu/fuel-stations/grandport/",
+      "category": "fuel-stations",
+      "rows": 16,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "aab77cdaedd96cbd9b105a6a8412ce64429abc99e553c8c52736c9c27e89d6c0"
+    },
+    {
+      "url": "https://places.cyber.mu/fuel-stations/moka/",
+      "category": "fuel-stations",
+      "rows": 9,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "81329c45be622bacfccfe51ef0b3bc555eba50ba4a561b833e8b645b706551f1"
+    },
+    {
+      "url": "https://places.cyber.mu/fuel-stations/pamplemousses/",
+      "category": "fuel-stations",
+      "rows": 19,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "539fa15b7f860c49cdb8d6ef99b74b58c36213ff0335930df49612402318f840"
+    },
+    {
+      "url": "https://places.cyber.mu/fuel-stations/plainewilhems/",
+      "category": "fuel-stations",
+      "rows": 40,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "2bd0ba45ddc2b4b3c8ced0d6f799890441c2d5b4678473d238fef3f740163fe7"
+    },
+    {
+      "url": "https://places.cyber.mu/fuel-stations/portlouis/",
+      "category": "fuel-stations",
+      "rows": 17,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "af57601c6e412fd7ffd2d9952c48b9376d63ac12df84ed0d9bcc073bd54e2133"
+    },
+    {
+      "url": "https://places.cyber.mu/fuel-stations/rivieredurempart/",
+      "category": "fuel-stations",
+      "rows": 15,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "f9191b07e4490873aebaab69ac1bfc84828ec6f1b373dacab3848b05ac6970dc"
+    },
+    {
+      "url": "https://places.cyber.mu/fuel-stations/savanne/",
+      "category": "fuel-stations",
+      "rows": 6,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "cc3df7358e4ee879562a9139abea128fbe5534cbd26c2f593211a8c065241c3b"
+    },
+    {
+      "url": "https://places.cyber.mu/shopping/blackriver/",
+      "category": "shopping",
+      "rows": 16,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "c1d99fc98277c00b480b77fdb07a795908c5df6161ae1533447680df1502bfb9"
+    },
+    {
+      "url": "https://places.cyber.mu/shopping/flacq/",
+      "category": "shopping",
+      "rows": 21,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "e40b0969b28d1291ae2553dc1fa58bc0e6554df104f9704b3a0522ccf196c091"
+    },
+    {
+      "url": "https://places.cyber.mu/shopping/grandport/",
+      "category": "shopping",
+      "rows": 17,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "77c33dec994f9d744033933bf9855d5c9c400d5e214494e80d38ac4cb0d81c78"
+    },
+    {
+      "url": "https://places.cyber.mu/shopping/moka/",
+      "category": "shopping",
+      "rows": 11,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "0d8eb41bad8c6c5eaeda0907b65d076a58252181aff3c47e2aea6d9d8e26a94d"
+    },
+    {
+      "url": "https://places.cyber.mu/shopping/pamplemousses/",
+      "category": "shopping",
+      "rows": 16,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "8d6aee5192045fa17fb51ac82488d97e5eb2f7ddee0cc4ae03bb6af139e4de49"
+    },
+    {
+      "url": "https://places.cyber.mu/shopping/plainewilhems/",
+      "category": "shopping",
+      "rows": 51,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "8a7d87c0038585ed8bc03e36fb575d5dee411fba88bb5e0d6b3a24cb17044bb6"
+    },
+    {
+      "url": "https://places.cyber.mu/shopping/portlouis/",
+      "category": "shopping",
+      "rows": 17,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "ac9eb3ca3faa4336566194df64a6d85d9f8ae5490176cdaa8bf9dc231acf67f8"
+    },
+    {
+      "url": "https://places.cyber.mu/shopping/rivieredurempart/",
+      "category": "shopping",
+      "rows": 16,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "a522b7a97cf55921b25dd6c4990d9374811908a0d2521d5a64b11a8c1830e6bb"
+    },
+    {
+      "url": "https://places.cyber.mu/shopping/savanne/",
+      "category": "shopping",
+      "rows": 6,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "ea86c83355ab74d05945ff8cfc0734d0beae5ad96fe9d6fa924e1782aeaa105c"
+    },
+    {
+      "url": "https://places.cyber.mu/shopping/unassigned/",
+      "category": "shopping",
+      "rows": 1,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "f26663ad25a96cd6003f6b8fca4ec60335e9de72e62bac0790325cfd702f9817"
+    },
+    {
+      "url": "https://places.cyber.mu/embassies/",
+      "category": "embassies",
+      "rows": 15,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "e2f1e1eb266d4160c8d4c8246460e51c3a0e52a0a96de105ad1ace54b7695293"
+    },
+    {
+      "url": "https://places.cyber.mu/community/blackriver/",
+      "category": "community",
+      "rows": 20,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "aee339637aa55c118b6f6dc5958806ff3fea5603cdd489a058252d3bc7dcf33b"
+    },
+    {
+      "url": "https://places.cyber.mu/community/flacq/",
+      "category": "community",
+      "rows": 50,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "5e004d07d35bda19042ec2a46baa677cc8194c913f7dac9e8db8cbe14f4cdca6"
+    },
+    {
+      "url": "https://places.cyber.mu/community/grandport/",
+      "category": "community",
+      "rows": 28,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "2f453daebae00dd56b852d08512e60bfb5c3c1fe25dce37dfc310a0e03ea5e3d"
+    },
+    {
+      "url": "https://places.cyber.mu/community/moka/",
+      "category": "community",
+      "rows": 16,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "2de89c9fa04ce27385ad489050951a55c332ccb09c108e4fc21cce2945a71c95"
+    },
+    {
+      "url": "https://places.cyber.mu/community/pamplemousses/",
+      "category": "community",
+      "rows": 32,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "d1be6a4e8a573dd528c570a3be7bd4eb71025441d7bc1ceb7aeffb41dec5c812"
+    },
+    {
+      "url": "https://places.cyber.mu/community/plainewilhems/",
+      "category": "community",
+      "rows": 41,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "4ba81cf46bb20de347a994f2e993548a3331131026f2119b41c34d57796180d4"
+    },
+    {
+      "url": "https://places.cyber.mu/community/portlouis/",
+      "category": "community",
+      "rows": 22,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "7307f6ea0520094194f5ce9a1f48ffd43bbf6aea6b0f8e24377a883d97d31046"
+    },
+    {
+      "url": "https://places.cyber.mu/community/rivieredurempart/",
+      "category": "community",
+      "rows": 28,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "0dc30b7953376e9a64d5efe8b2c8cf409b90559d1f47b8734e9b869eed287a92"
+    },
+    {
+      "url": "https://places.cyber.mu/community/savanne/",
+      "category": "community",
+      "rows": 20,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "dc1ba68db9cc748d378e1845e217b5cd6b83bbf65c713498fce2b8e49be9ab7c"
+    },
+    {
+      "url": "https://places.cyber.mu/community/unassigned/",
+      "category": "community",
+      "rows": 7,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "bf917c2035d11a3b931018633c6a2494b98804fb3915d5de72f1a4b703fc4966"
+    },
+    {
+      "url": "https://places.cyber.mu/utilities/",
+      "category": "utilities",
+      "rows": 26,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "299b5e81e7a3bd6a5136dc5757796754046b81bcb2bed7751f5926c870209a4e"
+    },
+    {
+      "url": "https://places.cyber.mu/sports/",
+      "category": "sports",
+      "rows": 23,
+      "source_snapshot": "2026-09-06 09:20 MUT",
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "7b1f00e6a4e967bea02167fada5921554bfbbf13649f33812a6e9848e8ca0ec1"
+    }
+  ]
+}
