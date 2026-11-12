@@ -1,5 +1,9 @@
 # Data guide and Power BI import
 
+## Larger OSM inventory
+
+The [osm folder](osm/) adds **6,965 retained mapped records**, with a [separate flat CSV](osm/places.csv) and [import guide](osm/README.md). Only 103 records have accessibility-related tags; the rest of the inventory primarily supplies research leads. This section's three tables below remain the **35-place curated dataset**. Do not append the datasets and assume they contain unique physical businesses.
+
 Updated: 2026-11-12. UTF-8, comma-delimited CSV with one header row, CRLF line endings and standard double-quote escaping. No merged cells, embedded Markdown, totals rows or multiple tables in a file.
 
 ## Tables
