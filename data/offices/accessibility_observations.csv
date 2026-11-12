@@ -1,0 +1,24 @@
+observation_id,office_id,feature,status,source_id,scope,source_date,checked_date,summary
+OFOBS0001,OFF0001,ramp,operator_reported_yes,OS001,entrances,,2026-11-12,Operator reports ramps at entrances.
+OFOBS0002,OFF0001,wheelchair_toilet,operator_reported_yes,OS001,ground_floor,,2026-11-12,Operator reports ground-floor facilities for disabled visitors; dimensions not provided.
+OFOBS0003,OFF0001,evacuation,assistance_plan_needed,OS001,building,,2026-11-12,Operator describes on-foot evacuation and no specialist equipment. Confirm a suitable plan.
+OFOBS0004,OFF0001,public_visit_policy,appointment_required,OS001,office,,2026-11-12,Public access by appointment.
+OFOBS0005,OFF0002,ramp,historical_reported_yes,OS002,office,2023-09-05,2026-11-12,2023 inauguration report describes a ramp for disabled users; operation today unverified.
+OFOBS0006,OFF0002,general_parking,historical_reported_yes,OS002,office,2023-09-05,2026-11-12,Ordinary parking reported; no wheelchair bays identified.
+OFOBS0007,OFF0003,step_free_entrance,listed_yes,OS003,specific_office_listing,,2026-11-12,"Third-party accessibility label only; no dimensions, continuous route or current operation verified."
+OFOBS0008,OFF0003,wheelchair_parking,listed_yes,OS003,specific_office_listing,,2026-11-12,"Third-party accessibility label only; no dimensions, continuous route or current operation verified."
+OFOBS0009,OFF0003,wheelchair_toilet,listed_yes,OS003,specific_office_listing,,2026-11-12,"Third-party accessibility label only; no dimensions, continuous route or current operation verified."
+OFOBS0010,OFF0003,wheelchair_seating,listed_yes,OS003,specific_office_listing,,2026-11-12,"Third-party accessibility label only; no dimensions, continuous route or current operation verified."
+OFOBS0011,OFF0004,step_free_entrance,listed_yes,OS004,specific_office_listing,,2026-11-12,"Third-party accessibility label only; no dimensions, continuous route or current operation verified."
+OFOBS0012,OFF0004,wheelchair_parking,listed_yes,OS004,specific_office_listing,,2026-11-12,"Third-party accessibility label only; no dimensions, continuous route or current operation verified."
+OFOBS0013,OFF0005,step_free_entrance,listed_yes,OS005,specific_office_listing,,2026-11-12,"Third-party accessibility label only; no dimensions, continuous route or current operation verified."
+OFOBS0014,OFF0005,wheelchair_parking,listed_yes,OS005,specific_office_listing,,2026-11-12,"Third-party accessibility label only; no dimensions, continuous route or current operation verified."
+OFOBS0015,OFF0006,step_free_entrance,listed_yes,OS006,specific_office_listing,,2026-11-12,"Third-party accessibility label only; no dimensions, continuous route or current operation verified."
+OFOBS0016,OFF0006,wheelchair_parking,listed_yes,OS006,specific_office_listing,,2026-11-12,"Third-party accessibility label only; no dimensions, continuous route or current operation verified."
+OFOBS0017,OFF0006,wheelchair_toilet,listed_yes,OS006,specific_office_listing,,2026-11-12,"Third-party accessibility label only; no dimensions, continuous route or current operation verified."
+OFOBS0018,OFF0007,wheelchair_access,listed_yes,OS007,specific_office_listing,,2026-11-12,"Third-party accessibility label only; no dimensions, continuous route or current operation verified."
+OFOBS0019,OFF0008,wheelchair_access,unknown,OS008,identity_only,,2026-11-12,"Official contact directory establishes location, not physical accessibility. No absence of access is inferred."
+OFOBS0020,OFF0009,wheelchair_access,unknown,OS008,identity_only,,2026-11-12,"Official contact directory establishes location, not physical accessibility. No absence of access is inferred."
+OFOBS0021,OFF0010,wheelchair_access,unknown,OS008,identity_only,,2026-11-12,"Official contact directory establishes location, not physical accessibility. No absence of access is inferred."
+OFOBS0022,OFF0011,wheelchair_access,unknown,OS008,identity_only,,2026-11-12,"Official contact directory establishes location, not physical accessibility. No absence of access is inferred."
+OFOBS0023,OFF0012,wheelchair_access,unknown,OS008,identity_only,,2026-11-12,"Official contact directory establishes location, not physical accessibility. No absence of access is inferred."
