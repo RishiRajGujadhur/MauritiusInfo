@@ -6,7 +6,9 @@ The [entertainment tables](entertainment/) contain 16 cinema/track/performance-s
 
 ## Shop and wheelchair parking research
 
-The [shop dataset](shops/) records 12 branches with separate entrance, toilet, parking-label, dedicated-bay and shared-facility fields. Its [Power BI guide](shops/README.md) explains the joins and how to avoid counting shared bays for every tenant. The [2,371-shop OSM view](osm/shops.csv) is a subset of existing mapped places, not added national coverage.
+Use the [all-status shop register](osm/shop_access_register.csv) for positive, negative, limited and unknown mapped records, and the [readable barrier list](shops/BARRIER_REPORTS.md) for the 24 reported barriers. The expanded branch table has 39 records, including 27 added operator-listed branches with unknown access. No shop size is inferred.
+
+The [shop dataset](shops/) records 39 branches with separate entrance, toilet, parking-label, dedicated-bay and shared-facility fields. Its [Power BI guide](shops/README.md) explains the joins and how to avoid counting shared bays for every tenant. The [2,371-shop OSM view](osm/shops.csv) is a subset of existing mapped places, not added national coverage.
 
 ## Office accessibility
 
