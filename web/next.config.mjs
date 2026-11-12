@@ -5,4 +5,7 @@ export default {
   basePath,
   trailingSlash: true,
   images: { unoptimized: true },
+  experimental: {
+    optimizePackageImports: ['@radix-ui/themes', '@radix-ui/react-icons'],
+  },
 };

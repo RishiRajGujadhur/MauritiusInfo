@@ -1,6 +1,6 @@
 * { box-sizing: border-box; }
 body { margin: 0; }
-.radix-themes { min-height: 100vh; background: var(--gray-2); font-family: Inter, system-ui, sans-serif; }
+.app-theme { min-height: 100vh; background: var(--gray-2); font-family: Inter, system-ui, sans-serif; }
 .container { width: min(1240px, 100%); padding: 0 32px; margin: 0 auto; }
 a { color: var(--accent-11); text-underline-offset: 3px; }
 button, input { font: inherit; }
@@ -44,7 +44,7 @@ h1 { font-size: clamp(32px, 5vw, 46px); letter-spacing: -1.5px; line-height: 1.1
 .pagination { display: flex; align-items: center; justify-content: space-between; padding: 22px 0; gap: 12px; font-size: 12px; color: var(--gray-11); }
 .pagination > div { display: flex; align-items: center; gap: 12px; }
 .page-input { display: flex; align-items: center; gap: 6px; }
-.page-input input { width: 55px; min-height: 36px; text-align: center; border: 1px solid var(--gray-7); border-radius: 6px; background: var(--color-surface); color: var(--gray-12); }
+.page-input .rt-TextFieldRoot { width: 55px; min-height: 36px; text-align: center; border: 1px solid var(--gray-7); border-radius: 6px; background: var(--color-surface); color: var(--gray-12); }
 footer.container { border-top: 1px solid var(--gray-5); padding-top: 22px; padding-bottom: 30px; margin-top: 32px; color: var(--gray-11); font-size: 11px; line-height: 1.7; }
 footer p:last-child { font-size: 10px; }
 .dialog-heading { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
@@ -91,5 +91,8 @@ footer p:last-child { font-size: 10px; }
   .pagination > div { width: 100%; gap: 6px; justify-content: space-between; }
   .pagination .rt-Button { padding: 0 9px; font-size: 12px; }
   .page-input { font-size: 11px; }
-  .page-input input { width: 42px; }
+  .page-input .rt-TextFieldRoot { width: 42px; }
 }
+
+.place-name.rt-Button { height: auto; min-height: 32px; justify-content: flex-start; white-space: normal; margin: 0; }
+.page-input .rt-TextFieldInput { text-align: center; }

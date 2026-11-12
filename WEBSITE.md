@@ -22,7 +22,7 @@ For local development, run `npm run dev` inside `web`, then visit `http://localh
 
 The shared `data-core.mjs` declares nine CSV datasets and handles parsing, normalization, search, filtering and pagination. Existing tests run with `node --test tests/site-core.test.mjs` from the repository root.
 
-The site includes Radix Select filters, Dialog details, Switch dark mode, tooltips, icons and an animated SVG pin. The saved `mu-theme` preference is reused. Reduced-motion preference disables the pin animation. Source links and individual feature evidence remain in the detail view.
+The site includes Radix Select filters, Dialog details, Switch dark mode, tooltips, icons and an animated SVG pin. Dark mode is the default. Theme choices are saved in `mu-theme-v2`. Reduced-motion preference disables the pin animation. Source links and individual feature evidence remain in the detail view. Details load on demand, search filtering uses React deferred updates, and CSV requests use browser HTTP caching with a reload on explicit retry. Links, buttons, fields, menus and icons use Radix components.
 
 At migration, the nine datasets contain 8,548 source records. Some sources overlap. Positive reports describe source claims, and unknown access fields remain unknown. Historical festival editions retain their dates and status in details. Failed source downloads show a retry action and an incomplete-results message.
 
