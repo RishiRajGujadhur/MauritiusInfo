@@ -1,5 +1,9 @@
 # Data guide and Power BI import
 
+## Festival events
+
+A separate [festival dataset](festivals/) adds **14 edition/component rows for 12 festival series**, with [events.csv](festivals/events.csv), scoped observations and sources. Import it separately from place tables; its [guide](festivals/README.md) explains dates, access levels and venue-only evidence.
+
 ## Larger OSM inventory
 
 The [osm folder](osm/) adds **6,965 retained mapped records**, with a [separate flat CSV](osm/places.csv) and [import guide](osm/README.md). Only 103 records have accessibility-related tags; the rest of the inventory primarily supplies research leads. This section's three tables below remain the **35-place curated dataset**. Do not append the datasets and assume they contain unique physical businesses.
