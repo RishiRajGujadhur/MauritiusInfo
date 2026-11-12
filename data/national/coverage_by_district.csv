@@ -1,0 +1,12 @@
+district,osm_record_count,osm_accessibility_tag_records,health_source_district_records,health_district_basis,unique_combined_count,completeness
+Black River,898,12,12,source_directory_unverified,,not_assessed
+Flacq,424,14,30,source_directory_unverified,,not_assessed
+Grand Port,516,48,15,source_directory_unverified,,not_assessed
+Moka,358,1,14,source_directory_unverified,,not_assessed
+Pamplemousses,487,5,22,source_directory_unverified,,not_assessed
+Plaines Wilhems,1953,8,32,source_directory_unverified,,not_assessed
+Port Louis,1069,5,18,source_directory_unverified,,not_assessed
+Riviere du Rempart,624,8,18,source_directory_unverified,,not_assessed
+Rodrigues,408,0,0,source_directory_unverified,,not_assessed
+Savanne,151,2,8,source_directory_unverified,,not_assessed
+Unresolved,77,0,0,source_directory_unverified,,not_assessed
