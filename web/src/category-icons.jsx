@@ -1,0 +1,44 @@
+import { ArchiveIcon, BackpackIcon, BadgeIcon, BlendingModeIcon, BookmarkIcon, BoxIcon, CalendarIcon, Component1Icon, CookieIcon, DashboardIcon, DesktopIcon, DiscIcon, EnvelopeClosedIcon, ExclamationTriangleIcon, FaceIcon, FrameIcon, GearIcon, GlobeIcon, GridIcon, GroupIcon, HeartIcon, HomeIcon, IdCardIcon, ImageIcon, LaptopIcon, LightningBoltIcon, LockClosedIcon, MixIcon, OpacityIcon, PaperPlaneIcon, ReaderIcon, RowsIcon, StackIcon, SunIcon, TargetIcon, TriangleUpIcon, VideoIcon } from '@radix-ui/react-icons';
+
+export const CATEGORY_ICONS = {
+  'Amenity': HomeIcon,
+  'Arts Centre': ImageIcon,
+  'Atms': IdCardIcon,
+  'Bar Restaurant': CookieIcon,
+  'Beach': SunIcon,
+  'Community': GroupIcon,
+  'Embassies': BadgeIcon,
+  'Entertainment': VideoIcon,
+  'Festivals & Events': CalendarIcon,
+  'Fire': ExclamationTriangleIcon,
+  'Fuel-Stations': LightningBoltIcon,
+  'Garden': BlendingModeIcon,
+  'Grocery Store': StackIcon,
+  'Healthcare': HeartIcon,
+  'Heritage Site': BookmarkIcon,
+  'Leisure': FaceIcon,
+  'Museum': FrameIcon,
+  'Natural': GlobeIcon,
+  'Nature Park': TriangleUpIcon,
+  'Oceanarium': OpacityIcon,
+  'Office': DesktopIcon,
+  'Offices': LaptopIcon,
+  'Police': LockClosedIcon,
+  'Post-Offices': EnvelopeClosedIcon,
+  'Repairs & Healthcare': GearIcon,
+  'Restaurant': DiscIcon,
+  'Retail': BackpackIcon,
+  'Schools': ReaderIcon,
+  'Shop': BoxIcon,
+  'Shopping': Component1Icon,
+  'Shopping Mall': GridIcon,
+  'Sports': TargetIcon,
+  'Supermarket': ArchiveIcon,
+  'Tourism': PaperPlaneIcon,
+  'Utilities': DashboardIcon,
+  'Waterfront': RowsIcon,
+};
+
+export function getCategoryIcon(category) {
+  return CATEGORY_ICONS[category] || MixIcon;
+}

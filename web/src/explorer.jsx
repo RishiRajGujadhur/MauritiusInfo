@@ -4,6 +4,7 @@ import { AccessibilityIcon, ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowU
 import { flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
 import { DATASETS, filterRecords } from '../../data-core.mjs';
 import SearchSelect from './search-select';
+import { getCategoryIcon } from './category-icons';
 import { ReportBadge } from './ui';
 
 const PlaceDetails = lazy(() => import('./place-details'));
@@ -163,7 +164,10 @@ export default function Explorer() {
   }
   function cellContent(record, column) {
     if (column === 'name') return <Button variant="ghost" className="place-name" onClick={event => openDetails(record, event)}><DrawingPinIcon /><span>{record.name}</span><ExternalLinkIcon className="row-open-icon" /></Button>;
-    if (column === 'category') return <span className="muted">{record.category}<small>{record.type !== record.category ? record.type : ''}</small></span>;
+    if (column === 'category') {
+      const CategoryIcon = getCategoryIcon(record.category);
+      return <span className="muted"><span className="category-label"><CategoryIcon aria-hidden="true" />{record.category}</span><small>{record.type !== record.category ? record.type : ''}</small></span>;
+    }
     if (column === 'area') return <span>{record.area}<small>{record.address}</small></span>;
     if (column === 'access' || column === 'parking') return <ReportBadge value={record[column]} />;
     return <span className="muted source-name">{record.dataset.name}</span>;
@@ -185,7 +189,7 @@ export default function Explorer() {
         <div className="search-toolbar"><h1><DrawingPinIcon />Find a place</h1><TextField.Root ref={searchInput} aria-label="Search places" type="search" className="main-search" size="3" placeholder="Place, town or address" value={filters.search} onChange={event => updateFilter('search', event.target.value)}>
           <TextField.Slot><MagnifyingGlassIcon width="19" height="19" /></TextField.Slot><TextField.Slot side="right">{filters.search ? <IconButton size="1" variant="ghost" color="gray" aria-label="Clear search" onClick={() => { updateFilter('search', ''); searchInput.current?.focus(); }}><Cross2Icon /></IconButton> : <kbd>/</kbd>}</TextField.Slot>
         </TextField.Root><Tooltip content="Access can change. Confirm the facilities you need with the venue before visiting."><IconButton variant="ghost" color="gray" aria-label="About access reports"><InfoCircledIcon width="18" height="18" /></IconButton></Tooltip></div>
-        <div className="filters">{FILTERS.map(filter => <SearchSelect key={filter.key} {...filter} value={filters[filter.key]} options={options[filter.key]} onChange={value => updateFilter(filter.key, value)} />)}<Tooltip content="Clear search and filters"><IconButton variant="ghost" color="gray" aria-label="Reset filters" disabled={!activeFilters.length && !filters.search} onClick={reset}><ResetIcon /></IconButton></Tooltip></div>
+        <div className="filters">{FILTERS.map(filter => <SearchSelect key={filter.key} {...filter} getOptionIcon={filter.key === 'category' ? getCategoryIcon : undefined} value={filters[filter.key]} options={options[filter.key]} onChange={value => updateFilter(filter.key, value)} />)}<Tooltip content="Clear search and filters"><IconButton variant="ghost" color="gray" aria-label="Reset filters" disabled={!activeFilters.length && !filters.search} onClick={reset}><ResetIcon /></IconButton></Tooltip></div>
         {activeFilters.length > 0 && <div className="active-filters" aria-label="Active filters">{activeFilters.map(filter => <Button key={filter.key} size="1" variant="soft" onClick={() => updateFilter(filter.key, '')} aria-label={`Remove ${filter.label} filter`}><filter.icon />{filter.label} · {options[filter.key].find(([key]) => key === filters[filter.key])?.[1] || filters[filter.key]}<Cross2Icon /></Button>)}</div>}
       </section>
       {failures.length > 0 && <div className="load-error" role="alert"><InfoCircledIcon /><span>Some sources could not load. {records.length.toLocaleString()} records available.</span><Tooltip content={failures.join(', ')}><Button size="1" variant="soft" onClick={() => setRetry(value => value + 1)}><ResetIcon />Retry</Button></Tooltip></div>}
@@ -205,7 +209,7 @@ export default function Explorer() {
         </div>
         <nav className="pagination" aria-label="Results pages"><span className="page-range">{start}–{Math.min(start + visibleRows.length - (start ? 1 : 0), matches.length)} of {matches.length.toLocaleString()}</span><div className="page-navigation"><IconButton variant="soft" color="gray" size="1" aria-label="First page" disabled={loading || !pageIndex} onClick={() => table.setPageIndex(0)}><DoubleArrowLeftIcon /></IconButton><IconButton variant="soft" color="gray" size="1" aria-label="Previous page" disabled={loading || !pageIndex} onClick={() => table.previousPage()}><ArrowLeftIcon /></IconButton><label className="page-jump">Page<TextField.Root size="1" aria-label="Page number" type="number" min="1" max={pageCount} value={pageIndex + 1} onChange={event => table.setPageIndex(Math.min(pageCount - 1, Math.max(0, Number(event.target.value) - 1 || 0)))} /></label><span>of {pageCount}</span><IconButton variant="soft" color="gray" size="1" aria-label="Next page" disabled={loading || pageIndex >= pageCount - 1} onClick={() => table.nextPage()}><ArrowRightIcon /></IconButton><IconButton variant="soft" color="gray" size="1" aria-label="Last page" disabled={loading || pageIndex >= pageCount - 1} onClick={() => table.setPageIndex(pageCount - 1)}><DoubleArrowRightIcon /></IconButton></div><SearchSelect label="Rows" icon={TableIcon} value={String(pagination.pageSize)} options={['25', '50', '100'].map(value => [value, value])} placeholder="25" allowAll={false} onChange={value => table.setPageSize(Number(value))} /></nav>
       </section>
-      <footer><span>Source records may overlap. Unknown means details are missing.</span><Link href="https://github.com/RishiRajGujadhur/MauritiusInfo#readme">Sources & licences<ExternalLinkIcon /></Link><small>© OpenStreetMap contributors · ODbL. Open Data Mauritius via cyber.mu · CC BY-SA 4.0.</small></footer>
+      <footer><span className="footer-note">Source records may overlap. Unknown means details are missing.</span><Link href="https://github.com/RishiRajGujadhur/MauritiusInfo#readme">Sources & licences<ExternalLinkIcon /></Link><span className="footer-copyright">© OpenStreetMap contributors · ODbL. Open Data Mauritius via cyber.mu · CC BY-SA 4.0.</span></footer>
     </main>
     <Suspense fallback={selectedKey ? <div className="detail-loading" role="status">Loading place details…</div> : null}>{selectedRecord && <PlaceDetails record={selectedRecord} onClose={() => setSelectedKey(null)} triggerRef={detailTrigger} />}</Suspense>
   </Theme>;

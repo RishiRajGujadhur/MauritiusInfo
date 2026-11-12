@@ -3,6 +3,7 @@ import { Button, Dialog, IconButton, Link, Tabs, Tooltip } from '@radix-ui/theme
 import { AccessibilityIcon, AngleIcon, ArrowRightIcon, CalendarIcon, CheckCircledIcon, CopyIcon, Cross2Icon, DashboardIcon, DrawingPinIcon, EnterIcon, ExternalLinkIcon, HeightIcon, InfoCircledIcon, LayersIcon, MobileIcon, PersonIcon, RowsIcon } from '@radix-ui/react-icons';
 import { humanize, safeURL } from '../../data-core.mjs';
 import { ReportBadge } from './ui';
+import { getCategoryIcon } from './category-icons';
 
 function readableDate(value) {
   if (!value) return 'Unknown';
@@ -12,6 +13,7 @@ function readableDate(value) {
 
 export default function PlaceDetails({ record, onClose, triggerRef }) {
   const row = record.raw;
+  const CategoryIcon = getCategoryIcon(record.category);
   const [copyState, setCopyState] = useState('Copy link');
   const features = [
     ['Wheelchair access', AccessibilityIcon, row.wheelchair_access],
@@ -43,7 +45,7 @@ export default function PlaceDetails({ record, onClose, triggerRef }) {
 
   return <Dialog.Root open onOpenChange={open => { if (!open) onClose(); }}>
     <Dialog.Content maxWidth="650px" className="place-dialog" onCloseAutoFocus={event => { event.preventDefault(); triggerRef.current?.focus(); }}>
-      <div className="dialog-heading"><div className="place-title-icon"><DrawingPinIcon width="21" height="21" /></div><div><Dialog.Title>{record.name}</Dialog.Title><Dialog.Description className="detail-location">{location}</Dialog.Description></div><Dialog.Close><IconButton variant="ghost" color="gray" aria-label="Close details"><Cross2Icon /></IconButton></Dialog.Close></div>
+      <div className="dialog-heading"><div className="place-title-icon"><CategoryIcon width="21" height="21" aria-hidden="true" /></div><div><Dialog.Title>{record.name}</Dialog.Title><Dialog.Description className="detail-location">{location}</Dialog.Description></div><Dialog.Close><IconButton variant="ghost" color="gray" aria-label="Close details"><Cross2Icon /></IconButton></Dialog.Close></div>
       <div className="detail-subtitle"><LayersIcon />{record.dataset.name}<span>·</span>{record.type || record.category}</div>
       <Tabs.Root defaultValue="access"><Tabs.List aria-label="Place information"><Tabs.Trigger value="access"><AccessibilityIcon />Access</Tabs.Trigger><Tabs.Trigger value="details"><InfoCircledIcon />Details & source</Tabs.Trigger></Tabs.List>
         <Tabs.Content value="access"><dl className="features">{features.map(([label, Icon, value]) => <div key={label}><dt><Icon />{label}</dt><dd><ReportBadge value={value} /></dd></div>)}</dl><div className="detail-facts"><Tooltip content={date || 'Source date unavailable'}><span><CalendarIcon />{readableDate(date)}</span></Tooltip><span><CheckCircledIcon />{row.field_verified === 'true' ? 'On-site check recorded' : 'On-site check unknown'}</span></div>{status && <p className="listing-status"><InfoCircledIcon />{humanize(status)}</p>}</Tabs.Content>
