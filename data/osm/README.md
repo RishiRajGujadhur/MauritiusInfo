@@ -6,6 +6,8 @@ This folder is a bulk map-derived research inventory, separate from the curated,
 
 ## Shop subset
 
+Additional derived views: [shop_access_register.csv](shop_access_register.csv) adds readable status/category fields to all 2,371 existing mapped shops; [shop_barrier_reports.csv](shop_barrier_reports.csv) selects the 24 mapped negative/limited reports. These are overlapping views, not additional places. Shop size stays unknown. Reproduce using scripts/build_shop_access_register.py.
+
 [shops.csv](shops.csv) filters existing places to category=shop: **2,371 records**, preserving source IDs and statuses. Do not append this subset to places.csv or count it as extra places. [Separate branch research](../shops/README.md) tracks entrance and wheelchair-parking evidence with unresolved scope explicitly marked. Regenerate the subset using scripts/export_shops.py.
 
 ## Office subset
