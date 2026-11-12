@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Search Mauritius location and wheelchair accessibility source records by area, category and reported facilities.">
+  <meta name="theme-color" content="#173e68">
+  <title>Access Mauritius · Location explorer</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+<a class="skip" href="#results">Skip to results</a>
+<header class="masthead"><div class="shell masthead-inner"><a class="brand" href="./"><span class="brand-icon" aria-hidden="true">↗</span> Access Mauritius</a><a class="repo-link" href="https://github.com/RishiRajGujadhur/MauritiusInfo">View the data <span aria-hidden="true">↗</span></a></div></header>
+<main class="shell">
+  <section class="intro" aria-labelledby="title"><p class="eyebrow">MAURITIUS LOCATION EXPLORER</p><h1 id="title">A little more clarity.<br>Before you go.</h1><p class="lede">Find places across Mauritius and explore what’s reported about wheelchair access.</p><div class="intro-meta"><span class="live-dot" aria-hidden="true"></span><span id="inventory">Loading the repository data…</span></div></section>
+  <aside class="notice"><span class="info-icon" aria-hidden="true">i</span><p><strong>A listing isn’t an access guarantee.</strong> Reports may be old, incomplete or overlap across sources. Unknown means we have no evidence. Confirm the facilities you need before travelling.</p></aside>
+  <form id="filters" class="filters" role="search">
+    <div class="search-row"><label class="search-box"><span class="search-icon" aria-hidden="true">⌕</span><span class="sr-only">Search places, addresses and types</span><input id="search" type="search" placeholder="Search a place, town or address…" autocomplete="off"></label><button class="button quiet" type="button" id="reset">Reset filters</button></div>
+    <div class="filter-grid">
+      <label>Area<select id="area"><option value="">All areas</option></select></label>
+      <label>Category<select id="category"><option value="">All categories</option></select></label>
+      <label>Wheelchair access<select id="access"><option value="">All reports</option><option value="positive">Positive report</option><option value="limited">Limited / partial</option><option value="negative">Negative report</option><option value="unknown">Unknown</option></select></label>
+      <label>Wheelchair parking<select id="parking"><option value="">All reports</option><option value="positive">Positive report</option><option value="limited">Limited / partial</option><option value="negative">Negative report</option><option value="unknown">Unknown</option></select></label>
+      <label>Dataset<select id="dataset"><option value="">All datasets</option></select></label>
+    </div>
+  </form>
+  <div id="load-error" class="load-error" role="alert" hidden></div>
+  <section id="results" aria-labelledby="results-title" tabindex="-1">
+    <div class="results-bar"><div><h2 id="results-title">Explore places</h2><p id="count" role="status" aria-live="polite">Loading…</p></div><div class="result-options"><label class="sort-label">Sort<select id="sort"><option value="name">Name A–Z</option><option value="area">Area A–Z</option></select></label><label class="sort-label">Per page<select id="page-size"><option>25</option><option>50</option><option>100</option></select></label></div></div>
+    <div class="table-wrap"><table><caption class="sr-only">Location source records. Open a place to inspect its reported facilities.</caption><thead><tr><th scope="col">Place</th><th scope="col">Area</th><th scope="col">Wheelchair access</th><th scope="col">Wheelchair parking</th><th scope="col">Dataset</th></tr></thead><tbody id="rows"></tbody></table><div id="empty" class="empty" hidden><span aria-hidden="true">⌕</span><h3>No matching records</h3><p>Try a different search or reset the filters.</p><button class="button" type="button" id="empty-reset">Reset filters</button></div></div>
+    <nav class="pagination" aria-label="Results pages"><p id="page-summary"></p><div><button id="previous" class="button quiet" type="button" disabled>← Previous</button><label class="page-label">Page <input id="page-number" type="number" min="1" value="1" aria-label="Page number"></label><span id="page-total"></span><button id="next" class="button quiet" type="button" disabled>Next →</button></div></nav>
+  </section>
+</main>
+<footer class="shell footer"><p>Made for more informed journeys in Mauritius.</p><p>Source records, not unique venue totals. <a href="https://github.com/RishiRajGujadhur/MauritiusInfo#readme">Methodology &amp; source licences ↗</a></p><p>Map records: © OpenStreetMap contributors · <a href="https://opendatacommons.org/licenses/odbl/1-0/">ODbL</a>. Open-data directories: Open Data Mauritius via cyber.mu · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Research tables retain their linked source provenance.</p></footer>
+<dialog id="detail" aria-labelledby="detail-title"><div class="dialog-top"><span class="eyebrow">SOURCE RECORD</span><button id="close-detail" class="close-button" type="button" aria-label="Close details">×</button></div><div id="detail-body"></div></dialog>
+</body>
+</html>
