@@ -1,0 +1,17 @@
+{
+  "name": "access-mauritius-web",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build --webpack",
+    "publish:static": "npm run build && node scripts/publish.mjs"
+  },
+  "dependencies": {
+    "@radix-ui/themes": "3.3.0",
+    "@radix-ui/react-icons": "1.3.2",
+    "next": "16.4.6",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  }
+}

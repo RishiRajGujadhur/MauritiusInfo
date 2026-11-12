@@ -6,9 +6,9 @@ A practical, source-linked guide to wheelchair access at places in Mauritius.
 
 ## Website explorer
 
-A responsive website is now included at the repository root: search, area/category/access/parking/dataset filters, sorting, pagination and source-record details. It reads nine existing CSV tables directly (**8,548 source records** at implementation); later CSV updates flow through after republishing. Cross-source overlaps remain explicit, and source claims are not labelled as current access audits.
+[Open Access Mauritius](https://rishirajgujadhur.github.io/MauritiusInfo/) to search the location data. The Next.js and Radix UI interface includes area/category/access/parking filters, pagination, source details, icons and saved dark mode. It loads nine CSV datasets with 8,548 source records at migration.
 
-**One-time hosting setup:** open [GitHub Pages settings](https://github.com/RishiRajGujadhur/MauritiusInfo/settings/pages), select **Deploy from a branch → main → /(root) → Save**. The site has been built and checked; live Pages deployment is not confirmed. [Website setup and maintenance](WEBSITE.md).
+The site is statically exported for GitHub Pages using the existing main/root setup. [Build and maintenance instructions](WEBSITE.md).
 
 ## Additional directory locations
 
