@@ -4,6 +4,12 @@ A practical, source-linked guide to wheelchair access at places in Mauritius.
 
 **Web sources checked: 12 November 2026 (Mauritius time).** This is desk research, not an on-site access audit. The date means the source was checked, not that a facility was inspected or is working today. Summaries are paraphrased from public web pages and PDFs; original pages and photographs are not copied into this repository.
 
+## Website explorer
+
+A responsive website is now included at the repository root: search, area/category/access/parking/dataset filters, sorting, pagination and source-record details. It reads nine existing CSV tables directly (**8,548 source records** at implementation); later CSV updates flow through after republishing. Cross-source overlaps remain explicit, and source claims are not labelled as current access audits.
+
+**One-time hosting setup:** open [GitHub Pages settings](https://github.com/RishiRajGujadhur/MauritiusInfo/settings/pages), select **Deploy from a branch → main → /(root) → Save**. The site has been built and checked; live Pages deployment is not confirmed. [Website setup and maintenance](WEBSITE.md).
+
 ## Additional directory locations
 
 The [directory import](data/directory/README.md) adds **1,282 source records across 11 categories** from 64 public pages attributed to Open Data Mauritius via cyber.mu: 264 community/social-service points, 258 ATMs, 181 schools, 172 shopping locations, 151 petrol stations, 102 post offices, 79 police/coast-guard posts, 26 utility offices, 23 sports facilities, 15 embassies/high commissions and 11 fire stations. [Download the flat CSV](data/directory/places.csv).
