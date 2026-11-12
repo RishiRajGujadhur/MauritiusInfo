@@ -4,6 +4,12 @@ A practical, source-linked guide to wheelchair access at places in Mauritius.
 
 **Web sources checked: 12 November 2026 (Mauritius time).** This is desk research, not an on-site access audit. The date means the source was checked, not that a facility was inspected or is working today. Summaries are paraphrased from public web pages and PDFs; original pages and photographs are not copied into this repository.
 
+## National coverage expansion
+
+The [national coverage guide](data/national/README.md) adds **169 health-facility source records across all nine districts**, with coordinates, contact details, licensing and explicit unknown accessibility fields. [Download the health directory](data/national/health_facilities.csv).
+
+The [district coverage table](data/national/coverage_by_district.csv) and [district/category table](data/national/coverage_by_district_category.csv) make gaps visible in Power BI. The existing national OSM inventory contains **6,965 records across all nine districts and Rodrigues**, including 77 unresolved district assignments. This is broad geographic coverage, not a complete directory or verified accessibility coverage. The health import can overlap existing records; do not sum source tables as unique venues. Source district assignments remain unverified, with an apparent mismatch flagged.
+
 ## Repairs, mechanics, pharmacies and healthcare
 
 The [services guide](data/services/README.md) adds **16 researched locations/practices**, **28 observations** and **11 sources**. [Download researched services](data/services/services.csv).
