@@ -1,5 +1,0 @@
-:HL["/MauritiusInfo/_next/static/css/c2c7597ee138c0e7.css","style"]
-:HL["/MauritiusInfo/_next/static/css/efc756e1029de22c.css","style"]
-2:[["children",{"s":"__PAGE__","h":160}]]
-1:[["children",{"s":"_not-found","h":96,"c":"$Q2"}]]
-0:{"b":"08v4IVFJwZuKYzVEEfeIz","t":{"t":{"s":"","h":80,"c":"$Q1"}}}

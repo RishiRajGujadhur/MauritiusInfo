@@ -1,10 +1,10 @@
 # Access Mauritius website
 
-The interface uses Next.js, React and Radix Themes. It exports static HTML, CSS and JavaScript for the existing GitHub Pages main/root configuration.
+The static website uses React, Vite, Radix UI and TanStack Table v8. GitHub Pages publishes the committed root `index.html`, `assets/` and existing `data/` directory through main/root.
 
-## Build and publish
+## Build
 
-Source lives in `web/app/`. Use Node.js 20.9 or newer.
+Use Node.js 22.12 or newer.
 
 ```sh
 cd web
@@ -12,18 +12,20 @@ npm ci
 npm run publish:static
 ```
 
-Commit the changed source, lockfile and exported root files together, including `_next/`. GitHub Pages publishes from `main` and `/(root)`. The live URL is https://rishirajgujadhur.github.io/MauritiusInfo/.
+Commit source and the generated root files together. Source is in `web/src/`. The build exports `web/dist/`, and the publish script replaces generated assets in the repository root. Interface changes require rebuilding. CSV-only changes flow through after Pages republishes them and the browser refreshes/revalidates cached downloads.
 
-`publish:static` builds Next.js and copies `web/out/` into the repository root. The static export is committed so the current Pages branch setup can publish it directly. Future interface edits require running the build command before committing. CSV updates are fetched directly after Pages republishes them and the visitor refreshes.
+Local development uses `npm run dev` inside `web`, with the page at `/MauritiusInfo/`. Make the root `data` directory available through a local `web/public/data` symlink when developing. Production reads the existing published root data directory.
 
-For local development, run `npm run dev` inside `web`, then visit `http://localhost:3000/MauritiusInfo/`. For CSV loading during development, make the repository `data` directory available as `web/public/data` (a local symlink works). The exported site uses the existing root `data` directory.
+## Grid and filters
 
-## Data and behaviour
+TanStack Table sorts the full filtered dataset before pagination. All six headers toggle direction. Shift-click adds sorting columns. The narrow-screen sort picker provides the same columns. Radix provides the table presentation, buttons, popovers, fields, tabs, tooltips, theme and icons. Searchable filter menus support keyboard navigation and show selected values.
 
-The shared `data-core.mjs` declares nine CSV datasets and handles parsing, normalization, search, filtering and pagination. Existing tests run with `node --test tests/site-core.test.mjs` from the repository root.
+CSV export includes every filtered row in the selected sort order. Filter, sort, page and selected-record state are stored in the URL. Theme and density preferences are local to the browser. Dark mode is the default for a new preference.
 
-The site includes Radix Select filters, Dialog details, Switch dark mode, tooltips, icons and an animated SVG pin. Dark mode is the default. Theme choices are saved in `mu-theme-v2`. Reduced-motion preference disables the pin animation. Source links and individual feature evidence remain in the detail view. Details load on demand, search filtering uses React deferred updates, and CSV requests use browser HTTP caching with a reload on explicit retry. Links, buttons, fields, menus and icons use Radix components.
+CSV loading and normalization run in a worker. Search results use deferred React updates. Place details load on demand. The nine primary sources contain 8,548 records at implementation. Some source records overlap. Existing source licences and provenance continue to apply.
 
-At migration, the nine datasets contain 8,548 source records. Some sources overlap. Positive reports describe source claims, and unknown access fields remain unknown. Historical festival editions retain their dates and status in details. Failed source downloads show a retry action and an incomplete-results message.
+## Verification
 
-Source data remains under its existing licences. The footer provides attribution and links for OSM/ODbL and Open Data Mauritius via cyber.mu/CC BY-SA. No private credentials are used by the website.
+Run `node --test tests/site-core.test.mjs` from the repository root for parsing, normalization, feature filters and source-URL checks. Browser checks cover searchable-menu selection, sorting, multi-column order, pagination, CSV export, details, clipboard links and the two themes. The sticky header is checked against the actual scrolling container.
+
+[Review all 50 improvements](UI-IMPROVEMENTS.md).

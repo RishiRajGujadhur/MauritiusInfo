@@ -6,9 +6,9 @@ A practical, source-linked guide to wheelchair access at places in Mauritius.
 
 ## Website explorer
 
-[Open Access Mauritius](https://rishirajgujadhur.github.io/MauritiusInfo/) to search the location data. The Next.js and Radix UI interface includes area/category/access/parking filters, pagination, source details, icons and saved dark mode. It loads nine CSV datasets with 8,548 source records at migration.
+[Open Access Mauritius](https://rishirajgujadhur.github.io/MauritiusInfo/) to search the location data. The React, Radix UI and TanStack Table interface includes searchable filters, six sortable columns, multi-column sorting, CSV export, compact source details and saved dark mode. It loads nine CSV datasets with 8,548 source records at migration.
 
-The site is statically exported for GitHub Pages using the existing main/root setup. [Build and maintenance instructions](WEBSITE.md).
+The Vite build produces static files for GitHub Pages using the existing main/root setup. [Review the 50 interface improvements](UI-IMPROVEMENTS.md). [Build and maintenance instructions](WEBSITE.md).
 
 ## Additional directory locations
 
