@@ -4,7 +4,42 @@ A practical, source-linked guide to wheelchair access at places in Mauritius.
 
 **Web sources checked: 12 November 2026 (Mauritius time).** This is desk research, not an on-site access audit. The date means the source was checked, not that a facility was inspected or is working today. Summaries are paraphrased from public web pages and PDFs; original pages and photographs are not copied into this repository.
 
-## Download tables for Power BI
+## Bulk inventory — 6,965 mapped records
+
+[Download the large Power BI CSV](data/osm/places.csv) · [Import guide and licence](data/osm/README.md) · [Snapshot details](data/osm/import_manifest.json)
+
+Imported **12 November 2026** from the Mauritius OpenStreetMap extract (data timestamp **2026-11-11T21:22:47Z**). It contains named shops, restaurants, accommodation, health/public services, leisure sites and offices, including Rodrigues. Every record has an OSM source link, coordinates, category and explicit access status.
+
+| Inventory measure | Records |
+| --- | ---: |
+| Retained map records | 6,965 |
+| Shops | 2,371 |
+| Tourism objects | 987 |
+| Records with any accessibility-related tag | 103 |
+| Broad wheelchair-access tag: yes | 27 |
+| Broad wheelchair-access tag: limited | 24 |
+| Broad wheelchair-access tag: no | 49 |
+| Broad wheelchair-access status: unknown | 6,865 |
+| Likely duplicate candidates suppressed and logged | 106 |
+
+**These are not 6,965 verified accessible venues.** Only explicit map tags produce mapped_yes, mapped_no or mapped_limited. Missing tags stay unknown. No individual reviews were checked for this bulk import. The 103 tagged records include description/date/parking tags; that count is not the number of accessible places.
+
+| Region | Retained map records |
+| --- | ---: |
+| Central plateau and Moka | 2,311 |
+| North | 1,111 |
+| Port Louis | 1,069 |
+| West and south-west | 898 |
+| South and south-east | 667 |
+| East | 424 |
+| Rodrigues | 408 |
+| Region unresolved | 77 |
+
+The bulk inventory and the **35 curated places below** are separate datasets and may overlap. Do not add their counts as unique businesses. Node/area duplicates were conservatively flagged by name, type and distance; physical-venue deduplication is not guaranteed. Original tags on suppressed candidates are retained in the duplicate ledger.
+
+© OpenStreetMap contributors. Bulk map data is available under [ODbL 1.0](https://opendatacommons.org/licenses/odbl/1-0/) and distributed through [Geofabrik](https://download.geofabrik.de/africa/mauritius.html). Attribution and detailed scope are in [data/osm/README.md](data/osm/README.md). The curated review research remains separate.
+
+## Download curated tables for Power BI
 
 The [data folder](data/) contains **35 places**, **72 feature-level observations** and **29 sources**. It includes individual tenant branches and separates ordinary parking from wheelchair parking.
 
