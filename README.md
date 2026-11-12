@@ -4,6 +4,14 @@ A practical, source-linked guide to wheelchair access at places in Mauritius.
 
 **Web sources checked: 12 November 2026 (Mauritius time).** This is desk research, not an on-site access audit. The date means the source was checked, not that a facility was inspected or is working today. Summaries are paraphrased from public web pages and PDFs; original pages and photographs are not copied into this repository.
 
+## Entertainment: cinemas, tracks and spectator access
+
+The [entertainment guide](data/entertainment/README.md) adds **16 venue/site records**, **26 observations** and **12 sources**. [Download the Power BI venue table](data/entertainment/venues.csv).
+
+Coverage includes MCine branches, three outdoor-cinema locations, Caudan Arts Centre, Strike City, Champ de Mars, Côte d’Or athletics stadium, karting/luge listings and an explicitly flagged Anjalay motorsport planning lead. Spectator access is separate from activity participation, seating, toilets and wheelchair parking.
+
+**These are not 16 verified accessible/open venues.** Current screening/event schedules, screen-specific wheelchair spaces, spectator routes and operating status require confirmation where flagged. Old Star cinema labels are not applied to current MCine branches. One karting listing has unresolved operation and the Anjalay record describes refurbishment planning.
+
 ## Individual shops and wheelchair parking
 
 The [shop guide](data/shops/README.md) covers **12 researched branches**, **29 observations**, **13 sources** and one historical shared parking facility. [Download shop records](data/shops/shops.csv) or [parking facilities](data/shops/parking_facilities.csv).
