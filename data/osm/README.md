@@ -4,6 +4,10 @@
 
 This folder is a bulk map-derived research inventory, separate from the curated, review-backed tables in the parent folder. A mapped place is not a verified accessible destination. Shops, restaurants, accommodation, health/public services, leisure sites and offices are included when named. Unnamed objects, ordinary buildings, roads, bus-stop nodes, benches and waste bins are not counted to inflate the total.
 
+## Repair and healthcare subset
+
+[services.csv](services.csv) contains 415 existing map objects selected by explicit repair/medical subtype or healthcare category. service_group preserves doctors, clinics, hospitals, pharmacies, mechanics and other healthcare as distinct groups. Unknowns and negative map reports remain visible. This overlaps other subset files and must not be summed as new national records. Reproduce with scripts/export_services.py. [Separate researched services](../services/README.md).
+
 ## Shop subset
 
 Additional derived views: [shop_access_register.csv](shop_access_register.csv) adds readable status/category fields to all 2,371 existing mapped shops; [shop_barrier_reports.csv](shop_barrier_reports.csv) selects the 24 mapped negative/limited reports. These are overlapping views, not additional places. Shop size stays unknown. Reproduce using scripts/build_shop_access_register.py.
