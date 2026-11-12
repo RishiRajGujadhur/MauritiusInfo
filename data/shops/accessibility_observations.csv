@@ -1,0 +1,30 @@
+observation_id,shop_id,feature,status,scope,source_id,checked_date,original_review_check,summary
+SHOBS0001,SHP0001,step_free_entrance,listed_yes,specific_branch_listing,SH001,2026-11-12,not_applicable,"Directory feature label; measurements, current operation and complete route not verified."
+SHOBS0002,SHP0001,wheelchair_parking,listed_yes,specific_branch_listing,SH001,2026-11-12,not_applicable,Directory flags wheelchair parking on this branch listing; ownership/site scope and exact bays unresolved.
+SHOBS0003,SHP0001,wheelchair_toilet,listed_yes,specific_branch_listing,SH001,2026-11-12,not_applicable,"Directory feature label; measurements, current operation and complete route not verified."
+SHOBS0004,SHP0002,step_free_entrance,listed_yes,specific_branch_listing,SH002,2026-11-12,not_applicable,"Directory feature label; measurements, current operation and complete route not verified."
+SHOBS0005,SHP0002,wheelchair_parking,listed_yes,specific_branch_listing,SH002,2026-11-12,not_applicable,Directory flags wheelchair parking on this branch listing; ownership/site scope and exact bays unresolved.
+SHOBS0006,SHP0002,wheelchair_toilet,listed_yes,specific_branch_listing,SH002,2026-11-12,not_applicable,"Directory feature label; measurements, current operation and complete route not verified."
+SHOBS0007,SHP0003,step_free_entrance,listed_yes,specific_branch_listing,SH003,2026-11-12,not_applicable,"Directory feature label; measurements, current operation and complete route not verified."
+SHOBS0008,SHP0003,wheelchair_parking,listed_yes,specific_branch_listing,SH003,2026-11-12,not_applicable,Directory flags wheelchair parking on this branch listing; ownership/site scope and exact bays unresolved.
+SHOBS0009,SHP0003,wheelchair_toilet,listed_yes,specific_branch_listing,SH003,2026-11-12,not_applicable,"Directory feature label; measurements, current operation and complete route not verified."
+SHOBS0010,SHP0004,step_free_entrance,listed_yes,specific_branch_listing,SH004,2026-11-12,not_applicable,"Directory feature label; measurements, current operation and complete route not verified."
+SHOBS0011,SHP0004,wheelchair_parking,listed_yes,specific_branch_listing,SH004,2026-11-12,not_applicable,Directory flags wheelchair parking on this branch listing; ownership/site scope and exact bays unresolved.
+SHOBS0012,SHP0004,wheelchair_toilet,listed_yes,specific_branch_listing,SH004,2026-11-12,not_applicable,"Directory feature label; measurements, current operation and complete route not verified."
+SHOBS0013,SHP0004,wheelchair_seating,listed_yes,specific_branch_listing,SH004,2026-11-12,not_applicable,"Directory feature label; measurements, current operation and complete route not verified."
+SHOBS0014,SHP0005,step_free_entrance,listed_yes,specific_branch_listing,SH005,2026-11-12,not_applicable,"Directory feature label; measurements, current operation and complete route not verified."
+SHOBS0015,SHP0005,wheelchair_parking,listed_yes,specific_branch_listing,SH005,2026-11-12,not_applicable,Directory flags wheelchair parking on this branch listing; ownership/site scope and exact bays unresolved.
+SHOBS0016,SHP0007,step_free_entrance,listed_yes,specific_branch_listing,SH007,2026-11-12,not_applicable,"Directory feature label; measurements, current operation and complete route not verified."
+SHOBS0017,SHP0007,wheelchair_parking,listed_yes,specific_branch_listing,SH007,2026-11-12,not_applicable,Directory flags wheelchair parking on this branch listing; ownership/site scope and exact bays unresolved.
+SHOBS0018,SHP0007,wheelchair_toilet,listed_yes,specific_branch_listing,SH007,2026-11-12,not_applicable,"Directory feature label; measurements, current operation and complete route not verified."
+SHOBS0019,SHP0008,step_free_entrance,listed_yes,specific_branch_listing,SH008,2026-11-12,not_applicable,"Directory feature label; measurements, current operation and complete route not verified."
+SHOBS0020,SHP0008,wheelchair_parking,listed_yes,specific_branch_listing,SH008,2026-11-12,not_applicable,Directory flags wheelchair parking on this branch listing; ownership/site scope and exact bays unresolved.
+SHOBS0021,SHP0009,step_free_entrance,listed_yes,specific_branch_listing,SH009,2026-11-12,not_applicable,"Directory feature label; measurements, current operation and complete route not verified."
+SHOBS0022,SHP0009,wheelchair_parking,listed_yes,specific_branch_listing,SH009,2026-11-12,not_applicable,Directory flags wheelchair parking on this branch listing; ownership/site scope and exact bays unresolved.
+SHOBS0023,SHP0010,wheelchair_parking,listed_yes,specific_branch_listing,SH010,2026-11-12,not_applicable,Directory flags wheelchair parking on this branch listing; ownership/site scope and exact bays unresolved.
+SHOBS0024,SHP0011,step_free_entrance,listed_yes,specific_branch_listing,SH011,2026-11-12,not_applicable,"Directory feature label; measurements, current operation and complete route not verified."
+SHOBS0025,SHP0011,wheelchair_parking,listed_yes,specific_branch_listing,SH011,2026-11-12,not_applicable,Directory flags wheelchair parking on this branch listing; ownership/site scope and exact bays unresolved.
+SHOBS0026,SHP0012,step_free_entrance,listed_yes,specific_branch_listing,SH012,2026-11-12,not_applicable,"Directory feature label; measurements, current operation and complete route not verified."
+SHOBS0027,SHP0012,wheelchair_parking,listed_yes,specific_branch_listing,SH012,2026-11-12,not_applicable,Directory flags wheelchair parking on this branch listing; ownership/site scope and exact bays unresolved.
+SHOBS0028,SHP0005,aisle_clearance,unmeasured_visitor_concern,specific_branch_listing,SH005,2026-11-12,mirror_only,Mirrored Google-attributed review describes narrow corridors without wheelchair measurements or a reliable date. Not classified as a wheelchair audit.
+SHOBS0029,SHP0006,shared_site_wheelchair_parking,historical_announced_provision,shared_terminal,SH013,2026-11-12,not_applicable,"2022 statement describes terminal-wide provision, not reserved Winners bays or current usable route."
