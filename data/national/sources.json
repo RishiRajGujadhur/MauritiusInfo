@@ -1,0 +1,65 @@
+{
+  "publisher": "Open Data Mauritius",
+  "retrieved_via": "cyber.mu public open-data republication",
+  "license_as_stated_by_mirror": "CC-BY-SA-4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "primary_dataset_url": "https://data.govmu.org/dataset/locations-hospitals-clinics-medi-clinics-area-health-centres-and-community-health-centres",
+  "primary_download_result": "Anti-bot HTML rather than CSV; primary file not ingested",
+  "source_snapshot": "2026-09-06 09:20 MUT",
+  "sources": [
+    {
+      "url": "https://places.cyber.mu/health/blackriver/",
+      "rows": 12,
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "b0032c2134dde875662da4fbf765d56c26fa7cd617a090a11b6c21c293a5bd10"
+    },
+    {
+      "url": "https://places.cyber.mu/health/flacq/",
+      "rows": 30,
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "abda0861ac735300457970ea085eb145aa6b44d319f8dc46cbd8895a114cc01d"
+    },
+    {
+      "url": "https://places.cyber.mu/health/grandport/",
+      "rows": 15,
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "87d705c6083f5fae09827bdacd2348b461e36b9cb2e21dcb5295bf5b84c1e001"
+    },
+    {
+      "url": "https://places.cyber.mu/health/moka/",
+      "rows": 14,
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "149cbdfa9c5a1014b706204a26d24e46282897c44626dd9dfd5a489c72da22eb"
+    },
+    {
+      "url": "https://places.cyber.mu/health/pamplemousses/",
+      "rows": 22,
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "697c2f93a94649d569e4763a0fd3ee38dab7ce9f50945f1d53ff4d31db7fb192"
+    },
+    {
+      "url": "https://places.cyber.mu/health/plainewilhems/",
+      "rows": 32,
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "e7e16da40bd7b096310b34315458bd3032440170bb28f74c0e49c1a6caefe98b"
+    },
+    {
+      "url": "https://places.cyber.mu/health/portlouis/",
+      "rows": 18,
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "20bd59645c9e05338291c7c319e9bcaf1f8d5cd3210a7d332ccfa3b764754654"
+    },
+    {
+      "url": "https://places.cyber.mu/health/rivieredurempart/",
+      "rows": 18,
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "cb06e4d69a23f284ab58134bdfdb054b5bd8766fb9da0b2f8d29a35ada6d155e"
+    },
+    {
+      "url": "https://places.cyber.mu/health/savanne/",
+      "rows": 8,
+      "retrieved_date": "2026-11-12",
+      "response_sha256": "29f9743e148a89d1ad7074424f0fcd5fdc4b2a3d28df3ca3981b96c4966a2a93"
+    }
+  ]
+}
