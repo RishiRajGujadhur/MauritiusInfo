@@ -35,3 +35,7 @@ Serve the repository root over HTTP, for example `python3 -m http.server 8000`, 
 Run `node --test tests/site-core.test.mjs`. Tests exercise the real datasets, quoted/multiline CSV parsing, independent feature filters, accent-insensitive search, empty results, invalid page bounds and unsafe URL rejection. No dependencies are required. Data shape changes require updating the normalizer and expected fixture counts where appropriate.
 
 Website files: `index.html`, `styles.css`, `app.js`, `data-core.mjs`, `.nojekyll`. No source data is rewritten by the website. Data attribution and licence links are displayed in the footer; original source licences continue to apply.
+
+## First deployment troubleshooting
+
+If Pages is enabled on main/root but the project URL returns 404, check the repository Actions tab for a Pages build/deployment. The source files alone do not prove the site has been deployed. A new commit to the selected branch can request another build after Pages is enabled. Use the project URL including `/MauritiusInfo/`, not just the account's github.io root.
