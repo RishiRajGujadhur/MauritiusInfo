@@ -1,0 +1,73 @@
+source_district,category,source_record_count,district_verified
+Not stated,atms,73,false
+Not stated,community,7,false
+Not stated,embassies,7,false
+Not stated,fire,11,false
+Not stated,police,79,false
+Not stated,post-offices,86,false
+Not stated,schools,15,false
+Not stated,shopping,1,false
+Not stated,sports,2,false
+Not stated,utilities,25,false
+Agalega,schools,2,false
+Black River,atms,13,false
+Black River,community,20,false
+Black River,fuel-stations,9,false
+Black River,post-offices,1,false
+Black River,schools,5,false
+Black River,shopping,16,false
+Black River,sports,9,false
+Flacq,atms,15,false
+Flacq,community,50,false
+Flacq,fuel-stations,20,false
+Flacq,post-offices,1,false
+Flacq,schools,13,false
+Flacq,shopping,21,false
+Flacq,sports,1,false
+Flacq,utilities,1,false
+Grand Port,atms,17,false
+Grand Port,community,28,false
+Grand Port,fuel-stations,16,false
+Grand Port,post-offices,1,false
+Grand Port,schools,10,false
+Grand Port,shopping,17,false
+Moka,atms,12,false
+Moka,community,16,false
+Moka,fuel-stations,9,false
+Moka,post-offices,4,false
+Moka,schools,13,false
+Moka,shopping,11,false
+Moka,sports,1,false
+Pamplemousses,atms,15,false
+Pamplemousses,community,32,false
+Pamplemousses,fuel-stations,19,false
+Pamplemousses,post-offices,4,false
+Pamplemousses,schools,14,false
+Pamplemousses,shopping,16,false
+Plaines Wilhems,atms,57,false
+Plaines Wilhems,community,41,false
+Plaines Wilhems,embassies,3,false
+Plaines Wilhems,fuel-stations,40,false
+Plaines Wilhems,post-offices,3,false
+Plaines Wilhems,schools,59,false
+Plaines Wilhems,shopping,51,false
+Plaines Wilhems,sports,8,false
+Port Louis,atms,23,false
+Port Louis,community,22,false
+Port Louis,embassies,5,false
+Port Louis,fuel-stations,17,false
+Port Louis,schools,18,false
+Port Louis,shopping,17,false
+Port Louis,sports,2,false
+Rivière du Rempart,atms,19,false
+Rivière du Rempart,community,28,false
+Rivière du Rempart,fuel-stations,15,false
+Rivière du Rempart,schools,14,false
+Rivière du Rempart,shopping,16,false
+Rodrigues,schools,13,false
+Savanne,atms,14,false
+Savanne,community,20,false
+Savanne,fuel-stations,6,false
+Savanne,post-offices,2,false
+Savanne,schools,5,false
+Savanne,shopping,6,false
