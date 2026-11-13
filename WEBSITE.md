@@ -118,3 +118,22 @@ focus return remain supported. Mobile options have 44px minimum tap targets.
 Mall visit details can select separately published trading groups (such as
 hypermarket or leisure) from the same source snapshot. This does not copy mall
 hours onto tenants, change directory open-now badges, or change trip checks.
+
+### GPS proximity sort and opening-hours window
+
+Select **Sort → Nearest to me (GPS)** on desktop or mobile to request location
+permission and sort all matching places by straight-line distance. This adds no
+radius restriction; the existing nearby radius filter remains independent.
+Unmapped places stay at the end. Permission errors preserve the existing order.
+Coordinates and GPS sort state stay in memory and are excluded from shared URLs
+and browser storage. Clear GPS removes the proximity origin. Changing sort,
+clearing filters or leaving the page cancels pending location results.
+
+The **Hours** popover and Visit filters offer a Radix two-thumb slider for an
+**Open by / Stay open until** visit window, in 15-minute increments from 00:00 to
+24:00 on a selected date. Results must have continuous published opening coverage
+for that whole same-day window in Mauritius time, including holiday exceptions
+and overnight carry-over. Unknown schedules and breaks during the window are
+excluded. The date and time window are shareable through the `hours` URL query;
+invalid ranges are ignored. Search badges continue to describe opening now,
+while this filter describes the selected visit date.

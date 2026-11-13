@@ -413,3 +413,25 @@ footer > a { order: 2; margin-left: auto; }
 }
 
 @media (max-width:700px) { .grid-actions .rt-Button[aria-label="My trip"] { width:auto; padding:0 9px; gap:5px; } .grid-actions .rt-Button[aria-label="My trip"] > span { display:inline; font-size:12px; } }
+
+.desktop-sort { flex: 0 0 155px; }
+.hours-popover { width: 360px; max-width: calc(100vw - 24px); padding: 20px; }
+.hours-window { margin: 20px 0 26px; }
+.hours-popover .hours-window { margin: 0; }
+.hours-window-heading, .hours-range-labels, .hours-range-scale { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.hours-window-heading h2 { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 16px; }
+.hours-date { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 18px 0; font-size: 14px; }
+.hours-date .rt-TextFieldRoot { max-width: 180px; }
+.hours-date input { min-width: 0; font-size: 16px; color-scheme: dark; }
+.light .hours-date input { color-scheme: light; }
+.hours-range-labels { font-size: 12px; }
+.hours-range-labels strong { display: block; font-size: 18px; font-variant-numeric: tabular-nums; margin-top: 4px; }
+.hours-range-labels > :last-child { text-align: right; }
+.hours-range.rt-SliderRoot { margin: 12px 0 4px; min-height: 44px; touch-action: none; }
+.hours-range .rt-SliderThumb { min-width: 24px; min-height: 24px; }
+.hours-range .rt-SliderThumb:focus-visible { outline: 2px solid var(--accent-9); outline-offset: 4px; }
+.hours-range-scale { color: var(--gray-11); font-size: 11px; font-variant-numeric: tabular-nums; }
+.gps-summary { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px 14px; font-size: 13px; }
+.gps-summary p { flex: 1 1 220px; margin: 0; }
+@media (min-width: 701px) and (max-width: 1150px) { .filters { flex-wrap: wrap; } .filters > .filter-control { flex: 1 1 110px; } }
+@media (max-width: 700px) { .desktop-sort { display: none; } }

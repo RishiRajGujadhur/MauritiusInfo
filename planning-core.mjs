@@ -148,3 +148,35 @@ export function formatIntervals(intervals){return intervals===null?'Unconfirmed'
 export function readTrip(value) {
   try {const rows=JSON.parse(value);if(!Array.isArray(rows))return [];const seen=new Set();return rows.filter(r=>r&&typeof r.key==='string'&&r.key.length<200&&!seen.has(r.key)&&seen.add(r.key)).slice(0,50).map(r=>({key:r.key,arrival:localDateTime(r.arrival)?r.arrival:'',duration:Math.max(1,Math.min(1440,Math.trunc(Number(r.duration))||60))}));}catch{return [];}
 }
+
+
+// A same-day visit window in Mauritius time. Invalid URL values never activate it.
+export function readHoursWindow(value) {
+  if (typeof value !== 'string') return null;
+  const [date, from, to, ...extra] = value.split(',');
+  if (extra.length || !/^\d{4}-\d{2}-\d{2}$/.test(date) || !localDateTime(date+'T00:00') || !/^\d+$/.test(from||'') || !/^\d+$/.test(to||'')) return null;
+  const start=Number(from),end=Number(to);
+  return start>=0 && end<=1440 && start<end && start%15===0 && end%15===0 ? {date,start,end} : null;
+}
+export function windowTime(minutes) { return minutes===1440 ? '24:00' : formatTime(minutes); }
+export function hoursWindowMatch(record,window,calendar) {
+  if(!window)return true;
+  const schedule=parseHours(hoursFor(record));
+  if(!schedule)return false;
+  const date=localDateTime(window.date+'T00:00');
+  if(!date)return false;
+  const today=dayIntervals(schedule,date,calendar);
+  if(today===null)return false;
+  const parts=mauritiusParts(date),holiday=calendar?.holidays?.some(h=>h.date===parts.date);
+  if((holiday && !schedule.holiday?.length)||(!holiday && schedule.closedDays?.includes(parts.day)))return false;
+  const previous=dayIntervals(schedule,new Date(date.getTime()-DAY_MS),calendar);
+  const intervals=[...today, ...(previous||[]).filter(([,end])=>end>1440).map(([,end])=>[0,end-1440])].sort((a,b)=>a[0]-b[0]);
+  let covered=window.start;
+  for(const [start,end] of intervals) {
+    if(end<=covered)continue;
+    if(start>covered)return false;
+    covered=end;
+    if(covered>=window.end)return true;
+  }
+  return false;
+}
