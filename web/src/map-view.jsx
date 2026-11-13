@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Button } from '@radix-ui/themes';
 import { EnterFullScreenIcon, RowsIcon } from '@radix-ui/react-icons';
 import L from 'leaflet';
@@ -9,7 +10,10 @@ import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import { coordinates } from '../../place-tools.mjs';
 
 const COLORS = {positive:'#17854a',limited:'#a46406',negative:'#c83138',unknown:'#64748b'};
-export default function MapView({ records, onOpen, onList }) {
+export default function MapView({ records, onOpen, onList, gps, savedSet, onToggleSave }) {
+  const wrapper=useRef(null),fitted=useRef(false),gpsLayer=useRef(null),saved=useRef(savedSet),save=useRef(onToggleSave);
+  const [expanded,setExpanded]=useState(false),[tileVersion,setTileVersion]=useState(0),[popup,setPopup]=useState(null);
+  saved.current=savedSet;save.current=onToggleSave;
   const host = useRef(null), map = useRef(null), cluster = useRef(null), open = useRef(onOpen);
   const [tileError, setTileError] = useState(false);
   const plotted = useMemo(() => records.filter(record => coordinates(record)), [records]);
@@ -25,7 +29,7 @@ export default function MapView({ records, onOpen, onList }) {
     cluster.current.addTo(instance);
     const resize = new ResizeObserver(() => instance.invalidateSize()); resize.observe(host.current);
     return () => { resize.disconnect(); instance.remove(); map.current = null; cluster.current = null; };
-  }, []);
+  }, [tileVersion]);
   useEffect(() => {
     const layer = cluster.current, instance = map.current;
     if (!layer || !instance) return;
@@ -45,24 +49,30 @@ export default function MapView({ records, onOpen, onList }) {
         const access = document.createElement('p'); access.textContent = `Access: ${record.access.label} · Parking: ${record.parking.label}`;
         const position = document.createElement('p'); position.textContent = record.raw.coordinate_method === 'geometry_bbox_centre' ? 'Position: centre of the mapped area; entrance may differ.' : record.raw.coordinate_basis === 'source_map_link_rounded' ? 'Position: rounded source map coordinates; entrance may differ.' : 'Position from the source map; entrance may differ.';
         const evidence = document.createElement('p'); evidence.textContent = (record.evidence || []).map(item => item.label).join(' · ');
-        const button = document.createElement('button'); button.type = 'button'; button.textContent = 'View place'; button.addEventListener('click', event => open.current(record,event));
-        container.append(title,location,access,evidence,position,button); return container;
+        const controls=document.createElement('div');controls.className='map-popup-actions';container.append(title,location,access,evidence,position,controls);setPopup({container:controls,record}); return container;
       }, {maxWidth:300,minWidth:220});
+      marker.on('popupclose',()=>setPopup(current=>current?.record.key===record.key?null:current));
       return marker;
     });
     layer.addLayers(markers);
-    if (plotted.length) {
+    if (plotted.length && !fitted.current) {
+      fitted.current=true;
       const mainland = plotted.filter(record => coordinates(record)[1] < 60);
       const focus = plotted.length > 500 && mainland.length ? mainland : plotted;
       instance.fitBounds(L.latLngBounds(focus.map(coordinates)), {padding:[35,35],maxZoom:15,animate:false});
     }
     return () => { layer.clearLayers(); };
-  }, [plotted]);
-  return <section className="map-view" aria-label="Place map">
-    <div className="map-summary"><p><strong>{plotted.length.toLocaleString()}</strong> mapped · {(records.length-plotted.length).toLocaleString()} without coordinates</p><div><Button variant="soft" color="gray" onClick={() => { if(plotted.length) map.current?.fitBounds(L.latLngBounds(plotted.map(coordinates)),{padding:[35,35],maxZoom:15}); }} disabled={!plotted.length}><EnterFullScreenIcon />Fit all</Button><Button variant="soft" color="gray" onClick={onList}><RowsIcon />List</Button></div></div>
-    {tileError && <p className="map-notice" role="status">Map background could not load. Place markers are still available. Try the list view if needed.</p>}
+  }, [plotted,tileVersion]);
+  useEffect(()=>{map.current?.invalidateSize();},[expanded]);
+  useEffect(()=>{if(!map.current)return;gpsLayer.current?.remove();if(gps)gpsLayer.current=L.circleMarker(gps,{radius:9,color:'#fff',fillColor:'#1677ff',fillOpacity:1,weight:3}).bindTooltip('Your GPS location').addTo(map.current);return()=>gpsLayer.current?.remove();},[gps,tileVersion]);
+  function island(east){const rows=plotted.filter(record=>(coordinates(record)[1]>=60)===east);if(rows.length)map.current?.fitBounds(L.latLngBounds(rows.map(coordinates)),{padding:[35,35],maxZoom:15,animate:false});}
+  return <section ref={wrapper} className={`map-view ${expanded?'map-expanded':''}`} aria-label="Place map">
+    <div className="map-summary"><p><strong>{plotted.length.toLocaleString()}</strong> mapped · {(records.length-plotted.length).toLocaleString()} without coordinates</p><div><Button variant="soft" onClick={()=>setExpanded(value=>!value)}>{expanded?'Exit expanded map':'Expand map'}</Button><Button variant="soft" disabled={!plotted.some(r=>coordinates(r)[1]<60)} onClick={()=>island(false)}>Mauritius</Button><Button variant="soft" disabled={!plotted.some(r=>coordinates(r)[1]>=60)} onClick={()=>island(true)}>Rodrigues</Button>{gps&&<Button variant="soft" onClick={()=>map.current?.setView(gps,14,{animate:false})}>My location</Button>}<Button variant="soft" color="gray" onClick={() => { if(plotted.length) map.current?.fitBounds(L.latLngBounds(plotted.map(coordinates)),{padding:[35,35],maxZoom:15}); }} disabled={!plotted.length}><EnterFullScreenIcon />Fit all</Button><Button variant="soft" color="gray" onClick={onList}><RowsIcon />List</Button></div></div>
+    {tileError && <p className="map-notice" role="status">Map background could not load. Place markers are still available. <Button variant="soft" onClick={()=>{fitted.current=false;setTileError(false);setTileVersion(value=>value+1);}}>Retry map background</Button></p>}
     {!plotted.length && <p className="map-notice" role="status">No coordinates for these results. Use the list to view all matching places.</p>}
+    <p className="form-note">Tab to a marker and press Enter for its summary. Arrow keys pan; + and − zoom. Use List for a searchable alternative.</p>
     <div ref={host} className="leaflet-host" aria-label="Interactive map of Mauritius and Rodrigues" />
+    {popup&&createPortal(<div className="qol-actions"><Button size="2" onClick={event=>open.current(popup.record,event)}>View place</Button><Button size="2" variant="soft" onClick={()=>save.current?.(popup.record.key)}>{savedSet?.has(popup.record.key)?'Unsave place':'Save place'}</Button><Button asChild size="2" variant="soft"><a href={`https://www.google.com/maps/dir/?api=1&destination=${coordinates(popup.record).join(',')}`} target="_blank" rel="noopener noreferrer">Directions to pin</a></Button></div>,popup.container)}
     <div className="map-legend" aria-label="Wheelchair access legend"><span><i style={{background:COLORS.positive}}>✓</i>Reported yes</span><span><i style={{background:COLORS.limited}}>!</i>Limited</span><span><i style={{background:COLORS.negative}}>×</i>Reported no</span><span><i style={{background:COLORS.unknown}}>?</i>Unknown</span></div>
     <p className="form-note">Map shows all filtered records with coordinates, including Rodrigues. Fit all to include every island. Cluster numbers count records. Positions and accessibility reports may need checking.</p>
   </section>;

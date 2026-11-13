@@ -4,6 +4,10 @@ import { AccessibilityIcon, ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowU
 import { flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
 import { DATASETS, filterRecords } from '../../data-core.mjs';
 import SearchSelect from './search-select';
+import { addRecent, readRecents, readSearches, searchQuery, recordsCSV } from '../../qol-core.mjs';
+import { copyText, downloadFile } from './qol-actions.mjs';
+import { CopyFallback, RecentSearches } from './qol-ui';
+const ToolsPanel=lazy(()=>import('./tools-panel'));
 import HoursFilter from './hours-filter';
 import { getCategoryIcon } from './category-icons';
 import { ReportBadge, EvidenceLabels } from './ui';
@@ -53,20 +57,26 @@ function storedValue(key, fallback) {
   try { return localStorage.getItem(key) || fallback; } catch { return fallback; }
 }
 
-function downloadRows(rows) {
-  const headers = ['record_id', 'place_name', 'category', 'area', 'address', 'wheelchair_access', 'wheelchair_parking', 'dataset', 'evidence'];
-  const values = rows.map(({ original: record }) => [record.id, record.name, record.category, record.area, record.address, record.access.raw, record.parking.raw, record.dataset.name, record.evidence?.map(item => item.label).join('; ')]);
-  const csv = [headers, ...values].map(row => row.map(value => `"${String(value ?? '').replaceAll('"', '""')}"`).join(',')).join('\r\n');
-  const url = URL.createObjectURL(new Blob(['\uFEFF', csv], { type: 'text/csv;charset=utf-8' }));
-  const anchor = document.createElement('a');
-  anchor.href = url;
-  anchor.download = 'access-mauritius-results.csv';
-  anchor.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
+function downloadRows(rows){downloadFile('access-mauritius-results.csv',recordsCSV(rows.map(row=>row.original)),'text/csv;charset=utf-8');}
 
 export default function Explorer() {
   const [initial] = useState(readInitial);
+  const [toolsOpen,setToolsOpen]=useState(false);
+  const [recents,setRecents]=useState(()=>readRecents(storedValue('mu-recents-v1','[]')));
+  const [searches,setSearches]=useState(()=>readSearches(storedValue('mu-searches-v1','[]')));
+  const [notice,setNotice]=useState(null);
+  const [copyFallback,setCopyFallback]=useState('');
+  const [connected,setConnected]=useState(navigator.onLine);
+  function rememberSearch(text){setRecents(rows=>addRecent(rows,text));}
+  async function shareResults(){
+    const url=location.href;
+    try{if(navigator.share){await navigator.share({title:'Access Mauritius places',url});return;}}catch(error){if(error.name==='AbortError')return;}
+    if(await copyText(url))setNotice({message:'Results link copied.'});else setCopyFallback(url);
+  }
+  function restoreSearch(query){history.pushState(null,'',location.pathname+'?'+searchQuery(query));dispatchEvent(new PopStateEvent('popstate'));}
+  function recentControls(){return <RecentSearches rows={recents} onChoose={text=>{updateFilter('search',text);setSearchDraft(text);rememberSearch(text);}} onRemove={text=>setRecents(rows=>rows.filter(r=>r!==text))} onClear={()=>setRecents([])} />;}
+  useEffect(()=>{try{localStorage.setItem('mu-recents-v1',JSON.stringify(recents));localStorage.setItem('mu-searches-v1',JSON.stringify(searches));}catch{setNotice({message:'Search history could not be saved on this browser.'});}},[recents,searches]);
+  useEffect(()=>{function online(){setConnected(true);setNotice({message:'Connection restored. Retry sources to refresh the data.'});}function offline(){setConnected(false);}addEventListener('online',online);addEventListener('offline',offline);return()=>{removeEventListener('online',online);removeEventListener('offline',offline);};},[]);
   const [practical, setPractical] = useState(initial.practical);
   const [nearby, setNearby] = useState(initial.nearby);
   const [hoursWindow,setHoursWindow]=useState(initial.hoursWindow);
@@ -142,7 +152,7 @@ export default function Explorer() {
     addEventListener('storage', sync); return () => removeEventListener('storage', sync);
   }, []);
   const savedSet = useMemo(() => new Set(savedKeys), [savedKeys]);
-  function toggleSave(key) { setSavedKeys(current => current.includes(key) ? current.filter(value => value !== key) : [...current, key]); }
+  function toggleSave(key) { const removing=savedKeys.includes(key);setSavedKeys(current=>removing?current.filter(value=>value!==key):[...new Set([...current,key])]);setNotice({message:removing?'Place removed from saved places.':'Place saved.',undo:removing?()=>setSavedKeys(current=>[...new Set([...current,key])]):null}); }
   function updateNeeds(next) { setNeeds(next); setPagination(current => ({ ...current, pageIndex: 0 })); }
   function toggleSavedOnly() { setSavedOnly(value => !value); setPagination(current => ({ ...current, pageIndex: 0 })); }
   useEffect(() => {
@@ -173,9 +183,7 @@ export default function Explorer() {
     setLoading(true);
     let alive = true;
     async function fallback(failures) {
-      const saved = await loadOfflineRecords();
-      if (!alive) return;
-      setRecords(saved); setOfflineMode(true); setFailures(failures); setLoading(false);
+      try{const saved=await loadOfflineRecords();if(!alive)return;setRecords(saved);setOfflineMode(true);setFailures(failures);}catch{if(alive){setRecords([]);setFailures(failures);setTripWarning('Saved data could not load. Reconnect and retry sources.');}}finally{if(alive)setLoading(false);}
     }
     if (!navigator.onLine) {
       fallback([]);
@@ -240,6 +248,23 @@ export default function Explorer() {
   });
   const pageCount = Math.max(1, table.getPageCount());
   const pageIndex = Math.min(pagination.pageIndex, pageCount - 1);
+  useEffect(()=>{
+    function keys(event){
+      const target=event.target;
+      if(target?.closest?.('input,textarea,select,[contenteditable="true"],[role="slider"]')||document.querySelector('[role="dialog"],[role="alertdialog"]')||document.querySelector('.search-popover'))return;
+      if(event.key==='?'&&!event.ctrlKey&&!event.metaKey){event.preventDefault();setToolsOpen(true);return;}
+      if(!event.altKey||event.ctrlKey||event.metaKey)return;
+      const key=event.key.toLowerCase();
+      if(key==='pagedown'&&!loading){event.preventDefault();goToPage(Math.min(pageCount-1,pageIndex+1));}
+      if(key==='pageup'&&!loading){event.preventDefault();goToPage(Math.max(0,pageIndex-1));}
+      if(key==='m'){event.preventDefault();setView('map');}
+      if(key==='l'){event.preventDefault();setView('list');}
+      if(key==='s'){event.preventDefault();toggleSavedOnly();}
+      if(key==='t'){event.preventDefault();setTripOpen(true);}
+    }
+    addEventListener('keydown',keys);return()=>removeEventListener('keydown',keys);
+  },[pageIndex,pageCount,loading]);
+
 
   useEffect(() => {
     if (!loading && pagination.pageIndex !== pageIndex) setPagination(current => ({ ...current, pageIndex }));
@@ -312,7 +337,7 @@ export default function Explorer() {
     setSelectedKey(record.key);
   }
   function cellContent(record, column) {
-    if (column === 'name') return <div className="place-cell"><IconButton className="save-place" variant="ghost" color={savedSet.has(record.key) ? 'blue' : 'gray'} aria-label={`${savedSet.has(record.key) ? 'Unsave' : 'Save'} ${record.name}`} aria-pressed={savedSet.has(record.key)} onClick={() => toggleSave(record.key)}>{savedSet.has(record.key) ? <BookmarkFilledIcon /> : <BookmarkIcon />}</IconButton><Button variant="ghost" className="place-name" onClick={event => openDetails(record, event)}><DrawingPinIcon /><span>{record.name}<HoursBadge record={record} now={now} />{distanceByKey.has(record.key) && <small>{distanceByKey.get(record.key).toFixed(1)} km straight line</small>}</span><ExternalLinkIcon className="row-open-icon" /></Button></div>;
+    if (column === 'name') return <div className="place-cell"><IconButton className="save-place" variant="ghost" color={savedSet.has(record.key) ? 'blue' : 'gray'} aria-label={`${savedSet.has(record.key) ? 'Unsave' : 'Save'} ${record.name}`} aria-pressed={savedSet.has(record.key)} onClick={() => toggleSave(record.key)}>{savedSet.has(record.key) ? <BookmarkFilledIcon /> : <BookmarkIcon />}</IconButton><Button variant="ghost" className="place-name" onClick={event => openDetails(record, event)}><DrawingPinIcon /><span title={record.name}>{record.name}<HoursBadge record={record} now={now} />{distanceByKey.has(record.key) && <small>{distanceByKey.get(record.key).toFixed(1)} km straight line</small>}</span><ExternalLinkIcon className="row-open-icon" /></Button></div>;
     if (column === 'category') {
       const CategoryIcon = getCategoryIcon(record.category);
       return <span className="muted"><span className="category-label"><CategoryIcon aria-hidden="true" />{record.category}</span><small>{record.type !== record.category ? record.type : ''}</small></span>;
@@ -322,6 +347,8 @@ export default function Explorer() {
     return <span className="muted source-name">{record.dataset.name}<EvidenceLabels record={record} /></span>;
   }
   const selectedRecord = records.find(record => record.key === selectedKey);
+  const sortedRecords=table.getSortedRowModel().rows.map(row=>row.original);
+  const selectedIndex=sortedRecords.findIndex(record=>record.key===selectedKey);
   const activeFilters = FILTERS.filter(filter => filters[filter.key]);
   const visibleRows = table.getRowModel().rows;
   const start = matches.length ? pageIndex * pagination.pageSize + 1 : 0;
@@ -345,7 +372,7 @@ export default function Explorer() {
   function clearGPS(){gpsRequest.current++;setGPS(null);setGPSPending(false);setGeoMessage('');if(nearby?.id==='gps')setNearby(null);if(sorting.some(value=>value.id==='proximity'||(value.id==='distance'&&nearby?.id==='gps')))table.setSorting([{id:'name',desc:false}]);setPagination(current=>({...current,pageIndex:0}));}
   function sortControl(){return <SearchSelect label="Sort" icon={CaretSortIcon} value={`${sorting[0]?.id || 'name'}:${sorting[0]?.desc ? 'desc' : 'asc'}`} options={mobileSortOptions} placeholder="Place · ascending" allowAll={false} onChange={changeSort} />;}
   function filterControls() {
-    return <><Popover.Root><Popover.Trigger><Button variant={hoursWindow?'soft':'surface'} color={hoursWindow?'blue':'gray'}><ClockIcon />Hours</Button></Popover.Trigger><Popover.Content className="hours-popover" aria-label="Filter by opening hours" sideOffset={7} align="start"><HoursFilter value={hoursWindow} onChange={updateHoursWindow} /></Popover.Content></Popover.Root><Button variant={practical.length || nearby || hoursWindow ? "soft" : "surface"} color={practical.length || nearby || hoursWindow ? "blue" : "gray"} onClick={() => setVisitOpen(true)}><MagnifyingGlassIcon />Visit filters{(practical.length > 0 || nearby || hoursWindow) && <span className="control-count">{practical.length + (nearby ? 1 : 0) + (hoursWindow ? 1 : 0)}</span>}</Button><Button className="needs-trigger" variant={needs.enabled && needs.ids.length ? "soft" : "surface"} color={needs.enabled && needs.ids.length ? "blue" : "gray"} onClick={() => setNeedsOpen(true)}><AccessibilityIcon />My needs{needs.enabled && needs.ids.length > 0 && <span className="control-count">{needs.ids.length}</span>}</Button>{FILTERS.map(filter => <SearchSelect key={filter.key} {...filter} getOptionIcon={filter.key === 'category' ? getCategoryIcon : undefined} value={filters[filter.key]} options={options[filter.key]} onChange={value => updateFilter(filter.key, value)} />)}</>;
+    return <><Popover.Root><Popover.Trigger><Button variant={hoursWindow?'soft':'surface'} color={hoursWindow?'blue':'gray'}><ClockIcon />Hours</Button></Popover.Trigger><Popover.Content className="hours-popover" aria-label="Filter by opening hours" sideOffset={7} align="start"><HoursFilter value={hoursWindow} onChange={updateHoursWindow} /></Popover.Content></Popover.Root><Button variant={practical.length || nearby || hoursWindow ? "soft" : "surface"} color={practical.length || nearby || hoursWindow ? "blue" : "gray"} onClick={() => setVisitOpen(true)}><MagnifyingGlassIcon />Visit filters{(practical.length > 0 || nearby || hoursWindow) && <span className="control-count">{practical.length + (nearby ? 1 : 0) + (hoursWindow ? 1 : 0)}</span>}</Button><Button className="needs-trigger" variant={needs.enabled && needs.ids.length ? "soft" : "surface"} color={needs.enabled && needs.ids.length ? "blue" : "gray"} onClick={() => setNeedsOpen(true)}><AccessibilityIcon />My needs{needs.enabled && needs.ids.length > 0 && <span className="control-count">{needs.ids.length}</span>}</Button>{FILTERS.map(({key,...filter}) => <SearchSelect key={key} {...filter} getOptionIcon={key === 'category' ? getCategoryIcon : undefined} value={filters[key]} options={options[key]} onChange={value => updateFilter(key, value)} />)}</>;
   }
   const mobileSortOptions = [['proximity:asc','Nearest to me (GPS)'],...Object.entries(COLUMN_LABELS).filter(([key])=>key!=='proximity' && (key!=='distance'||nearby)).flatMap(([key, label]) => [[`${key}:asc`, `${label} · ascending`], [`${key}:desc`, `${label} · descending`]])];
 
@@ -353,13 +380,14 @@ export default function Explorer() {
     <Link className="skip-link" href="#results">Skip to places</Link>
     <header className="site-header"><div className="shell header-inner">
       <Link href={BASE} className="brand"><GlobeIcon className="brand-icon" width="23" height="23" /><span className="desktop-brand">Access Mauritius</span><span className="mobile-brand">Places</span></Link>
-      <div className="header-actions">{(activeFilters.length > 0 || filters.search || savedOnly || practical.length > 0 || nearby || hoursWindow || gps || (needs.enabled && needs.ids.length > 0)) && <IconButton className="mobile-clear-all" variant="ghost" color="gray" aria-label="Clear all filters" onClick={reset}><ResetIcon /></IconButton>}<Link href="https://github.com/RishiRajGujadhur/MauritiusInfo" className="data-link"><LayersIcon />Data<ExternalLinkIcon /></Link><label className="theme-switch"><span className="sr-only">Dark mode</span>{appearance === 'dark' ? <MoonIcon /> : <SunIcon />}<Switch size="1" aria-label="Dark mode" checked={appearance === 'dark'} onCheckedChange={checked => setAppearance(checked ? 'dark' : 'light')} /></label></div>
+      <div className="header-actions"><IconButton variant="ghost" color="gray" aria-label="Saved places and tools" title="Saved places, backups and shortcuts (?)" onClick={()=>setToolsOpen(true)}><LayersIcon /></IconButton>{(activeFilters.length > 0 || filters.search || savedOnly || practical.length > 0 || nearby || hoursWindow || gps || (needs.enabled && needs.ids.length > 0)) && <IconButton className="mobile-clear-all" variant="ghost" color="gray" aria-label="Clear all filters" onClick={reset}><ResetIcon /></IconButton>}<Link href="https://github.com/RishiRajGujadhur/MauritiusInfo" className="data-link"><LayersIcon />Data<ExternalLinkIcon /></Link><label className="theme-switch"><span className="sr-only">Dark mode</span>{appearance === 'dark' ? <MoonIcon /> : <SunIcon />}<Switch size="1" aria-label="Dark mode" checked={appearance === 'dark'} onCheckedChange={checked => setAppearance(checked ? 'dark' : 'light')} /></label></div>
     </div></header>
     <main className="shell">
       <section className="workspace" aria-label="Find places">
-        <div className="search-toolbar"><h1><DrawingPinIcon />Find a place</h1><TextField.Root ref={searchInput} aria-label="Search places" type="search" className="main-search" size="3" placeholder="Place, town or address" value={filters.search} onChange={event => updateFilter('search', event.target.value)}>
+        <div className="search-toolbar"><h1><DrawingPinIcon />Find a place</h1><TextField.Root ref={searchInput} aria-label="Search places" type="search" className="main-search" size="3" placeholder="Place, town or address" value={filters.search} onKeyDown={event=>{if(event.key==='Enter'&&!event.nativeEvent.isComposing)rememberSearch(filters.search);}} onChange={event => updateFilter('search', event.target.value)}>
           <TextField.Slot><MagnifyingGlassIcon width="19" height="19" /></TextField.Slot><TextField.Slot side="right">{filters.search ? <IconButton size="1" variant="ghost" color="gray" aria-label="Clear search" onClick={() => { updateFilter('search', ''); searchInput.current?.focus(); }}><Cross2Icon /></IconButton> : <kbd>/</kbd>}</TextField.Slot>
         </TextField.Root><Tooltip content="Access can change. Confirm the facilities you need with the venue before visiting."><IconButton variant="ghost" color="gray" aria-label="About access reports"><InfoCircledIcon width="18" height="18" /></IconButton></Tooltip></div>
+        {!filters.search&&recentControls()}
         <div className="filters">{filterControls()}<div className="desktop-sort">{sortControl()}</div><Tooltip content="Clear search and filters"><IconButton variant="ghost" color="gray" aria-label="Reset filters" disabled={!activeFilters.length && !filters.search && !savedOnly && !practical.length && !nearby && !hoursWindow && !gps && !(needs.enabled && needs.ids.length)} onClick={reset}><ResetIcon /></IconButton></Tooltip></div>
         {activeFilters.length > 0 && <div className="active-filters" aria-label="Active filters">{activeFilters.map(filter => <Button key={filter.key} size="1" variant="soft" onClick={() => updateFilter(filter.key, '')} aria-label={`Remove ${filter.label} filter`}><filter.icon />{filter.label} · {options[filter.key].find(([key]) => key === filters[filter.key])?.[1] || filters[filter.key]}<Cross2Icon /></Button>)}</div>}
       </section>
@@ -372,16 +400,18 @@ export default function Explorer() {
         </div>
         {filters.search && <div className="mobile-query"><Button variant="ghost" color="gray" onClick={() => changeMobileSearchOpen(true)}><MagnifyingGlassIcon /><span>{filters.search}</span></Button><IconButton variant="ghost" color="gray" aria-label="Clear search" onClick={() => updateFilter('search', '')}><Cross2Icon /></IconButton></div>}
       </section>
+      {!connected&&<p className="offline-banner" role="status">You are offline. External links and map backgrounds need a connection.</p>}
+      {connected&&offlineMode&&<Button variant="soft" onClick={()=>setRetry(value=>value+1)}>Refresh online sources</Button>}
       {offlineMode && <p className="offline-banner" role="status">Saved offline copy · {records.length} downloaded places. Reconnect to refresh hours, reports and other data.<Button variant="soft" onClick={() => setRetry(value => value + 1)}>Retry connection</Button></p>}{tripWarning && <p role="status">{tripWarning}</p>}
       {(geoMessage||gps) && <div className="gps-summary"><p role="status">{geoMessage||'GPS location is active for this tab.'}{gps?.accuracy!=null&&` GPS accuracy: about ${Math.round(gps.accuracy)} m.`}</p>{gps&&<Button variant="ghost" size="1" onClick={clearGPS}>Clear GPS</Button>}{!gpsPending&&geoMessage&&!gps&&<Button variant="soft" size="1" onClick={()=>changeSort('proximity:asc')}>Try GPS again</Button>}</div>}
       {storageWarning && <p className="storage-warning" role="status">{storageWarning}</p>}
       {failures.length > 0 && <div className="load-error" role="alert"><InfoCircledIcon /><span>Some sources could not load. {records.length.toLocaleString()} records available.</span><Tooltip content={failures.join(', ')}><Button size="1" variant="soft" onClick={() => setRetry(value => value + 1)}><ResetIcon />Retry</Button></Tooltip></div>}
       <section id="results" tabIndex={-1} aria-label="Places">
-        <div className="grid-toolbar"><p role="status" aria-live="polite">{loading ? 'Loading places…' : <><strong>{matches.length.toLocaleString()}</strong> {matches.length === 1 ? 'result' : 'results'} <span>· {records.length.toLocaleString()} source records</span></>}</p><div className={`grid-actions ${view === 'map' ? 'map-actions' : ''}`}><Button size="2" variant="soft" onClick={() => setTripOpen(true)} aria-label="My trip"><DrawingPinIcon /><span>My trip</span>{trip.length > 0 && <span>{trip.length}</span>}</Button><Button className="saved-view-toggle" size="2" variant={savedOnly ? 'soft' : 'ghost'} color={savedOnly ? 'blue' : 'gray'} aria-pressed={savedOnly} onClick={toggleSavedOnly} aria-label={`Saved places (${savedKeys.length})`}>{savedOnly ? <BookmarkFilledIcon /> : <BookmarkIcon />}<span>Saved</span>{savedKeys.length > 0 && <span className="saved-count">{savedKeys.length}</span>}</Button><SegmentedControl.Root className="view-toggle" size="2" aria-label="Place view" value={view} onValueChange={setView}><SegmentedControl.Item value="list" aria-label="List view"><RowsIcon /><span className="view-label">List</span></SegmentedControl.Item><SegmentedControl.Item value="map" aria-label="Map view"><GlobeIcon /><span className="view-label">Map</span></SegmentedControl.Item></SegmentedControl.Root><Tooltip content="Row spacing"><SegmentedControl.Root className="density-toggle" size="1" value={density} aria-label="Row density" onValueChange={setDensity}><SegmentedControl.Item value="compact" aria-label="Compact rows"><RowsIcon /></SegmentedControl.Item><SegmentedControl.Item value="comfortable" aria-label="Comfortable rows"><SizeIcon /></SegmentedControl.Item></SegmentedControl.Root></Tooltip><Tooltip content="Download all filtered results in sort order"><Button variant="ghost" color="gray" size="1" aria-label="Export CSV" disabled={loading || !matches.length} onClick={() => downloadRows(table.getSortedRowModel().rows)}><DownloadIcon /><span>Export CSV</span></Button></Tooltip></div></div>
+        <div className="grid-toolbar"><p role="status" aria-live="polite">{loading ? 'Loading places…' : <><strong>{matches.length.toLocaleString()}</strong> {matches.length === 1 ? 'result' : 'results'} <span>· {records.length.toLocaleString()} source records</span></>}</p><div className={`grid-actions ${view === 'map' ? 'map-actions' : ''}`}><IconButton variant="ghost" color="gray" aria-label="Share filtered results" onClick={shareResults}><ExternalLinkIcon /></IconButton><Button className="mobile-view-button" variant="soft" onClick={()=>setView(view==='map'?'list':'map')} aria-label={view==='map'?'Show list':'Show map'}>{view==='map'?<RowsIcon />:<GlobeIcon />}</Button><Button size="2" variant="soft" onClick={() => setTripOpen(true)} aria-label="My trip"><DrawingPinIcon /><span>My trip</span>{trip.length > 0 && <span>{trip.length}</span>}</Button><Button className="saved-view-toggle" size="2" variant={savedOnly ? 'soft' : 'ghost'} color={savedOnly ? 'blue' : 'gray'} aria-pressed={savedOnly} onClick={toggleSavedOnly} aria-label={`Saved places (${savedKeys.length})`}>{savedOnly ? <BookmarkFilledIcon /> : <BookmarkIcon />}<span>Saved</span>{savedKeys.length > 0 && <span className="saved-count">{savedKeys.length}</span>}</Button><SegmentedControl.Root className="view-toggle" size="2" aria-label="Place view" value={view} onValueChange={setView}><SegmentedControl.Item value="list" aria-label="List view"><RowsIcon /><span className="view-label">List</span></SegmentedControl.Item><SegmentedControl.Item value="map" aria-label="Map view"><GlobeIcon /><span className="view-label">Map</span></SegmentedControl.Item></SegmentedControl.Root><Tooltip content="Row spacing"><SegmentedControl.Root className="density-toggle" size="1" value={density} aria-label="Row density" onValueChange={setDensity}><SegmentedControl.Item value="compact" aria-label="Compact rows"><RowsIcon /></SegmentedControl.Item><SegmentedControl.Item value="comfortable" aria-label="Comfortable rows"><SizeIcon /></SegmentedControl.Item></SegmentedControl.Root></Tooltip><Tooltip content="Download all filtered results in sort order"><Button variant="ghost" color="gray" size="1" aria-label="Export CSV" disabled={loading || !matches.length} onClick={() => downloadRows(table.getSortedRowModel().rows)}><DownloadIcon /><span>Export CSV</span></Button></Tooltip></div></div>
         {(practical.length > 0 || nearby || hoursWindow) && <p className="visit-active-summary">{practical.map(id => PRACTICAL_FILTERS.find(([key]) => key === id)?.[1]).join(' · ')}{nearby && ` · Within ${nearby.radius} km of ${nearby.name}`}{hoursWindow&&` · Open ${windowTime(hoursWindow.start)}–${windowTime(hoursWindow.end)} on ${hoursWindow.date} (Mauritius)`}<Button variant="ghost" size="1" onClick={() => setVisitOpen(true)}>Edit</Button></p>}
         {savedOnly && !loading && <p className="saved-explainer">Saved on this browser only.{!savedKeys.length && ' Open a place and tap Save place to start your shortlist.'}</p>}
         {needs.enabled && needs.ids.length > 0 && <p className="needs-summary">Matching all {needs.ids.length} selected needs · reported availability only<Button variant="ghost" size="1" onClick={() => setNeedsOpen(true)}>Edit</Button></p>}
-        {view === 'map' ? <Suspense fallback={<div className="map-loading" role="status">Loading map…</div>}><MapView records={matches} onOpen={openDetails} onList={() => setView('list')} /></Suspense> : <>
+        {view === 'map' ? <Suspense fallback={<div className="map-loading" role="status">Loading map…</div>}><MapView records={matches} gps={gps?.point} savedSet={savedSet} onToggleSave={toggleSave} onOpen={openDetails} onList={() => setView('list')} /></Suspense> : <>
         <div className="mobile-sort"><SearchSelect label="Sort" icon={CaretSortIcon} value={`${sorting[0]?.id || 'name'}:${sorting[0]?.desc ? 'desc' : 'asc'}`} options={mobileSortOptions} placeholder="Name · ascending" allowAll={false} onChange={changeSort} /></div>
         <div className={`grid-scroll ${density}`} tabIndex={0} role="region" aria-label="Location grid" aria-busy={loading}>
           <Table.Root className="places-table" variant="surface" size="1"><Table.Header>{table.getHeaderGroups().map(group => <Table.Row key={group.id}>{group.headers.map(header => {
@@ -390,7 +420,7 @@ export default function Explorer() {
             const priority = sorting.findIndex(value => value.id === header.id);
             return <Table.ColumnHeaderCell key={header.id} aria-sort={direction === 'asc' ? 'ascending' : direction === 'desc' ? 'descending' : 'none'}><Tooltip content="Click to sort. Shift-click to add another column."><Button size="1" variant="ghost" color="gray" className="sort-button" onClick={header.column.getToggleSortingHandler()} aria-label={`Sort by ${COLUMN_LABELS[header.id]}`}><Icon />{flexRender(header.column.columnDef.header, header.getContext())}{direction === 'asc' ? <ArrowUpIcon /> : direction === 'desc' ? <ArrowDownIcon /> : <CaretSortIcon className="sort-idle" />}{sorting.length > 1 && priority >= 0 && <sup>{priority + 1}</sup>}</Button></Tooltip></Table.ColumnHeaderCell>;
           })}</Table.Row>)}</Table.Header><Table.Body>
-            {loading && !records.length ? Array.from({ length: 8 }, (_, index) => <Table.Row key={index}>{columns.map(column => <Table.Cell key={column.id || column.accessorKey}><Skeleton height="16px" width={column.accessorKey === 'name' ? '80%' : '65%'} /></Table.Cell>)}</Table.Row>) : visibleRows.map(row => <Table.Row key={row.id}>{row.getVisibleCells().map(cell => <Table.Cell key={cell.id} data-label={COLUMN_LABELS[cell.column.id]} className={`column-${cell.column.id}`}>{cellContent(row.original, cell.column.id)}</Table.Cell>)}</Table.Row>)}
+            {loading && !records.length ? Array.from({ length: 8 }, (_, index) => <Table.Row key={index}>{table.getVisibleLeafColumns().map(column => <Table.Cell key={column.id}><Skeleton height="16px" width={column.accessorKey === 'name' ? '80%' : '65%'} /></Table.Cell>)}</Table.Row>) : visibleRows.map(row => <Table.Row key={row.id}>{row.getVisibleCells().map(cell => <Table.Cell key={cell.id} data-label={COLUMN_LABELS[cell.column.id]} className={`column-${cell.column.id}`}>{cellContent(row.original, cell.column.id)}</Table.Cell>)}</Table.Row>)}
           </Table.Body></Table.Root>
           {!loading && !matches.length && <div className="empty"><MagnifyingGlassIcon width="27" height="27" /><h2>{savedOnly && !savedKeys.length ? "No saved places yet" : "No matching places"}</h2><p>Try another name or remove a filter.</p><Button variant="soft" onClick={reset}><ResetIcon />Reset filters</Button></div>}
         </div>
@@ -418,17 +448,21 @@ export default function Explorer() {
       <Dialog.Content className="mobile-search-sheet" maxWidth="520px" onOpenAutoFocus={event => { event.preventDefault(); mobileSearchInput.current?.focus(); }}>
         <div className="mobile-search-heading"><Dialog.Title>Search places</Dialog.Title><Dialog.Close><IconButton variant="ghost" color="gray" aria-label="Close search"><Cross2Icon /></IconButton></Dialog.Close></div>
         <Dialog.Description className="sr-only">Search by place name, town or address. Your selected filters also apply.</Dialog.Description>
-        <form onSubmit={event => { event.preventDefault(); updateFilter('search', searchDraft.trim()); setMobileSearchOpen(false); scrollToResults(); }}>
+        <form onSubmit={event => { event.preventDefault(); updateFilter('search', searchDraft.trim()); rememberSearch(searchDraft);setMobileSearchOpen(false); scrollToResults(); }}>
           <TextField.Root ref={mobileSearchInput} size="3" type="search" enterKeyHint="search" autoComplete="off" aria-label="Search places on mobile" placeholder="Place, town or address" value={searchDraft} onChange={event => setSearchDraft(event.target.value)}>
             <TextField.Slot><MagnifyingGlassIcon width="21" height="21" /></TextField.Slot>
             {searchDraft && <TextField.Slot side="right"><IconButton type="button" variant="ghost" color="gray" aria-label="Clear mobile search" onClick={() => { setSearchDraft(''); mobileSearchInput.current?.focus(); }}><Cross2Icon /></IconButton></TextField.Slot>}
           </TextField.Root>
+          {!searchDraft&&recentControls()}
           <Button className="mobile-search-submit" type="submit" size="3" disabled={loading}>{loading ? 'Loading places…' : `Show ${draftCount.toLocaleString()} results`}<ArrowRightIcon /></Button>
         </form>
       </Dialog.Content>
     </Dialog.Root>
+    <CopyFallback text={copyFallback} onClose={()=>setCopyFallback('')} />
+    {notice&&<div className="qol-toast" role="status"><span>{notice.message}</span>{notice.undo&&<Button size="1" variant="soft" onClick={()=>{notice.undo();setNotice(null);}}>Undo</Button>}<IconButton variant="ghost" color="gray" aria-label="Dismiss notification" onClick={()=>setNotice(null)}><Cross2Icon /></IconButton></div>}
+    <Suspense fallback={<div className="detail-loading" role="status">Loading tools…</div>}>{toolsOpen&&<ToolsPanel onClose={()=>setToolsOpen(false)} records={records} savedKeys={savedKeys} onSaved={setSavedKeys} allowCleanup={!loading&&!failures.length&&!offlineMode} searches={searches} onSearches={setSearches} onRestore={restoreSearch} onOpen={openDetails} onSavedView={()=>{setSavedOnly(true);setPagination(current=>({...current,pageIndex:0}));}} onSavePage={()=>{setSavedKeys(current=>[...new Set([...current,...visibleRows.map(row=>row.original.key)])]);setNotice({message:'Current page added to saved places.'});}} onShare={shareResults} onExport={()=>downloadFile('access-mauritius-results.csv',recordsCSV(sortedRecords),'text/csv;charset=utf-8')} onTop={()=>{window.scrollTo({top:0});document.querySelector('.grid-scroll')?.scrollTo({top:0});}} />}</Suspense>
     <Suspense fallback={needsOpen ? <div className="detail-loading" role="status">Loading needs…</div> : null}>{needsOpen && <NeedsFilter needs={needs} onChange={updateNeeds} open={needsOpen} onOpenChange={setNeedsOpen} />}</Suspense>
     <Suspense fallback={<div className="detail-loading" role="status">Loading visit tools…</div>}>{visitOpen && <VisitFilters open={visitOpen} onClose={() => setVisitOpen(false)} selected={practical} onChange={updatePractical} nearby={nearby} onNearby={updateNearby} hoursWindow={hoursWindow} onHoursWindow={updateHoursWindow} />}{tripOpen && <TripPanel open={tripOpen} onClose={() => setTripOpen(false)} trip={trip} onChange={setTrip} records={records} savedKeys={savedKeys} onOpen={openDetails} offlineMode={offlineMode} />}</Suspense>
-    <Suspense fallback={selectedKey ? <div className="detail-loading" role="status">Loading place details…</div> : null}>{selectedRecord && <PlaceDetails key={selectedRecord.key} record={selectedRecord} now={now} onAddToTrip={() => { if (!trip.some(stop => stop.key === selectedRecord.key) && trip.length < 50) { setTrip(current => [...current,{key:selectedRecord.key,arrival:'',duration:60}]); if (!savedSet.has(selectedRecord.key)) toggleSave(selectedRecord.key); } }} tripFull={trip.length >= 50} inTrip={trip.some(stop => stop.key === selectedRecord.key)} saved={savedSet.has(selectedRecord.key)} onToggleSave={toggleSave} onClose={() => setSelectedKey(null)} triggerRef={detailTrigger} />}</Suspense>
+    <Suspense fallback={selectedKey ? <div className="detail-loading" role="status">Loading place details…</div> : null}>{selectedRecord && <PlaceDetails key={selectedRecord.key} record={selectedRecord} resultIndex={selectedIndex} resultCount={sortedRecords.length} onPrevious={selectedIndex>0?()=>setSelectedKey(sortedRecords[selectedIndex-1].key):null} onNext={selectedIndex>=0&&selectedIndex<sortedRecords.length-1?()=>setSelectedKey(sortedRecords[selectedIndex+1].key):null} now={now} onAddToTrip={() => { if (!trip.some(stop => stop.key === selectedRecord.key) && trip.length < 50) { setTrip(current => [...current,{key:selectedRecord.key,arrival:'',duration:60}]); if (!savedSet.has(selectedRecord.key)) toggleSave(selectedRecord.key); } }} tripFull={trip.length >= 50} inTrip={trip.some(stop => stop.key === selectedRecord.key)} saved={savedSet.has(selectedRecord.key)} onToggleSave={toggleSave} onClose={() => setSelectedKey(null)} triggerRef={detailTrigger} />}</Suspense>
   </Theme>;
 }
