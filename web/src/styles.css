@@ -501,3 +501,46 @@ html,.grid-scroll,.rt-DialogContent { scrollbar-gutter:stable; }
 }
 
 @media print { .rt-DialogContent { background:white !important; } .rt-DialogContent,.rt-DialogContent *,.places-table,.places-table * { color:black !important; text-shadow:none !important; } }
+/* Comparison, visit preparation and browser-private notes. */
+.compare-scroll { overflow:auto; max-width:100%; scrollbar-gutter:stable; }
+.compare-scroll .rt-TableRootTable { min-width:580px; }
+.compare-scroll .rt-TableCell,.compare-scroll .rt-TableColumnHeaderCell { min-width:210px; max-width:310px; vertical-align:top; overflow-wrap:anywhere; }
+.compare-scroll .rt-TableRowHeaderCell { min-width:145px; position:sticky; left:0; z-index:1; background:var(--color-panel-solid); }
+.compare-place-heading { display:flex; align-items:flex-start; gap:8px; justify-content:space-between; }
+.compare-place-heading > .rt-Button { white-space:normal; height:auto; text-align:left; }
+.compare-scroll .visit-summary h2 { font-size:14px; }
+.compare-scroll .visit-summary .visit-facts > div { grid-template-columns:1fr; gap:5px; }
+.compare-scroll .visit-summary .form-note { font-size:12px; }
+.visit-support section { margin:18px 0; padding-bottom:18px; border-bottom:1px solid var(--gray-5); }
+.visit-support h2,.related-source-records h2,.duplicate-group h2 { font-size:17px; margin:0 0 10px; }
+.visit-support li { margin:12px 0; line-height:1.6; }
+.closing-warning { display:flex; width:fit-content; margin-top:5px; font-size:11px; }
+.related-source-records { margin:16px 0; padding:14px; background:var(--gray-3); border-radius:10px; }
+.related-source-records .rt-Button { white-space:normal; height:auto; min-height:38px; }
+.duplicate-group { border-bottom:1px solid var(--gray-6); padding:20px 0; }
+.duplicate-group article { padding:10px 0; }
+.share-stops { display:grid; gap:16px; margin:22px 0; max-height:50dvh; overflow:auto; }
+.share-stops label { display:flex; align-items:flex-start; gap:12px; padding:4px; line-height:1.5; }
+.share-stops small { display:block; color:var(--gray-11); font-size:13px; margin:4px 0; }
+.compare-trigger { white-space:nowrap; }
+@media (max-width:700px) {
+ .compare-trigger.rt-Button { min-height:44px; padding:0 8px; gap:5px; }
+ .compare-trigger span:first-of-type { display:none; }
+ .compare-dialog { width:calc(100vw - 16px); padding:18px !important; }
+ .compare-dialog .rt-TabsList { overflow-x:auto; }
+ .compare-scroll .rt-TableCell,.compare-scroll .rt-TableColumnHeaderCell { min-width:200px; }
+ .compare-scroll .rt-TableRowHeaderCell { min-width:115px; font-size:12px; }
+ .mobile-place-status .rt-Button,.visit-support .rt-Button,.share-stops label { min-height:44px; }
+ .closing-warning { margin:8px 0; font-size:12px; }
+ .hours-badge,.closing-warning { white-space:normal; }
+}
+@media (max-width:400px) {
+ .brand { font-size:20px; gap:6px; }
+ .header-actions { gap:5px; }
+ .theme-switch { min-width:44px; }
+ .theme-switch > svg { display:none; }
+}
+@media print { .compare-scroll { overflow:visible; } .compare-scroll .rt-TableRootTable { min-width:0; } .share-stops { max-height:none; overflow:visible; } }
+
+.place-dialog .rt-TabsList { overflow-x:auto; }
+.place-dialog .rt-TabsTrigger { flex-shrink:0; white-space:nowrap; }

@@ -4,12 +4,14 @@ import { Badge, Button, Link } from '@radix-ui/themes';
 import { ClockIcon, ExternalLinkIcon, MobileIcon } from '@radix-ui/react-icons';
 import { safeURL, humanize } from '../../data-core.mjs';
 import { openingStatus, hoursFor, parseHours, formatIntervals, contactLinks, DAY_NAMES, mauritiusParts } from '../../planning-core.mjs';
+import { closingSoon } from '../../outing-core.mjs';
 import calendar from '../../data/planning/holidays.json';
 
-export function HoursBadge({ record, now }) {
+export function HoursBadge({ record, now, threshold=60 }) {
   if(!hoursFor(record))return null;
   const result=openingStatus(record,now,calendar,{next:false});
-  return <Badge className="hours-badge" color={result.state==='open'?'green':result.state==='closed'?'red':'gray'} variant="soft"><ClockIcon />{result.state==='open'?'Open · listed hours':result.state==='closed'?'Closed · listed hours':result.label}</Badge>;
+  const warning=closingSoon(record,now,calendar,threshold);
+  return <><Badge className="hours-badge" color={result.state==='open'?'green':result.state==='closed'?'red':'gray'} variant="soft"><ClockIcon />{result.state==='open'?'Open · listed hours':result.state==='closed'?'Closed · listed hours':result.label}</Badge>{warning&&<Badge className="closing-warning" color="amber" variant="soft"><ClockIcon />Closes in {warning.minutes} min · listed hours</Badge>}</>;
 }
 export default function VisitInfo({ record, now }) {
   const p=record.planning||{}, t=p.tags||{},r=record.raw;
