@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Dialog, IconButton, Link, Tabs, Tooltip } from '@radix-ui/themes';
 import { AccessibilityIcon, AngleIcon, ArrowRightIcon, CalendarIcon, CheckCircledIcon, CopyIcon, Cross2Icon, DashboardIcon, DrawingPinIcon, EnterIcon, ExternalLinkIcon, HeightIcon, InfoCircledIcon, LayersIcon, MobileIcon, PersonIcon, RowsIcon, BookmarkIcon, BookmarkFilledIcon } from '@radix-ui/react-icons';
+import { coordinates } from '../../place-tools.mjs';
 import { humanize, safeURL } from '../../data-core.mjs';
 import ReportUpdate from './report-update';
 import { ReportBadge, EvidenceLabels } from './ui';
@@ -26,9 +27,9 @@ export default function PlaceDetails({ record, onClose, triggerRef, saved, onTog
     ['Wheelchair seating', RowsIcon, row.wheelchair_seating],
     ['Parking route', ArrowRightIcon, row.parking_to_entrance_route || row.parking_to_shop_route || row.parking_to_venue_route],
   ];
-  const latitude = Number(row.latitude);
-  const longitude = Number(row.longitude);
-  const hasCoordinates = row.latitude && row.longitude && Number.isFinite(latitude) && Number.isFinite(longitude);
+  const position = coordinates(record);
+  const [latitude, longitude] = position || [];
+  const hasCoordinates = Boolean(position);
   const sourceURL = safeURL(row.source_url || row.contact_url || row.contact_or_booking_url);
   const phone = row.phone || row.phone_international_digits || '';
   const phoneDigits = String(phone).replace(/[\s()-]/g, '');

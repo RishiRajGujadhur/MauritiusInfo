@@ -4,7 +4,7 @@ import { attachEvidence } from '../../place-tools.mjs';
 self.onmessage = async ({ data: { base, reload } }) => {
   const evidenceFailures = [];
   async function csv(path) {
-    const response = await fetch(`${base}${path}`, { cache: reload ? 'reload' : 'default' });
+    const response = await fetch(`${base}${path}`, { cache: reload ? 'reload' : 'default', signal: AbortSignal.timeout(20000) });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     return parseCSV(await response.text());
   }

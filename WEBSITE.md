@@ -39,3 +39,22 @@ Run `node --test tests/site-core.test.mjs` from the repository root for parsing,
 - **Report update:** the form validates the date/source and description, provides a review screen, and opens a prefilled public GitHub Issue draft with stable record and dataset identifiers. A GitHub account is required; users submit and attach photos there. Reports do not modify CSV data automatically. Review the report and evidence before merging a data correction. No test reports were submitted during implementation.
 
 Run `node --test tests/*.test.mjs` for both data and planning-feature checks.
+
+## Performance and resilience
+
+The explorer requests unsorted matches so TanStack sorts only once. Mobile draft
+counts skip sorting entirely. `filterRecords` keeps its sorted default for other
+callers. My needs UI loads on demand alongside the existing map and details chunks.
+
+Every CSV fetch times out after 20 seconds. Failed primary tables leave successful
+tables available; failed evidence tables flag the affected records. Retry bypasses
+the normal HTTP cache. Worker startup errors use the existing retry banner.
+
+Shared URLs explicitly encode disabled needs (`needs=`), preventing the recipient's
+stored preferences from silently changing shared results. Page numbers reject
+non-finite/fractional values and stay intact while data loads. Browser history
+navigation restores filters, sorting, pagination, selected record and view.
+
+Run `node --test tests/*.test.mjs` for data, filtering, evidence and actual worker
+loading/failure tests. Build with `npm run publish:static` from `web` and commit the
+source and generated export together.

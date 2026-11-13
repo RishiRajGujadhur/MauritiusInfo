@@ -35,3 +35,11 @@ test('source URLs reject script and data protocols',()=>{
   assert.equal(safeURL('javascript:alert(1)'),null);assert.equal(safeURL('data:text/html,bad'),null);
   assert.equal(safeURL('https://example.com/'),'https://example.com/');
 });
+
+test('unsorted filtering preserves matches and input order for table sorting and counts',()=>{
+  const ds={id:'test',name:'Test',path:'test.csv'};
+  const rows=['Zoo Café','Alpha Café','Other'].map((place_name,i)=>normalize({place_name},ds,i));
+  assert.deepEqual(filterRecords(rows,{search:'cafe'},{sort:false}).map(r=>r.name),['Zoo Café','Alpha Café']);
+  assert.deepEqual(filterRecords(rows,{search:'cafe'}).map(r=>r.name),['Alpha Café','Zoo Café']);
+  assert.equal(rows[0].name,'Zoo Café');
+});

@@ -6,7 +6,7 @@ import { DATASETS, filterRecords } from '../../data-core.mjs';
 import SearchSelect from './search-select';
 import { getCategoryIcon } from './category-icons';
 import { ReportBadge, EvidenceLabels } from './ui';
-import NeedsFilter from './needs-filter';
+const NeedsFilter = lazy(() => import('./needs-filter'));
 import { matchesNeeds, validNeeds, readSaved } from '../../place-tools.mjs';
 
 const MapView = lazy(() => import('./map-view'));
@@ -33,7 +33,7 @@ function readInitial() {
     return { id, desc: direction === 'desc' };
   }).filter(value => Object.hasOwn(COLUMN_LABELS, value.id));
   const size = Number(query.get('size'));
-  return { view: query.get('view') === 'map' ? 'map' : 'list', savedOnly: query.get('saved') === '1', needs: query.has('needs') ? validNeeds(query.get('needs').split(',')) : null, filters, sorting: sorting.length ? sorting : [{ id: 'name', desc: false }], pageIndex: Math.max(0, Number(query.get('page')) - 1 || 0), pageSize: [25, 50, 100].includes(size) ? size : 25, record: query.get('record') };
+  return { view: query.get('view') === 'map' ? 'map' : 'list', savedOnly: query.get('saved') === '1', needs: query.has('needs') ? validNeeds(query.get('needs').split(',')) : null, filters, sorting: sorting.length ? sorting : [{ id: 'name', desc: false }], pageIndex: Number.isSafeInteger(Number(query.get('page'))) ? Math.max(0, Number(query.get('page')) - 1) : 0, pageSize: [25, 50, 100].includes(size) ? size : 25, record: query.get('record') };
 }
 
 function storedValue(key, fallback) {
@@ -122,7 +122,9 @@ export default function Explorer() {
 
   useEffect(() => {
     setLoading(true);
-    const worker = new Worker(new URL('./data-worker.js', import.meta.url), { type: 'module' });
+    let worker;
+    try { worker = new Worker(new URL('./data-worker.js', import.meta.url), { type: 'module' }); }
+    catch { setFailures(DATASETS.map(dataset => dataset.name)); setLoading(false); return; }
     worker.onmessage = ({ data }) => {
       setRecords(data.records);
       setFailures([...data.failures, ...data.evidenceFailures.map(name => `${name} evidence`)]);
@@ -132,7 +134,7 @@ export default function Explorer() {
       setFailures(DATASETS.map(dataset => dataset.name));
       setLoading(false);
     };
-    worker.postMessage({ base: BASE, reload: retry > 0 });
+    worker.postMessage({ base: new URL(BASE, location.href).href, reload: retry > 0 });
     return () => worker.terminate();
   }, [retry]);
 
@@ -141,8 +143,8 @@ export default function Explorer() {
   const sourceOptions = useMemo(() => DATASETS.map(dataset => [dataset.id, dataset.name]), []);
   const options = { area: areas, category: categories, access: REPORTS, parking: REPORTS, dataset: sourceOptions };
   const eligibleRecords = useMemo(() => records.filter(record => (!savedOnly || savedSet.has(record.key)) && (!needs.enabled || matchesNeeds(record, needs.ids))), [records, savedOnly, savedSet, needs]);
-  const matches = useMemo(() => filterRecords(eligibleRecords, deferredFilters), [eligibleRecords, deferredFilters]);
-  const draftCount = useMemo(() => mobileSearchOpen ? filterRecords(eligibleRecords, { ...filters, search: deferredSearchDraft }).length : 0, [eligibleRecords, filters, deferredSearchDraft, mobileSearchOpen]);
+  const matches = useMemo(() => filterRecords(eligibleRecords, deferredFilters, { sort: false }), [eligibleRecords, deferredFilters]);
+  const draftCount = useMemo(() => mobileSearchOpen ? filterRecords(eligibleRecords, { ...filters, search: deferredSearchDraft }, { sort: false }).length : 0, [eligibleRecords, filters, deferredSearchDraft, mobileSearchOpen]);
   const columns = useMemo(() => [
     { accessorKey: 'name', header: 'Place', sortingFn: 'alphanumeric' },
     { accessorKey: 'category', header: 'Category' },
@@ -180,14 +182,28 @@ export default function Explorer() {
     for (const [key, value] of Object.entries(filters)) if (value) query.set(key, value);
     const sortText = sorting.map(value => `${value.id}:${value.desc ? 'desc' : 'asc'}`).join(',');
     if (sortText !== 'name:asc') query.set('sort', sortText);
-    if (pageIndex) query.set('page', String(pageIndex + 1));
+    const urlPage = loading ? pagination.pageIndex : pageIndex;
+    if (urlPage) query.set('page', String(urlPage + 1));
     if (pagination.pageSize !== 25) query.set('size', String(pagination.pageSize));
     if (view === 'map') query.set('view', 'map');
     if (savedOnly) query.set('saved', '1');
-    if (needs.enabled && needs.ids.length) query.set('needs', needs.ids.join(','));
+    query.set('needs', needs.enabled ? needs.ids.join(',') : '');
     if (selectedKey) query.set('record', selectedKey);
     history.replaceState(null, '', location.pathname + (query.size ? `?${query}` : ''));
-  }, [filters, sorting, pageIndex, pagination.pageSize, selectedKey, view, savedOnly, needs]);
+  }, [filters, sorting, pageIndex, pagination.pageSize, selectedKey, view, savedOnly, needs, loading, pagination.pageIndex]);
+
+  useEffect(() => {
+    function restoreURL() {
+      const next = readInitial();
+      setFilters(next.filters); setSearchDraft(next.filters.search);
+      setView(next.view); setSavedOnly(next.savedOnly); setSorting(next.sorting);
+      setPagination({ pageIndex: next.pageIndex, pageSize: next.pageSize });
+      setSelectedKey(next.record);
+      if (next.needs !== null) setNeeds({ ids: next.needs, enabled: next.needs.length > 0 });
+    }
+    addEventListener('popstate', restoreURL);
+    return () => removeEventListener('popstate', restoreURL);
+  }, []);
 
   function scrollToResults() {
     if (matchMedia('(max-width: 700px)').matches) {
@@ -313,7 +329,7 @@ export default function Explorer() {
         </form>
       </Dialog.Content>
     </Dialog.Root>
-    <NeedsFilter needs={needs} onChange={updateNeeds} open={needsOpen} onOpenChange={setNeedsOpen} />
+    <Suspense fallback={needsOpen ? <div className="detail-loading" role="status">Loading needs…</div> : null}>{needsOpen && <NeedsFilter needs={needs} onChange={updateNeeds} open={needsOpen} onOpenChange={setNeedsOpen} />}</Suspense>
     <Suspense fallback={selectedKey ? <div className="detail-loading" role="status">Loading place details…</div> : null}>{selectedRecord && <PlaceDetails key={selectedRecord.key} record={selectedRecord} saved={savedSet.has(selectedRecord.key)} onToggleSave={toggleSave} onClose={() => setSelectedKey(null)} triggerRef={detailTrigger} />}</Suspense>
   </Theme>;
 }

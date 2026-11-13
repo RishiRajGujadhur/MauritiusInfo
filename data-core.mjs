@@ -59,9 +59,11 @@ export function normalize(row,dataset,index){
     access:status(row.wheelchair_access),parking:status(row.wheelchair_parking),
     search:fold([name,category,area,type,address,row.locality,row.parent_site_name].join(' '))};
 }
-export function filterRecords(records,state){
+export function filterRecords(records,state,{sort=true}={}){
   const words=fold(state.search).trim().split(/\s+/).filter(Boolean);
-  return records.filter(r=>words.every(word=>r.search.includes(word)) && (!state.area||r.area===state.area) && (!state.category||r.category===state.category) && (!state.access||r.access.group===state.access) && (!state.parking||r.parking.group===state.parking) && (!state.dataset||r.dataset.id===state.dataset)).sort((a,b)=>{
+  const matches = records.filter(r=>words.every(word=>r.search.includes(word)) && (!state.area||r.area===state.area) && (!state.category||r.category===state.category) && (!state.access||r.access.group===state.access) && (!state.parking||r.parking.group===state.parking) && (!state.dataset||r.dataset.id===state.dataset));
+  if (!sort) return matches;
+  return matches.sort((a,b)=>{
     if(state.sort==='area'){const d=a.area.localeCompare(b.area,'en');if(d)return d;}
     return a.name.localeCompare(b.name,'en')||a.key.localeCompare(b.key);
   });

@@ -34,7 +34,7 @@ export default function SearchSelect({ label, icon: Icon, value, options, onChan
 
   return <div className="filter-control" data-selected={Boolean(value && allowAll)}>
     <Popover.Root open={open} onOpenChange={next => { setOpen(next); if (next) { setQuery(''); setActive(0); } }}>
-      <Popover.Trigger><Button variant={value && allowAll ? 'soft' : 'surface'} color={value && allowAll ? 'blue' : 'gray'} className="filter-trigger" aria-label={`${label}: ${selected}`}>
+      <Popover.Trigger><Button type="button" variant={value && allowAll ? 'soft' : 'surface'} color={value && allowAll ? 'blue' : 'gray'} className="filter-trigger" aria-label={`${label}: ${selected}`}>
         <TriggerIcon /><span className="filter-caption">{label}</span><span className="filter-value">{value && allowAll ? `${label} · ${selected}` : selected}</span><ChevronDownIcon className="chevron" />
       </Button></Popover.Trigger>
       <Popover.Content className="search-popover" sideOffset={7} align="start" aria-label={`Choose ${label.toLowerCase()}`}>
@@ -44,7 +44,7 @@ export default function SearchSelect({ label, icon: Icon, value, options, onChan
         <div className="option-list" id={`${id}-options`} role="listbox" aria-label={label}>
           {matches.map(([key, text], index) => {
             const OptionIcon = key && getOptionIcon?.(key);
-            return <Button key={key} id={`${id}-${index}`} role="option" tabIndex={-1} aria-selected={key === value} variant="ghost" color="gray" className={`search-option ${index === activeIndex ? 'is-active' : ''}`} onMouseEnter={() => setActive(index)} onClick={() => choose(key)} ref={node => { if (node && index === activeIndex) node.scrollIntoView({ block: 'nearest' }); }}>
+            return <Button type="button" key={key} id={`${id}-${index}`} role="option" tabIndex={-1} aria-selected={key === value} variant="ghost" color="gray" className={`search-option ${index === activeIndex ? 'is-active' : ''}`} onMouseEnter={() => setActive(index)} onClick={() => choose(key)} ref={node => { if (node && index === activeIndex) node.scrollIntoView({ block: 'nearest' }); }}>
             <span className="option-label">{OptionIcon && <OptionIcon aria-hidden="true" />}{text}</span>{key === value && <CheckIcon />}
           </Button>;
           })}
