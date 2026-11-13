@@ -1,4 +1,4 @@
-import React, { useId, useMemo, useState } from 'react';
+import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Button, Popover, TextField } from '@radix-ui/themes';
 import { CheckIcon, ChevronDownIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { fold } from '../../data-core.mjs';
@@ -8,12 +8,20 @@ export default function SearchSelect({ label, icon: Icon, value, options, onChan
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(0);
   const id = useId();
+  const pointerOpen = useRef(false);
+  const contentRef = useRef(null);
+  const searchRef = useRef(null);
+  const optionRefs = useRef([]);
   const choices = useMemo(() => allowAll ? [['', placeholder], ...options] : options, [options, placeholder, allowAll]);
   const matchedChoices = choices.filter(([, text]) => fold(text).includes(fold(query)));
   const matches = matchedChoices.slice(0,100);
   const selected = choices.find(([key]) => key === value)?.[1] || placeholder;
   const TriggerIcon = (value && getOptionIcon?.(value)) || Icon;
   const activeIndex = Math.min(active, Math.max(0, matches.length - 1));
+
+  useEffect(() => {
+    if (open) optionRefs.current[activeIndex]?.scrollIntoView({ block: 'nearest' });
+  }, [open, activeIndex, query]);
 
   function choose(next) {
     onChange(next);
@@ -34,18 +42,18 @@ export default function SearchSelect({ label, icon: Icon, value, options, onChan
   }
 
   return <div className="filter-control" data-selected={Boolean(value && allowAll)}>
-    <Popover.Root open={open} onOpenChange={next => { setOpen(next); if (next) { setQuery(''); setActive(0); } }}>
-      <Popover.Trigger><Button type="button" variant={value && allowAll ? 'soft' : 'surface'} color={value && allowAll ? 'blue' : 'gray'} className="filter-trigger" aria-label={`${label}: ${selected}`}>
+    <Popover.Root open={open} onOpenChange={next => { setOpen(next); if (next) { setQuery(''); setActive(Math.max(0, choices.findIndex(([key]) => key === value))); } }}>
+      <Popover.Trigger><Button type="button" variant={value && allowAll ? 'soft' : 'surface'} color={value && allowAll ? 'blue' : 'gray'} className="filter-trigger" onPointerDown={() => { pointerOpen.current = true; }} onKeyDown={() => { pointerOpen.current = false; }} aria-label={`${label}: ${selected}`}>
         <TriggerIcon /><span className="filter-caption">{label}</span><span className="filter-value">{value && allowAll ? `${label} · ${selected}` : selected}</span><ChevronDownIcon className="chevron" />
       </Button></Popover.Trigger>
-      <Popover.Content className="search-popover" sideOffset={7} align="start" aria-label={`Choose ${label.toLowerCase()}`}>
-        <TextField.Root autoFocus size="2" role="combobox" aria-label={`Search ${label.toLowerCase()}`} aria-expanded="true" aria-autocomplete="list" aria-controls={`${id}-options`} aria-activedescendant={matches.length ? `${id}-${activeIndex}` : undefined} value={query} placeholder={`Search ${label.toLowerCase()}…`} onChange={event => { setQuery(event.target.value); setActive(0); }} onKeyDown={navigate}>
+      <Popover.Content ref={contentRef} tabIndex={-1} onKeyDown={navigate} onOpenAutoFocus={event => { event.preventDefault(); if (pointerOpen.current) contentRef.current?.focus({ preventScroll: true }); else searchRef.current?.focus({ preventScroll: true }); }} className="search-popover" sideOffset={7} align="start" aria-label={`Choose ${label.toLowerCase()}`}>
+        <TextField.Root ref={searchRef} className="dropdown-search" size="2" autoComplete="off" autoCorrect="off" spellCheck={false} role="combobox" aria-label={`Search ${label.toLowerCase()}`} aria-expanded="true" aria-autocomplete="list" aria-controls={`${id}-options`} aria-activedescendant={matches.length ? `${id}-${activeIndex}` : undefined} value={query} placeholder={`Search ${label.toLowerCase()}…`} onChange={event => { setQuery(event.target.value); setActive(0); }}>
           <TextField.Slot><MagnifyingGlassIcon /></TextField.Slot>
         </TextField.Root>
         <div className="option-list" id={`${id}-options`} role="listbox" aria-label={label}>
           {matches.map(([key, text], index) => {
             const OptionIcon = key && getOptionIcon?.(key);
-            return <Button type="button" key={key} id={`${id}-${index}`} role="option" tabIndex={-1} aria-selected={key === value} variant="ghost" color="gray" className={`search-option ${index === activeIndex ? 'is-active' : ''}`} onMouseEnter={() => setActive(index)} onClick={() => choose(key)} ref={node => { if (node && index === activeIndex) node.scrollIntoView({ block: 'nearest' }); }}>
+            return <Button type="button" key={key} id={`${id}-${index}`} role="option" tabIndex={-1} aria-selected={key === value} variant="ghost" color="gray" className={`search-option ${index === activeIndex ? 'is-active' : ''}`} onMouseEnter={() => setActive(index)} onClick={() => choose(key)} ref={node => { optionRefs.current[index] = node; }}>
             <span className="option-label">{OptionIcon && <OptionIcon aria-hidden="true" />}{text}</span>{key === value && <CheckIcon />}
           </Button>;
           })}

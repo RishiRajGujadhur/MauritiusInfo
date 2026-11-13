@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import SearchSelect from './search-select';
 import { Badge, Button, Link } from '@radix-ui/themes';
 import { ClockIcon, ExternalLinkIcon, MobileIcon } from '@radix-ui/react-icons';
 import { safeURL, humanize } from '../../data-core.mjs';
@@ -12,17 +13,21 @@ export function HoursBadge({ record, now }) {
 }
 export default function VisitInfo({ record, now }) {
   const p=record.planning||{}, t=p.tags||{},r=record.raw;
-  const schedule=parseHours(hoursFor(record)), current=openingStatus(record,now,calendar),contacts=contactLinks(record);
+  const [scope, setScope] = useState('');
+  const scopes = p.trading_schedules || [];
+  const scoped = scopes.find(item => item.scope === scope);
+  const hoursRecord = scoped ? { ...record, planning: { ...p, opening_hours: scoped.opening_hours } } : record;
+  const schedule=parseHours(hoursFor(hoursRecord)), current=openingStatus(hoursRecord,now,calendar),contacts=contactLinks(record);
   const source=safeURL(p.hours_source_url||p.source_url||r.source_url);
   const sourceDate=p.hours_checked_date||p.retrieved_date;
   const observed=t['check_date:opening_hours']||t['survey:date']||t.check_date;
   const facts=[['Vegetarian options',t['diet:vegetarian']],['Vegan options',t['diet:vegan']],['Egg-friendly vegetarian',t['diet:ovo_vegetarian']],['Air conditioning',t.air_conditioning],['Covered venue / area',t.covered],['Outdoor seating',t.outdoor_seating],['Cash',t['payment:cash']],['Credit cards',t['payment:credit_cards']],['Debit cards',t['payment:debit_cards']]];
   const arrival=[['Entrance location',t.entrance?'Mapped object is an entrance ('+humanize(t.entrance)+'). Its location still needs checking.':null],['Steps',t.step_count],['Surface',t.surface],['Smoothness',t.smoothness],['Access notes',t['wheelchair:description']],['Parking-to-entrance route',r.parking_to_entrance_route||r.parking_to_shop_route||r.parking_to_venue_route],['Entrance clear width',r.entrance_clear_width_m?`${r.entrance_clear_width_m} m`:null],['Parking bay width',r.parking_bay_width_m?`${r.parking_bay_width_m} m`:null],['Transfer space',r.parking_transfer_space_m?`${r.parking_transfer_space_m} m`:null]];
   return <div className="visit-info">
-    <section><h2><ClockIcon />Opening hours</h2><p><strong>{current.label}</strong></p>
+    <section><h2><ClockIcon />Opening hours</h2>{scopes.length > 1 && <><SearchSelect label="Hours for" icon={ClockIcon} value={scoped?.scope || ''} options={scopes.filter(item => item.scope !== 'Shops').map(item => [item.scope, item.scope])} placeholder="Shops" onChange={setScope} /><p className="form-note">Separate mall trading groups. Individual businesses can differ. Search badges and trip checks use the mall shop schedule.</p></>}<p><strong>{current.label}</strong></p>
       {current.next&&<p>{current.next.state==='open'?'Next opening':'Next closing'} · {new Date(current.next.at).toLocaleString('en-GB',{timeZone:'Indian/Mauritius',weekday:'short',hour:'2-digit',minute:'2-digit'})}</p>}
       {p.hours_note&&<p>{p.hours_note}</p>}{schedule?<dl className="hours-list">{DAY_NAMES.map((name,i)=><div key={name}><dt>{name}</dt><dd>{formatIntervals(schedule.week[i])}</dd></div>)}<div><dt>Public holidays</dt><dd>{formatIntervals(schedule.holiday)}</dd></div></dl>:hoursFor(record)?<p className="raw-hours">Source schedule: {hoursFor(record)}</p>:<p>Hours have not been published in these sources.</p>}
-      <p className="form-note">All times are Mauritius time (UTC+4). {p.hours_scope||'Listed schedule; call ahead to confirm.'} Holiday exceptions and temporary changes may differ. Holiday calendar covers {calendar.years.join(' and ')}; Eid dates remain subject to confirmation.</p>
+      <p className="form-note">All times are Mauritius time (UTC+4). {scoped ? `Mall ${scoped.scope.toLowerCase()} schedule; individual tenants may differ.` : p.hours_scope||'Listed schedule; call ahead to confirm.'} Holiday exceptions and temporary changes may differ. Holiday calendar covers {calendar.years.join(' and ')}; Eid dates remain subject to confirmation.</p>
       {source&&<p className="form-note"><Link href={source} target="_blank" rel="noopener noreferrer">{hoursFor(record)?'Hours source':'Planning source'}<ExternalLinkIcon /></Link>{sourceDate&&` · Retrieved ${sourceDate}`}{observed&&` · Source check date ${observed}`}{p.source_object_timestamp&&` · Map object last edited ${p.source_object_timestamp.slice(0,10)} (not an hours verification)`}</p>}
     </section>
     <section><h2>Contact the venue</h2><div className="visit-contact-actions">{contacts.call&&<Button asChild variant="soft"><a href={contacts.call}><MobileIcon />Call {contacts.phone}</a></Button>}{contacts.whatsapp&&<Button asChild variant="soft"><a href={contacts.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp<ExternalLinkIcon /></a></Button>}{contacts.website&&<Button asChild variant="soft"><a href={contacts.website} target="_blank" rel="noopener noreferrer">Website<ExternalLinkIcon /></a></Button>}</div>{!contacts.call&&!contacts.whatsapp&&!contacts.website&&<p>No usable contact channel in the imported data. Check the source listing.</p>}<p className="form-note">WhatsApp appears only when explicitly listed by the source.</p></section>

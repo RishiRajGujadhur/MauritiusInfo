@@ -31,7 +31,9 @@ are not republished. Those publishers retain rights to their pages.
 ## Conservative joins and interpretation
 
 - Ascencia hours join exact mall identities only. Mall shop hours are **not**
-  copied to tenants. The full separate trading groups remain in `mall-hours.json`.
+  copied to tenants. The full separate trading groups remain in `mall-hours.json` and are joined as
+  `trading_schedules` to 17 exact source records for those seven malls. Place details
+  can switch between groups without changing shop-hour search badges or trip checks.
 - my.t coordinates come directly from its operator branch locator. They are
   branch positions, not independently surveyed accessible entrances.
 - The MRA row describes its e-services support/office information. Its appointment

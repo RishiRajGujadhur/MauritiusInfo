@@ -74,7 +74,7 @@ def run():
     for row in csv.DictReader((ROOT/path).open()):
      if compact(row[namefield]) in aliases:
       key=ds+':'+row[idfield];base=records.setdefault(key,{'tags':{}})
-      base.update({'opening_hours':hours['opening_hours'],'hours_scope':'Mall shops; individual tenants may differ','hours_source_url':URLS['ascencia'],'hours_checked_date':args.checked_date})
+      base.update({'opening_hours':hours['opening_hours'],'hours_scope':'Mall shops; individual tenants may differ','hours_source_url':URLS['ascencia'],'hours_checked_date':args.checked_date,'trading_schedules':[v for v in mall_schedules if v['mall']==mall]})
  b=get('myt')
  if b:
   for i,node in enumerate(ET.fromstring(b).findall('marker')):

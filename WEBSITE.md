@@ -107,3 +107,14 @@ breaks/overlaps, contact safety, dietary/facility unknowns, source failure recov
 real dataset joins and service-worker scope/fallback tests. Local Chromium launch
 is blocked by this environment's socket restriction, so interactive browser and
 visual verification still require a browser-capable environment before merging.
+
+### Dropdown focus and mall trading groups
+
+Search fields use one inset focus border instead of overlapping input and Radix
+focus outlines. Tapping a filter leaves the keyboard closed until its search field
+is tapped; opening with the keyboard focuses search. Arrow keys, Enter, Escape and
+focus return remain supported. Mobile options have 44px minimum tap targets.
+
+Mall visit details can select separately published trading groups (such as
+hypermarket or leisure) from the same source snapshot. This does not copy mall
+hours onto tenants, change directory open-now badges, or change trip checks.

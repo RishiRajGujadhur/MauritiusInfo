@@ -88,3 +88,19 @@ test('operator arrival statements retain their separate source and do not overwr
  const vegetarian=data['official:PADHARO-SA-CENTREPOINT'];
  assert.equal(vegetarian.tags['diet:vegetarian'],'only');assert.equal(vegetarian.tags['diet:ovo_vegetarian'],undefined);
 });
+
+test('mall trading groups retain different closing times without changing the default shop hours',()=>{
+ const data=JSON.parse(readFileSync(new URL('../data/planning/records.json',import.meta.url))).records;
+ const p=data['curated:MU0013'];
+ const hypermarket=p.trading_schedules.find(s=>s.scope==='Hypermarket');
+ assert.equal(hypermarket.mall,'Bagatelle Mall');
+ assert.equal(p.trading_schedules.length,5);
+ const sunday=at('2026-11-15T18:00');
+ assert.equal(openingStatus({raw:{},planning:p},sunday,calendar).state,'closed');
+ assert.equal(openingStatus({raw:{},planning:{...p,opening_hours:hypermarket.opening_hours}},sunday,calendar).state,'open');
+ assert.equal(data['curated:MU0032']?.trading_schedules,undefined);
+ for(const value of Object.values(data)) for(const s of value.trading_schedules||[]) {
+  assert(parseHours(s.opening_hours),s.mall+' '+s.scope);
+  assert.equal(s.source_url,'https://www.ascenciamalls.com/opening-hours');
+ }
+});
