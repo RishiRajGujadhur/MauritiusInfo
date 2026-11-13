@@ -1,12 +1,15 @@
 import React, { lazy, Suspense, useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Dialog, IconButton, Link, SegmentedControl, Skeleton, Switch, Table, TextField, Theme, Tooltip } from '@radix-ui/themes';
-import { AccessibilityIcon, ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpIcon, CaretSortIcon, ChevronRightIcon, Cross2Icon, DashboardIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon, DownloadIcon, DrawingPinIcon, ExternalLinkIcon, GlobeIcon, InfoCircledIcon, LayersIcon, MagnifyingGlassIcon, MixIcon, MoonIcon, ResetIcon, RowsIcon, SizeIcon, SunIcon, TableIcon } from '@radix-ui/react-icons';
+import { AccessibilityIcon, ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpIcon, CaretSortIcon, ChevronRightIcon, Cross2Icon, DashboardIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon, DownloadIcon, DrawingPinIcon, ExternalLinkIcon, GlobeIcon, InfoCircledIcon, LayersIcon, MagnifyingGlassIcon, MixIcon, MoonIcon, ResetIcon, RowsIcon, SizeIcon, SunIcon, TableIcon, BookmarkIcon, BookmarkFilledIcon } from '@radix-ui/react-icons';
 import { flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
 import { DATASETS, filterRecords } from '../../data-core.mjs';
 import SearchSelect from './search-select';
 import { getCategoryIcon } from './category-icons';
-import { ReportBadge } from './ui';
+import { ReportBadge, EvidenceLabels } from './ui';
+import NeedsFilter from './needs-filter';
+import { matchesNeeds, validNeeds, readSaved } from '../../place-tools.mjs';
 
+const MapView = lazy(() => import('./map-view'));
 const PlaceDetails = lazy(() => import('./place-details'));
 const BASE = import.meta.env.BASE_URL;
 const DEFAULT_FILTERS = { search: '', area: '', category: '', access: '', parking: '', dataset: '' };
@@ -30,7 +33,7 @@ function readInitial() {
     return { id, desc: direction === 'desc' };
   }).filter(value => Object.hasOwn(COLUMN_LABELS, value.id));
   const size = Number(query.get('size'));
-  return { filters, sorting: sorting.length ? sorting : [{ id: 'name', desc: false }], pageIndex: Math.max(0, Number(query.get('page')) - 1 || 0), pageSize: [25, 50, 100].includes(size) ? size : 25, record: query.get('record') };
+  return { view: query.get('view') === 'map' ? 'map' : 'list', savedOnly: query.get('saved') === '1', needs: query.has('needs') ? validNeeds(query.get('needs').split(',')) : null, filters, sorting: sorting.length ? sorting : [{ id: 'name', desc: false }], pageIndex: Math.max(0, Number(query.get('page')) - 1 || 0), pageSize: [25, 50, 100].includes(size) ? size : 25, record: query.get('record') };
 }
 
 function storedValue(key, fallback) {
@@ -38,8 +41,8 @@ function storedValue(key, fallback) {
 }
 
 function downloadRows(rows) {
-  const headers = ['record_id', 'place_name', 'category', 'area', 'address', 'wheelchair_access', 'wheelchair_parking', 'dataset'];
-  const values = rows.map(({ original: record }) => [record.id, record.name, record.category, record.area, record.address, record.access.raw, record.parking.raw, record.dataset.name]);
+  const headers = ['record_id', 'place_name', 'category', 'area', 'address', 'wheelchair_access', 'wheelchair_parking', 'dataset', 'evidence'];
+  const values = rows.map(({ original: record }) => [record.id, record.name, record.category, record.area, record.address, record.access.raw, record.parking.raw, record.dataset.name, record.evidence?.map(item => item.label).join('; ')]);
   const csv = [headers, ...values].map(row => row.map(value => `"${String(value ?? '').replaceAll('"', '""')}"`).join(',')).join('\r\n');
   const url = URL.createObjectURL(new Blob(['\uFEFF', csv], { type: 'text/csv;charset=utf-8' }));
   const anchor = document.createElement('a');
@@ -52,6 +55,15 @@ function downloadRows(rows) {
 export default function Explorer() {
   const [initial] = useState(readInitial);
   const [filters, setFilters] = useState(initial.filters);
+  const [view, setView] = useState(initial.view);
+  const [savedKeys, setSavedKeys] = useState(() => readSaved(storedValue('mu-saved-v1', '[]')));
+  const [savedOnly, setSavedOnly] = useState(initial.savedOnly);
+  const [storageWarning, setStorageWarning] = useState('');
+  const [needsOpen, setNeedsOpen] = useState(false);
+  const [needs, setNeeds] = useState(() => {
+    if (initial.needs) return { ids: initial.needs, enabled: initial.needs.length > 0 };
+    try { const value = JSON.parse(storedValue('mu-needs-v1', '{}')); return { ids: validNeeds(Array.isArray(value.ids) ? value.ids : []), enabled: Boolean(value.enabled) }; } catch { return { ids: [], enabled: false }; }
+  });
   const [sorting, setSorting] = useState(initial.sorting);
   const [pagination, setPagination] = useState({ pageIndex: initial.pageIndex, pageSize: initial.pageSize });
   const [appearance, setAppearance] = useState(() => storedValue('mu-theme-v2', 'dark') === 'light' ? 'light' : 'dark');
@@ -70,6 +82,20 @@ export default function Explorer() {
   const searchInput = useRef(null);
   const deferredFilters = useDeferredValue(filters);
 
+  useEffect(() => {
+    try { localStorage.setItem('mu-saved-v1', JSON.stringify(savedKeys)); localStorage.setItem('mu-needs-v1', JSON.stringify(needs)); setStorageWarning(''); }
+    catch { setStorageWarning('Browser storage is unavailable. Saved places and needs will last for this tab only.'); }
+  }, [savedKeys, needs]);
+  useEffect(() => {
+    const sync = event => {
+      if (event.key === 'mu-saved-v1') setSavedKeys(readSaved(event.newValue));
+    };
+    addEventListener('storage', sync); return () => removeEventListener('storage', sync);
+  }, []);
+  const savedSet = useMemo(() => new Set(savedKeys), [savedKeys]);
+  function toggleSave(key) { setSavedKeys(current => current.includes(key) ? current.filter(value => value !== key) : [...current, key]); }
+  function updateNeeds(next) { setNeeds(next); setPagination(current => ({ ...current, pageIndex: 0 })); }
+  function toggleSavedOnly() { setSavedOnly(value => !value); setPagination(current => ({ ...current, pageIndex: 0 })); }
   useEffect(() => {
     document.documentElement.dataset.theme = appearance;
     try { localStorage.setItem('mu-theme-v2', appearance); } catch {}
@@ -99,7 +125,7 @@ export default function Explorer() {
     const worker = new Worker(new URL('./data-worker.js', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
       setRecords(data.records);
-      setFailures(data.failures);
+      setFailures([...data.failures, ...data.evidenceFailures.map(name => `${name} evidence`)]);
       setLoading(false);
     };
     worker.onerror = () => {
@@ -114,8 +140,9 @@ export default function Explorer() {
   const categories = useMemo(() => [...new Set(records.map(record => record.category))].sort().map(value => [value, value]), [records]);
   const sourceOptions = useMemo(() => DATASETS.map(dataset => [dataset.id, dataset.name]), []);
   const options = { area: areas, category: categories, access: REPORTS, parking: REPORTS, dataset: sourceOptions };
-  const matches = useMemo(() => filterRecords(records, deferredFilters), [records, deferredFilters]);
-  const draftCount = useMemo(() => mobileSearchOpen ? filterRecords(records, { ...filters, search: deferredSearchDraft }).length : 0, [records, filters, deferredSearchDraft, mobileSearchOpen]);
+  const eligibleRecords = useMemo(() => records.filter(record => (!savedOnly || savedSet.has(record.key)) && (!needs.enabled || matchesNeeds(record, needs.ids))), [records, savedOnly, savedSet, needs]);
+  const matches = useMemo(() => filterRecords(eligibleRecords, deferredFilters), [eligibleRecords, deferredFilters]);
+  const draftCount = useMemo(() => mobileSearchOpen ? filterRecords(eligibleRecords, { ...filters, search: deferredSearchDraft }).length : 0, [eligibleRecords, filters, deferredSearchDraft, mobileSearchOpen]);
   const columns = useMemo(() => [
     { accessorKey: 'name', header: 'Place', sortingFn: 'alphanumeric' },
     { accessorKey: 'category', header: 'Category' },
@@ -155,9 +182,12 @@ export default function Explorer() {
     if (sortText !== 'name:asc') query.set('sort', sortText);
     if (pageIndex) query.set('page', String(pageIndex + 1));
     if (pagination.pageSize !== 25) query.set('size', String(pagination.pageSize));
+    if (view === 'map') query.set('view', 'map');
+    if (savedOnly) query.set('saved', '1');
+    if (needs.enabled && needs.ids.length) query.set('needs', needs.ids.join(','));
     if (selectedKey) query.set('record', selectedKey);
     history.replaceState(null, '', location.pathname + (query.size ? `?${query}` : ''));
-  }, [filters, sorting, pageIndex, pagination.pageSize, selectedKey]);
+  }, [filters, sorting, pageIndex, pagination.pageSize, selectedKey, view, savedOnly, needs]);
 
   function scrollToResults() {
     if (matchMedia('(max-width: 700px)').matches) {
@@ -180,6 +210,8 @@ export default function Explorer() {
   }
   function reset() {
     mobileFilterStrip.current?.scrollTo({ left: 0 });
+    setNeeds(current => ({ ...current, enabled: false }));
+    setSavedOnly(false);
     setFilters(DEFAULT_FILTERS);
     setPagination(current => ({ ...current, pageIndex: 0 }));
   }
@@ -188,21 +220,21 @@ export default function Explorer() {
     setSelectedKey(record.key);
   }
   function cellContent(record, column) {
-    if (column === 'name') return <Button variant="ghost" className="place-name" onClick={event => openDetails(record, event)}><DrawingPinIcon /><span>{record.name}</span><ExternalLinkIcon className="row-open-icon" /></Button>;
+    if (column === 'name') return <div className="place-cell"><IconButton className="save-place" variant="ghost" color={savedSet.has(record.key) ? 'blue' : 'gray'} aria-label={`${savedSet.has(record.key) ? 'Unsave' : 'Save'} ${record.name}`} aria-pressed={savedSet.has(record.key)} onClick={() => toggleSave(record.key)}>{savedSet.has(record.key) ? <BookmarkFilledIcon /> : <BookmarkIcon />}</IconButton><Button variant="ghost" className="place-name" onClick={event => openDetails(record, event)}><DrawingPinIcon /><span>{record.name}</span><ExternalLinkIcon className="row-open-icon" /></Button></div>;
     if (column === 'category') {
       const CategoryIcon = getCategoryIcon(record.category);
       return <span className="muted"><span className="category-label"><CategoryIcon aria-hidden="true" />{record.category}</span><small>{record.type !== record.category ? record.type : ''}</small></span>;
     }
     if (column === 'area') return <span>{record.area}<small>{record.address}</small></span>;
     if (column === 'access' || column === 'parking') return <ReportBadge value={record[column]} />;
-    return <span className="muted source-name">{record.dataset.name}</span>;
+    return <span className="muted source-name">{record.dataset.name}<EvidenceLabels record={record} /></span>;
   }
   const selectedRecord = records.find(record => record.key === selectedKey);
   const activeFilters = FILTERS.filter(filter => filters[filter.key]);
   const visibleRows = table.getRowModel().rows;
   const start = matches.length ? pageIndex * pagination.pageSize + 1 : 0;
   function filterControls() {
-    return FILTERS.map(filter => <SearchSelect key={filter.key} {...filter} getOptionIcon={filter.key === 'category' ? getCategoryIcon : undefined} value={filters[filter.key]} options={options[filter.key]} onChange={value => updateFilter(filter.key, value)} />);
+    return <><Button className="needs-trigger" variant={needs.enabled && needs.ids.length ? "soft" : "surface"} color={needs.enabled && needs.ids.length ? "blue" : "gray"} onClick={() => setNeedsOpen(true)}><AccessibilityIcon />My needs{needs.enabled && needs.ids.length > 0 && <span className="control-count">{needs.ids.length}</span>}</Button>{FILTERS.map(filter => <SearchSelect key={filter.key} {...filter} getOptionIcon={filter.key === 'category' ? getCategoryIcon : undefined} value={filters[filter.key]} options={options[filter.key]} onChange={value => updateFilter(filter.key, value)} />)}</>;
   }
   const mobileSortOptions = Object.entries(COLUMN_LABELS).flatMap(([key, label]) => [[`${key}:asc`, `${label} · ascending`], [`${key}:desc`, `${label} · descending`]]);
 
@@ -210,14 +242,14 @@ export default function Explorer() {
     <Link className="skip-link" href="#results">Skip to places</Link>
     <header className="site-header"><div className="shell header-inner">
       <Link href={BASE} className="brand"><GlobeIcon className="brand-icon" width="23" height="23" /><span className="desktop-brand">Access Mauritius</span><span className="mobile-brand">Places</span></Link>
-      <div className="header-actions">{(activeFilters.length > 0 || filters.search) && <IconButton className="mobile-clear-all" variant="ghost" color="gray" aria-label="Clear all filters" onClick={reset}><ResetIcon /></IconButton>}<Link href="https://github.com/RishiRajGujadhur/MauritiusInfo" className="data-link"><LayersIcon />Data<ExternalLinkIcon /></Link><label className="theme-switch"><span className="sr-only">Dark mode</span>{appearance === 'dark' ? <MoonIcon /> : <SunIcon />}<Switch size="1" aria-label="Dark mode" checked={appearance === 'dark'} onCheckedChange={checked => setAppearance(checked ? 'dark' : 'light')} /></label></div>
+      <div className="header-actions">{(activeFilters.length > 0 || filters.search || savedOnly || (needs.enabled && needs.ids.length > 0)) && <IconButton className="mobile-clear-all" variant="ghost" color="gray" aria-label="Clear all filters" onClick={reset}><ResetIcon /></IconButton>}<Link href="https://github.com/RishiRajGujadhur/MauritiusInfo" className="data-link"><LayersIcon />Data<ExternalLinkIcon /></Link><label className="theme-switch"><span className="sr-only">Dark mode</span>{appearance === 'dark' ? <MoonIcon /> : <SunIcon />}<Switch size="1" aria-label="Dark mode" checked={appearance === 'dark'} onCheckedChange={checked => setAppearance(checked ? 'dark' : 'light')} /></label></div>
     </div></header>
     <main className="shell">
       <section className="workspace" aria-label="Find places">
         <div className="search-toolbar"><h1><DrawingPinIcon />Find a place</h1><TextField.Root ref={searchInput} aria-label="Search places" type="search" className="main-search" size="3" placeholder="Place, town or address" value={filters.search} onChange={event => updateFilter('search', event.target.value)}>
           <TextField.Slot><MagnifyingGlassIcon width="19" height="19" /></TextField.Slot><TextField.Slot side="right">{filters.search ? <IconButton size="1" variant="ghost" color="gray" aria-label="Clear search" onClick={() => { updateFilter('search', ''); searchInput.current?.focus(); }}><Cross2Icon /></IconButton> : <kbd>/</kbd>}</TextField.Slot>
         </TextField.Root><Tooltip content="Access can change. Confirm the facilities you need with the venue before visiting."><IconButton variant="ghost" color="gray" aria-label="About access reports"><InfoCircledIcon width="18" height="18" /></IconButton></Tooltip></div>
-        <div className="filters">{filterControls()}<Tooltip content="Clear search and filters"><IconButton variant="ghost" color="gray" aria-label="Reset filters" disabled={!activeFilters.length && !filters.search} onClick={reset}><ResetIcon /></IconButton></Tooltip></div>
+        <div className="filters">{filterControls()}<Tooltip content="Clear search and filters"><IconButton variant="ghost" color="gray" aria-label="Reset filters" disabled={!activeFilters.length && !filters.search && !savedOnly && !(needs.enabled && needs.ids.length)} onClick={reset}><ResetIcon /></IconButton></Tooltip></div>
         {activeFilters.length > 0 && <div className="active-filters" aria-label="Active filters">{activeFilters.map(filter => <Button key={filter.key} size="1" variant="soft" onClick={() => updateFilter(filter.key, '')} aria-label={`Remove ${filter.label} filter`}><filter.icon />{filter.label} · {options[filter.key].find(([key]) => key === filters[filter.key])?.[1] || filters[filter.key]}<Cross2Icon /></Button>)}</div>}
       </section>
       <section className="mobile-controls" aria-label="Place filters">
@@ -225,13 +257,17 @@ export default function Explorer() {
           {filterControls()}
           <SearchSelect label="Sort" icon={CaretSortIcon} value={`${sorting[0]?.id || 'name'}:${sorting[0]?.desc ? 'desc' : 'asc'}`} options={mobileSortOptions} placeholder="Name · ascending" allowAll={false} onChange={value => { const [id, direction] = value.split(':'); table.setSorting([{ id, desc: direction === 'desc' }]); }} />
           <SearchSelect label="Rows" icon={TableIcon} value={String(pagination.pageSize)} options={['25', '50', '100'].map(value => [value, value])} placeholder="25" allowAll={false} onChange={value => table.setPageSize(Number(value))} />
-          {(activeFilters.length > 0 || filters.search) && <Button className="mobile-reset" variant="ghost" color="gray" onClick={reset} aria-label="Reset filters"><ResetIcon />Clear</Button>}
+          {(activeFilters.length > 0 || filters.search || savedOnly || (needs.enabled && needs.ids.length > 0)) && <Button className="mobile-reset" variant="ghost" color="gray" onClick={reset} aria-label="Reset filters"><ResetIcon />Clear</Button>}
         </div>
         {filters.search && <div className="mobile-query"><Button variant="ghost" color="gray" onClick={() => changeMobileSearchOpen(true)}><MagnifyingGlassIcon /><span>{filters.search}</span></Button><IconButton variant="ghost" color="gray" aria-label="Clear search" onClick={() => updateFilter('search', '')}><Cross2Icon /></IconButton></div>}
       </section>
+      {storageWarning && <p className="storage-warning" role="status">{storageWarning}</p>}
       {failures.length > 0 && <div className="load-error" role="alert"><InfoCircledIcon /><span>Some sources could not load. {records.length.toLocaleString()} records available.</span><Tooltip content={failures.join(', ')}><Button size="1" variant="soft" onClick={() => setRetry(value => value + 1)}><ResetIcon />Retry</Button></Tooltip></div>}
       <section id="results" tabIndex={-1} aria-label="Places">
-        <div className="grid-toolbar"><p role="status" aria-live="polite">{loading ? 'Loading places…' : <><strong>{matches.length.toLocaleString()}</strong> results <span>· {records.length.toLocaleString()} source records</span></>}</p><div className="grid-actions"><Tooltip content="Row spacing"><SegmentedControl.Root size="1" value={density} aria-label="Row density" onValueChange={setDensity}><SegmentedControl.Item value="compact" aria-label="Compact rows"><RowsIcon /></SegmentedControl.Item><SegmentedControl.Item value="comfortable" aria-label="Comfortable rows"><SizeIcon /></SegmentedControl.Item></SegmentedControl.Root></Tooltip><Tooltip content="Download all filtered results in sort order"><Button variant="ghost" color="gray" size="1" aria-label="Export CSV" disabled={loading || !matches.length} onClick={() => downloadRows(table.getSortedRowModel().rows)}><DownloadIcon /><span>Export CSV</span></Button></Tooltip></div></div>
+        <div className="grid-toolbar"><p role="status" aria-live="polite">{loading ? 'Loading places…' : <><strong>{matches.length.toLocaleString()}</strong> {matches.length === 1 ? 'result' : 'results'} <span>· {records.length.toLocaleString()} source records</span></>}</p><div className={`grid-actions ${view === 'map' ? 'map-actions' : ''}`}><Button className="saved-view-toggle" size="2" variant={savedOnly ? 'soft' : 'ghost'} color={savedOnly ? 'blue' : 'gray'} aria-pressed={savedOnly} onClick={toggleSavedOnly} aria-label={`Saved places (${savedKeys.length})`}>{savedOnly ? <BookmarkFilledIcon /> : <BookmarkIcon />}<span>Saved</span>{savedKeys.length > 0 && <span className="saved-count">{savedKeys.length}</span>}</Button><SegmentedControl.Root className="view-toggle" size="2" aria-label="Place view" value={view} onValueChange={setView}><SegmentedControl.Item value="list" aria-label="List view"><RowsIcon /><span className="view-label">List</span></SegmentedControl.Item><SegmentedControl.Item value="map" aria-label="Map view"><GlobeIcon /><span className="view-label">Map</span></SegmentedControl.Item></SegmentedControl.Root><Tooltip content="Row spacing"><SegmentedControl.Root className="density-toggle" size="1" value={density} aria-label="Row density" onValueChange={setDensity}><SegmentedControl.Item value="compact" aria-label="Compact rows"><RowsIcon /></SegmentedControl.Item><SegmentedControl.Item value="comfortable" aria-label="Comfortable rows"><SizeIcon /></SegmentedControl.Item></SegmentedControl.Root></Tooltip><Tooltip content="Download all filtered results in sort order"><Button variant="ghost" color="gray" size="1" aria-label="Export CSV" disabled={loading || !matches.length} onClick={() => downloadRows(table.getSortedRowModel().rows)}><DownloadIcon /><span>Export CSV</span></Button></Tooltip></div></div>
+        {savedOnly && !loading && <p className="saved-explainer">Saved on this browser only.{!savedKeys.length && ' Open a place and tap Save place to start your shortlist.'}</p>}
+        {needs.enabled && needs.ids.length > 0 && <p className="needs-summary">Matching all {needs.ids.length} selected needs · reported availability only<Button variant="ghost" size="1" onClick={() => setNeedsOpen(true)}>Edit</Button></p>}
+        {view === 'map' ? <Suspense fallback={<div className="map-loading" role="status">Loading map…</div>}><MapView records={matches} onOpen={openDetails} onList={() => setView('list')} /></Suspense> : <>
         <div className="mobile-sort"><SearchSelect label="Sort" icon={CaretSortIcon} value={`${sorting[0]?.id || 'name'}:${sorting[0]?.desc ? 'desc' : 'asc'}`} options={mobileSortOptions} placeholder="Name · ascending" allowAll={false} onChange={value => { const [id, direction] = value.split(':'); table.setSorting([{ id, desc: direction === 'desc' }]); }} /></div>
         <div className={`grid-scroll ${density}`} tabIndex={0} role="region" aria-label="Location grid" aria-busy={loading}>
           <Table.Root className="places-table" variant="surface" size="1"><Table.Header>{table.getHeaderGroups().map(group => <Table.Row key={group.id}>{group.headers.map(header => {
@@ -242,7 +278,7 @@ export default function Explorer() {
           })}</Table.Row>)}</Table.Header><Table.Body>
             {loading && !records.length ? Array.from({ length: 8 }, (_, index) => <Table.Row key={index}>{columns.map(column => <Table.Cell key={column.id || column.accessorKey}><Skeleton height="16px" width={column.accessorKey === 'name' ? '80%' : '65%'} /></Table.Cell>)}</Table.Row>) : visibleRows.map(row => <Table.Row key={row.id}>{row.getVisibleCells().map(cell => <Table.Cell key={cell.id} data-label={COLUMN_LABELS[cell.column.id]} className={`column-${cell.column.id}`}>{cellContent(row.original, cell.column.id)}</Table.Cell>)}</Table.Row>)}
           </Table.Body></Table.Root>
-          {!loading && !matches.length && <div className="empty"><MagnifyingGlassIcon width="27" height="27" /><h2>No matching places</h2><p>Try another name or remove a filter.</p><Button variant="soft" onClick={reset}><ResetIcon />Reset filters</Button></div>}
+          {!loading && !matches.length && <div className="empty"><MagnifyingGlassIcon width="27" height="27" /><h2>{savedOnly && !savedKeys.length ? "No saved places yet" : "No matching places"}</h2><p>Try another name or remove a filter.</p><Button variant="soft" onClick={reset}><ResetIcon />Reset filters</Button></div>}
         </div>
         <div className="mobile-place-list" aria-label="Place list" aria-busy={loading}>
           {loading && !records.length ? Array.from({ length: 5 }, (_, index) => <div className="mobile-place-skeleton" key={index}><Skeleton height="22px" width="65%" /><Skeleton height="16px" width="80%" /><Skeleton height="20px" width="45%" /></div>) : visibleRows.map(({ original: record }) => {
@@ -253,13 +289,13 @@ export default function Explorer() {
                 <span className="mobile-category-icon"><CategoryIcon aria-hidden="true" /></span>
                 <span className="mobile-place-text"><strong>{record.name}</strong><span>{record.type || record.category} · {area}</span></span>
                 <ChevronRightIcon className="mobile-place-chevron" />
-              </Button>
-              <div className="mobile-place-status"><span>Access <ReportBadge value={record.access} /></span><span>Parking <ReportBadge value={record.parking} /></span></div>
+              </Button><IconButton className="mobile-save-place" variant="ghost" color={savedSet.has(record.key) ? "blue" : "gray"} aria-label={`${savedSet.has(record.key) ? "Unsave" : "Save"} ${record.name}`} aria-pressed={savedSet.has(record.key)} onClick={() => toggleSave(record.key)}>{savedSet.has(record.key) ? <BookmarkFilledIcon /> : <BookmarkIcon />}</IconButton>
+              <EvidenceLabels record={record} /><div className="mobile-place-status"><span>Access <ReportBadge value={record.access} /></span><span>Parking <ReportBadge value={record.parking} /></span></div>
             </article>;
           })}
-          {!loading && !matches.length && <div className="empty"><MagnifyingGlassIcon width="28" height="28" /><h2>No places found</h2><p>Try another search or clear your filters.</p><Button variant="soft" onClick={reset}>Clear filters</Button></div>}
+          {!loading && !matches.length && <div className="empty"><MagnifyingGlassIcon width="28" height="28" /><h2>{savedOnly && !savedKeys.length ? "No saved places yet" : "No places found"}</h2><p>Try another search or clear your filters.</p><Button variant="soft" onClick={reset}>Clear filters</Button></div>}
         </div>
-        <nav className="pagination" aria-label="Results pages"><span className="page-range">{start}–{Math.min(start + visibleRows.length - (start ? 1 : 0), matches.length)} of {matches.length.toLocaleString()}</span><div className="page-navigation"><IconButton variant="soft" color="gray" size="1" aria-label="First page" disabled={loading || !pageIndex} onClick={() => goToPage(0)}><DoubleArrowLeftIcon /></IconButton><IconButton variant="soft" color="gray" size="1" aria-label="Previous page" disabled={loading || !pageIndex} onClick={() => goToPage(pageIndex - 1)}><ArrowLeftIcon /></IconButton><label className="page-jump">Page<TextField.Root size="1" aria-label="Page number" type="number" min="1" max={pageCount} value={pageIndex + 1} onChange={event => table.setPageIndex(Math.min(pageCount - 1, Math.max(0, Number(event.target.value) - 1 || 0)))} /></label><span className="desktop-page-total">of {pageCount}</span><span className="mobile-page-indicator">Page {pageIndex + 1} of {pageCount}</span><IconButton variant="soft" color="gray" size="1" aria-label="Next page" disabled={loading || pageIndex >= pageCount - 1} onClick={() => goToPage(pageIndex + 1)}><ArrowRightIcon /></IconButton><IconButton variant="soft" color="gray" size="1" aria-label="Last page" disabled={loading || pageIndex >= pageCount - 1} onClick={() => goToPage(pageCount - 1)}><DoubleArrowRightIcon /></IconButton></div><SearchSelect label="Rows" icon={TableIcon} value={String(pagination.pageSize)} options={['25', '50', '100'].map(value => [value, value])} placeholder="25" allowAll={false} onChange={value => table.setPageSize(Number(value))} /></nav>
+        <nav className="pagination" aria-label="Results pages"><span className="page-range">{start}–{Math.min(start + visibleRows.length - (start ? 1 : 0), matches.length)} of {matches.length.toLocaleString()}</span><div className="page-navigation"><IconButton variant="soft" color="gray" size="1" aria-label="First page" disabled={loading || !pageIndex} onClick={() => goToPage(0)}><DoubleArrowLeftIcon /></IconButton><IconButton variant="soft" color="gray" size="1" aria-label="Previous page" disabled={loading || !pageIndex} onClick={() => goToPage(pageIndex - 1)}><ArrowLeftIcon /></IconButton><label className="page-jump">Page<TextField.Root size="1" aria-label="Page number" type="number" min="1" max={pageCount} value={pageIndex + 1} onChange={event => table.setPageIndex(Math.min(pageCount - 1, Math.max(0, Number(event.target.value) - 1 || 0)))} /></label><span className="desktop-page-total">of {pageCount}</span><span className="mobile-page-indicator">Page {pageIndex + 1} of {pageCount}</span><IconButton variant="soft" color="gray" size="1" aria-label="Next page" disabled={loading || pageIndex >= pageCount - 1} onClick={() => goToPage(pageIndex + 1)}><ArrowRightIcon /></IconButton><IconButton variant="soft" color="gray" size="1" aria-label="Last page" disabled={loading || pageIndex >= pageCount - 1} onClick={() => goToPage(pageCount - 1)}><DoubleArrowRightIcon /></IconButton></div><SearchSelect label="Rows" icon={TableIcon} value={String(pagination.pageSize)} options={['25', '50', '100'].map(value => [value, value])} placeholder="25" allowAll={false} onChange={value => table.setPageSize(Number(value))} /></nav></>}
       </section>
       <footer><span className="footer-note">Source records may overlap. Unknown means details are missing.</span><Link href="https://github.com/RishiRajGujadhur/MauritiusInfo#readme">Sources & licences<ExternalLinkIcon /></Link><span className="footer-copyright">© OpenStreetMap contributors · ODbL. Open Data Mauritius via cyber.mu · CC BY-SA 4.0.</span></footer>
     </main>
@@ -277,6 +313,7 @@ export default function Explorer() {
         </form>
       </Dialog.Content>
     </Dialog.Root>
-    <Suspense fallback={selectedKey ? <div className="detail-loading" role="status">Loading place details…</div> : null}>{selectedRecord && <PlaceDetails record={selectedRecord} onClose={() => setSelectedKey(null)} triggerRef={detailTrigger} />}</Suspense>
+    <NeedsFilter needs={needs} onChange={updateNeeds} open={needsOpen} onOpenChange={setNeedsOpen} />
+    <Suspense fallback={selectedKey ? <div className="detail-loading" role="status">Loading place details…</div> : null}>{selectedRecord && <PlaceDetails key={selectedRecord.key} record={selectedRecord} saved={savedSet.has(selectedRecord.key)} onToggleSave={toggleSave} onClose={() => setSelectedKey(null)} triggerRef={detailTrigger} />}</Suspense>
   </Theme>;
 }

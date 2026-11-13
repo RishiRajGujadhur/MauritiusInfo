@@ -255,3 +255,103 @@ footer > a { order: 2; margin-left: auto; }
   .features dt { margin: 0; }
   .dialog-heading h1 { font-size: 19px; }
 }
+
+/* Planning tools share the same result set in the table, list and map. */
+.place-cell { display:flex; align-items:center; gap:10px; }
+.place-cell .save-place { flex-shrink:0; margin:0; width:30px; height:32px; }
+.place-cell .place-name { flex:1; }
+.evidence-labels { display:flex; flex-wrap:wrap; gap:5px; margin-top:5px; }
+.evidence-labels .rt-Badge { font-size:10px; font-weight:400; gap:4px; }
+.evidence-labels svg { width:12px; height:12px; }
+.detail-header > .evidence-labels { margin:10px 0 0; }
+.detail-personal-actions { display:flex; gap:10px; flex-wrap:wrap; margin:16px 0; }
+.evidence-observations { border:1px solid var(--gray-6); border-radius:8px; padding:12px; }
+.evidence-observations summary { cursor:pointer; font-weight:550; }
+.evidence-observations article { padding:12px 0; border-top:1px solid var(--gray-5); }
+.evidence-observations p { margin:5px 0; }
+.evidence-observations a { overflow-wrap:anywhere; }
+.source-notes h2 { font-size:16px; }
+.needs-trigger.rt-Button { font-size:12px; min-height:36px; white-space:nowrap; gap:7px; }
+.control-count { display:grid; place-items:center; font-size:11px; background:var(--accent-5); border-radius:99px; min-width:20px; height:20px; }
+.grid-actions { gap:12px; }
+.view-toggle .rt-SegmentedControlItemLabelActive, .view-toggle .rt-SegmentedControlItemLabelInactive { display:inline-flex; align-items:center; gap:6px; }
+.saved-view-toggle.rt-Button { gap:6px; margin:0; }
+.needs-summary, .saved-explainer { display:flex; align-items:center; flex-wrap:wrap; gap:12px; font-size:12px; color:var(--gray-11); margin:4px 0 12px; }
+.needs-summary .rt-Button { margin:0; }
+.sheet-heading { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:12px; }
+.sheet-heading h1 { font-size:22px; margin:0; white-space:normal; }
+.sheet-heading .rt-IconButton { margin:0; width:44px; height:44px; flex-shrink:0; }
+.needs-options { display:flex; flex-direction:column; gap:4px; margin:18px 0; }
+.needs-options label { display:flex; align-items:center; gap:14px; min-height:52px; font-size:16px; cursor:pointer; }
+.needs-switch { display:flex; justify-content:space-between; align-items:center; min-height:48px; border-top:1px solid var(--gray-5); }
+.sheet-actions { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:20px; }
+.sheet-actions .rt-Button { min-height:44px; }
+.form-note { font-size:12px; color:var(--gray-11); line-height:1.6; }
+.storage-warning { padding:12px; border-radius:8px; background:var(--amber-3); color:var(--amber-11); font-size:13px; }
+.report-dialog { max-height:90dvh; overflow:auto; }
+.report-fields { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:20px 0; }
+.report-fields label { display:flex; flex-direction:column; gap:8px; font-size:14px; }
+.report-fields .full-width { grid-column:1/-1; }
+.report-fields .filter-trigger.rt-Button { min-height:44px; font-size:13px !important; }
+.report-fields .filter-caption { display:none; }
+.report-fields input, .report-fields textarea { font-size:16px; }
+.report-review h2 { font-size:18px; }
+.report-review pre { white-space:pre-wrap; overflow-wrap:anywhere; font:13px/1.7 system-ui,sans-serif; padding:14px; border-radius:8px; background:var(--gray-3); }
+.report-submit { width:100%; min-height:44px; }
+.map-view { margin:0 0 20px; }
+.map-summary { display:flex; justify-content:space-between; align-items:center; gap:12px; margin:8px 0 12px; }
+.map-summary p { font-size:12px; color:var(--gray-11); margin:0; }
+.map-summary > div { display:flex; gap:8px; }
+.map-summary .rt-Button { font-size:12px; }
+.leaflet-host { height:clamp(360px, 60dvh, 680px); width:100%; border:1px solid var(--gray-6); border-radius:12px; z-index:0; background:#dbe9ed; }
+.map-notice { background:var(--amber-3); color:var(--amber-11); padding:12px; border-radius:8px; font-size:13px; line-height:1.6; }
+.map-loading { min-height:360px; display:grid; place-items:center; }
+.place-map-marker > span { display:grid; place-items:center; width:30px; height:30px; border:2px solid white; border-radius:50% 50% 50% 0; transform:rotate(-45deg); box-shadow:0 2px 6px #0006; color:white; font:600 17px/1 system-ui; }
+.place-map-marker > span { border-radius:50%; transform:none; }
+.map-legend { display:flex; flex-wrap:wrap; gap:12px 18px; margin-top:14px; }
+.map-legend span { display:inline-flex; align-items:center; gap:6px; color:var(--gray-11); font-size:12px; }
+.map-legend i { width:20px; height:20px; color:white; font-style:normal; border-radius:50%; text-align:center; line-height:20px; }
+.map-place-popup { color:#19232c; font:14px/1.5 system-ui,sans-serif; }
+.map-place-popup > strong { font-size:17px; }
+.map-place-popup p { margin:8px 0; }
+.map-place-popup button { border:0; border-radius:7px; background:#0969da; color:white; min-height:44px; width:100%; font-size:15px; cursor:pointer; }
+.leaflet-control-zoom a { width:40px !important; height:40px !important; line-height:40px !important; }
+.leaflet-control-attribution { max-width:100%; font-size:11px; }
+.leaflet-host .marker-cluster { color:#182d19; font-weight:600; }
+@media (max-width:700px) {
+  .mobile-filter-strip .needs-trigger.rt-Button { border-radius:99px; min-height:44px; font-size:14px; padding:0 13px; }
+  .grid-toolbar { min-height:58px; gap:6px; }
+  .grid-toolbar > p { font-size:12px; }
+  .grid-actions { gap:8px; }
+  .grid-actions .rt-SegmentedControlRoot.view-toggle { display:inline-flex; min-height:44px; }
+  .grid-actions .view-toggle svg { width:19px; height:19px; }
+  .view-toggle .view-label { display:none; }
+  .grid-actions .saved-view-toggle.rt-Button { width:auto; padding:0 9px; gap:5px; }
+  .grid-actions .saved-view-toggle .saved-count { display:inline; font-size:12px; }
+  .grid-actions .rt-Button[aria-label="Export CSV"] { display:none; }
+  .mobile-place { position:relative; }
+  .mobile-place-main.rt-Button { padding-right:44px; box-sizing:border-box; }
+  .mobile-place-chevron { display:none; }
+  .mobile-save-place.rt-IconButton { position:absolute; right:0; top:14px; width:44px; height:44px; margin:0; }
+  .mobile-save-place svg { width:21px; height:21px; }
+  .mobile-place > .evidence-labels { margin:12px 0 0 46px; }
+  .evidence-labels .rt-Badge { font-size:11px; padding:3px 6px; }
+  .needs-summary, .saved-explainer { font-size:13px; line-height:1.6; }
+  .needs-dialog.rt-DialogContent, .report-dialog.rt-DialogContent { position:fixed; left:0; right:0; bottom:0; top:auto; transform:none; width:100%; max-width:none; max-height:94dvh; margin:0; overflow:auto; border-radius:22px 22px 0 0; padding:22px 20px calc(24px + env(safe-area-inset-bottom)); }
+  .needs-dialog .rt-DialogDescription, .report-dialog .rt-DialogDescription { font-size:15px; line-height:1.6; }
+  .detail-personal-actions .rt-Button { min-height:44px; font-size:14px; flex:1; }
+  .detail-header > .evidence-labels { margin-top:10px; }
+  .report-fields { gap:14px 10px; }
+  .report-fields .filter-trigger.rt-Button { font-size:14px !important; }
+  .form-note { font-size:13px; }
+  .map-summary { align-items:flex-start; flex-wrap:wrap; }
+  .map-summary p { font-size:13px; }
+  .map-summary .rt-Button { min-height:44px; font-size:14px; }
+  .leaflet-host { height:58dvh; min-height:320px; border-radius:9px; }
+  .map-legend { gap:8px 12px; }
+  .map-legend span { font-size:12px; }
+}
+
+.map-actions .density-toggle { display:none; }
+.leaflet-host .marker-cluster { background:rgba(60,130,190,.28); }
+.leaflet-host .marker-cluster > div { background:#d5eafa; color:#17446a; }
