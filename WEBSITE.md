@@ -145,3 +145,12 @@ search, shortlist, keyboard, dropdown, hours, details, map, trip, report and
 resilience changes. Tools are available from the header or `?`. Backups stay
 local; imports preview or merge explicitly, and unsupported records are disclosed.
 Browser visual and interactive acceptance checks remain pending.
+
+### Compare and prepare outings
+
+[Compare places and prepare an outing](FEATURES-VISIT-TOOLS.md) documents the
+comparison, visit-needs summary, call-ahead questions, inline closing warnings,
+related source listings, private notes and shareable trip links. The header
+Compare button opens comparison, related listings and closing-warning settings.
+Prepare & notes in place details holds the call checklist and personal note.
+My trip provides explicit selection and sharing of up to ten stops.

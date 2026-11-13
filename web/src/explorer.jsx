@@ -9,6 +9,9 @@ import { copyText, downloadFile } from './qol-actions.mjs';
 import { CopyFallback, RecentSearches } from './qol-ui';
 const ToolsPanel=lazy(()=>import('./tools-panel'));
 import HoursFilter from './hours-filter';
+import { duplicateGroups, readPrivateNotes, readSharedOuting, mergeOuting } from '../../outing-core.mjs';
+const ComparePlaces=lazy(()=>import('./compare-places'));
+const SharedOuting=lazy(()=>import('./shared-outing'));
 import { getCategoryIcon } from './category-icons';
 import { ReportBadge, EvidenceLabels } from './ui';
 const NeedsFilter = lazy(() => import('./needs-filter'));
@@ -50,7 +53,7 @@ function readInitial() {
   const practical = (query.get('features') || '').split(',').filter(id => PRACTICAL_FILTERS.some(([key]) => key === id));
   const town = locations.find(t => t.id === query.get('near'));
   const radius = [1,2,5,10,25,50].includes(Number(query.get('radius'))) ? Number(query.get('radius')) : 5;
-  return { hoursWindow: readHoursWindow(query.get('hours')), practical, nearby: town ? { id:town.id, name:town.name, point:[town.latitude,town.longitude], radius } : null, view: query.get('view') === 'map' ? 'map' : 'list', savedOnly: query.get('saved') === '1', needs: query.has('needs') ? validNeeds(query.get('needs').split(',')) : null, filters, sorting: sorting.length ? sorting : [{ id: 'name', desc: false }], pageIndex: Number.isSafeInteger(Number(query.get('page'))) ? Math.max(0, Number(query.get('page')) - 1) : 0, pageSize: [25, 50, 100].includes(size) ? size : 25, record: query.get('record') };
+  return { sharedOuting:readSharedOuting(query.get('plan')), hoursWindow: readHoursWindow(query.get('hours')), practical, nearby: town ? { id:town.id, name:town.name, point:[town.latitude,town.longitude], radius } : null, view: query.get('view') === 'map' ? 'map' : 'list', savedOnly: query.get('saved') === '1', needs: query.has('needs') ? validNeeds(query.get('needs').split(',')) : null, filters, sorting: sorting.length ? sorting : [{ id: 'name', desc: false }], pageIndex: Number.isSafeInteger(Number(query.get('page'))) ? Math.max(0, Number(query.get('page')) - 1) : 0, pageSize: [25, 50, 100].includes(size) ? size : 25, record: query.get('record') };
 }
 
 function storedValue(key, fallback) {
@@ -62,6 +65,17 @@ function downloadRows(rows){downloadFile('access-mauritius-results.csv',recordsC
 export default function Explorer() {
   const [initial] = useState(readInitial);
   const [toolsOpen,setToolsOpen]=useState(false);
+  const [compareOpen,setCompareOpen]=useState(false);
+  const [comparisonKeys,setComparisonKeys]=useState(()=>readSaved(storedValue('mu-compare-v1','[]')).slice(0,3));
+  const [notes,setNotes]=useState(()=>readPrivateNotes(storedValue('mu-visit-notes-v1','{}')));
+  const [notesError,setNotesError]=useState('');
+  const [closingThreshold,setClosingThreshold]=useState(()=>storedValue('mu-closing-window-v1','60')==='30'?30:60);
+  const [sharedOuting,setSharedOuting]=useState(initial.sharedOuting);
+  useEffect(()=>{try{localStorage.setItem('mu-compare-v1',JSON.stringify(comparisonKeys));localStorage.setItem('mu-closing-window-v1',String(closingThreshold));}catch{}},[comparisonKeys,closingThreshold]);
+  useEffect(()=>{try{localStorage.setItem('mu-visit-notes-v1',JSON.stringify(notes));setNotesError('');}catch{setNotesError('This note could not be saved to browser storage. It remains in this tab until you leave.');}},[notes]);
+  function toggleCompare(key){if(!comparisonKeys.includes(key)&&comparisonKeys.length>=3){setNotice({message:'Compare up to three places. Remove one before adding another.'});return;}setComparisonKeys(current=>current.includes(key)?current.filter(k=>k!==key):[...current,key].slice(0,3));}
+  function updateNote(key,text){if(!notes[key]&&text&&Object.keys(notes).length>=1000){setNotice({message:'The private-note limit is reached. Remove an unused note first.'});return;}setNotes(current=>{const next={...current};if(text)next[key]=text.slice(0,2000);else delete next[key];return next;});}
+
   const [recents,setRecents]=useState(()=>readRecents(storedValue('mu-recents-v1','[]')));
   const [searches,setSearches]=useState(()=>readSearches(storedValue('mu-searches-v1','[]')));
   const [notice,setNotice]=useState(null);
@@ -206,6 +220,8 @@ export default function Explorer() {
     return () => { alive = false; worker.terminate(); };
   }, [retry]);
 
+  const duplicates=useMemo(()=>duplicateGroups(records),[records]);
+  const relatedByKey=useMemo(()=>{const result=new Map();for(const group of duplicates)for(const record of group.records)result.set(record.key,group.records.filter(other=>other.key!==record.key));return result;},[duplicates]);
   const areas = useMemo(() => [...new Set(records.map(record => record.area))].sort().map(value => [value, value]), [records]);
   const categories = useMemo(() => [...new Set(records.map(record => record.category))].sort().map(value => [value, value]), [records]);
   const sourceOptions = useMemo(() => DATASETS.map(dataset => [dataset.id, dataset.name]), []);
@@ -216,6 +232,7 @@ export default function Explorer() {
   const locatedRecords = useMemo(() => nearbyResult ? nearbyResult.map(item => item.record) : eligibleRecords, [nearbyResult, eligibleRecords]);
   const gpsDistanceByKey=useMemo(()=>new Map(gps?records.map(record=>[record.key,distanceKm(gps.point,coordinates(record))]).filter(([,distance])=>distance!==null):[]),[records,gps]);
   const distanceByKey=sorting[0]?.id==='proximity'||(!nearby&&gps)?gpsDistanceByKey:nearbyDistanceByKey;
+  const comparisonDistances=useMemo(()=>{const origin=sorting[0]?.id==='proximity'||(!nearby&&gps)?gps?.point:nearby?.point;return new Map(origin?records.filter(record=>comparisonKeys.includes(record.key)).map(record=>[record.key,distanceKm(origin,coordinates(record))]).filter(([,distance])=>distance!==null):[]);},[records,comparisonKeys,gps,nearby,sorting]);
   const matches = useMemo(() => filterRecords(locatedRecords, deferredFilters, { sort: false }), [locatedRecords, deferredFilters]);
   const draftCount = useMemo(() => mobileSearchOpen ? filterRecords(locatedRecords, { ...filters, search: deferredSearchDraft }, { sort: false }).length : 0, [locatedRecords, filters, deferredSearchDraft, mobileSearchOpen]);
   const columns = useMemo(() => [
@@ -278,6 +295,7 @@ export default function Explorer() {
     const urlPage = loading ? pagination.pageIndex : pageIndex;
     if (urlPage) query.set('page', String(urlPage + 1));
     if (pagination.pageSize !== 25) query.set('size', String(pagination.pageSize));
+    if(sharedOuting?.token)query.set('plan',sharedOuting.token);
     if(hoursWindow)query.set('hours',`${hoursWindow.date},${hoursWindow.start},${hoursWindow.end}`);
     if (practical.length) query.set('features', practical.join(','));
     if (nearby && nearby.id !== 'gps') { query.set('near', nearby.id); query.set('radius', String(nearby.radius)); }
@@ -286,13 +304,13 @@ export default function Explorer() {
     query.set('needs', needs.enabled ? needs.ids.join(',') : '');
     if (selectedKey) query.set('record', selectedKey);
     history.replaceState(null, '', location.pathname + (query.size ? `?${query}` : ''));
-  }, [filters, sorting, pageIndex, pagination.pageSize, selectedKey, view, savedOnly, needs, loading, pagination.pageIndex, practical, nearby, hoursWindow]);
+  }, [filters, sorting, pageIndex, pagination.pageSize, selectedKey, view, savedOnly, needs, loading, pagination.pageIndex, practical, nearby, hoursWindow, sharedOuting]);
 
   useEffect(() => {
     function restoreURL() {
       const next = readInitial();
       setFilters(next.filters); setSearchDraft(next.filters.search);
-      setPractical(next.practical); setNearby(next.nearby); setHoursWindow(next.hoursWindow);
+      setPractical(next.practical); setNearby(next.nearby); setHoursWindow(next.hoursWindow);setSharedOuting(next.sharedOuting);
       gpsRequest.current++;setGPSPending(false);setGPS(null);setGeoMessage('');
       setView(next.view); setSavedOnly(next.savedOnly); setSorting(next.sorting);
       setPagination({ pageIndex: next.pageIndex, pageSize: next.pageSize });
@@ -337,7 +355,7 @@ export default function Explorer() {
     setSelectedKey(record.key);
   }
   function cellContent(record, column) {
-    if (column === 'name') return <div className="place-cell"><IconButton className="save-place" variant="ghost" color={savedSet.has(record.key) ? 'blue' : 'gray'} aria-label={`${savedSet.has(record.key) ? 'Unsave' : 'Save'} ${record.name}`} aria-pressed={savedSet.has(record.key)} onClick={() => toggleSave(record.key)}>{savedSet.has(record.key) ? <BookmarkFilledIcon /> : <BookmarkIcon />}</IconButton><Button variant="ghost" className="place-name" onClick={event => openDetails(record, event)}><DrawingPinIcon /><span title={record.name}>{record.name}<HoursBadge record={record} now={now} />{distanceByKey.has(record.key) && <small>{distanceByKey.get(record.key).toFixed(1)} km straight line</small>}</span><ExternalLinkIcon className="row-open-icon" /></Button></div>;
+    if (column === 'name') return <div className="place-cell"><IconButton className="save-place" variant="ghost" color={savedSet.has(record.key) ? 'blue' : 'gray'} aria-label={`${savedSet.has(record.key) ? 'Unsave' : 'Save'} ${record.name}`} aria-pressed={savedSet.has(record.key)} onClick={() => toggleSave(record.key)}>{savedSet.has(record.key) ? <BookmarkFilledIcon /> : <BookmarkIcon />}</IconButton><IconButton size="1" variant="ghost" color={comparisonKeys.includes(record.key)?'blue':'gray'} aria-label={`Compare ${record.name}`} aria-pressed={comparisonKeys.includes(record.key)} onClick={()=>toggleCompare(record.key)}><LayersIcon /></IconButton><Button variant="ghost" className="place-name" onClick={event => openDetails(record, event)}><DrawingPinIcon /><span title={record.name}>{record.name}<HoursBadge record={record} now={now} threshold={closingThreshold} />{distanceByKey.has(record.key) && <small>{distanceByKey.get(record.key).toFixed(1)} km straight line</small>}</span><ExternalLinkIcon className="row-open-icon" /></Button></div>;
     if (column === 'category') {
       const CategoryIcon = getCategoryIcon(record.category);
       return <span className="muted"><span className="category-label"><CategoryIcon aria-hidden="true" />{record.category}</span><small>{record.type !== record.category ? record.type : ''}</small></span>;
@@ -380,7 +398,7 @@ export default function Explorer() {
     <Link className="skip-link" href="#results">Skip to places</Link>
     <header className="site-header"><div className="shell header-inner">
       <Link href={BASE} className="brand"><GlobeIcon className="brand-icon" width="23" height="23" /><span className="desktop-brand">Access Mauritius</span><span className="mobile-brand">Places</span></Link>
-      <div className="header-actions"><IconButton variant="ghost" color="gray" aria-label="Saved places and tools" title="Saved places, backups and shortcuts (?)" onClick={()=>setToolsOpen(true)}><LayersIcon /></IconButton>{(activeFilters.length > 0 || filters.search || savedOnly || practical.length > 0 || nearby || hoursWindow || gps || (needs.enabled && needs.ids.length > 0)) && <IconButton className="mobile-clear-all" variant="ghost" color="gray" aria-label="Clear all filters" onClick={reset}><ResetIcon /></IconButton>}<Link href="https://github.com/RishiRajGujadhur/MauritiusInfo" className="data-link"><LayersIcon />Data<ExternalLinkIcon /></Link><label className="theme-switch"><span className="sr-only">Dark mode</span>{appearance === 'dark' ? <MoonIcon /> : <SunIcon />}<Switch size="1" aria-label="Dark mode" checked={appearance === 'dark'} onCheckedChange={checked => setAppearance(checked ? 'dark' : 'light')} /></label></div>
+      <div className="header-actions"><Button className="compare-trigger" variant="soft" size="2" aria-label={`Compare and plan (${comparisonKeys.length} selected)`} onClick={()=>setCompareOpen(true)}><LayersIcon /><span>Compare</span><span>{comparisonKeys.length}/3</span></Button><IconButton variant="ghost" color="gray" aria-label="Saved places and tools" title="Saved places, backups and shortcuts (?)" onClick={()=>setToolsOpen(true)}><LayersIcon /></IconButton>{(activeFilters.length > 0 || filters.search || savedOnly || practical.length > 0 || nearby || hoursWindow || gps || (needs.enabled && needs.ids.length > 0)) && <IconButton className="mobile-clear-all" variant="ghost" color="gray" aria-label="Clear all filters" onClick={reset}><ResetIcon /></IconButton>}<Link href="https://github.com/RishiRajGujadhur/MauritiusInfo" className="data-link"><LayersIcon />Data<ExternalLinkIcon /></Link><label className="theme-switch"><span className="sr-only">Dark mode</span>{appearance === 'dark' ? <MoonIcon /> : <SunIcon />}<Switch size="1" aria-label="Dark mode" checked={appearance === 'dark'} onCheckedChange={checked => setAppearance(checked ? 'dark' : 'light')} /></label></div>
     </div></header>
     <main className="shell">
       <section className="workspace" aria-label="Find places">
@@ -434,7 +452,7 @@ export default function Explorer() {
                 <span className="mobile-place-text"><strong>{record.name}</strong><span>{record.type || record.category} · {area}</span></span>
                 <ChevronRightIcon className="mobile-place-chevron" />
               </Button><IconButton className="mobile-save-place" variant="ghost" color={savedSet.has(record.key) ? "blue" : "gray"} aria-label={`${savedSet.has(record.key) ? "Unsave" : "Save"} ${record.name}`} aria-pressed={savedSet.has(record.key)} onClick={() => toggleSave(record.key)}>{savedSet.has(record.key) ? <BookmarkFilledIcon /> : <BookmarkIcon />}</IconButton>
-              <HoursBadge record={record} now={now} />{distanceByKey.has(record.key) && <small className="mobile-distance">{distanceByKey.get(record.key).toFixed(1)} km straight line</small>}<EvidenceLabels record={record} /><div className="mobile-place-status"><span>Access <ReportBadge value={record.access} /></span><span>Parking <ReportBadge value={record.parking} /></span></div>
+              <HoursBadge record={record} now={now} threshold={closingThreshold} />{distanceByKey.has(record.key) && <small className="mobile-distance">{distanceByKey.get(record.key).toFixed(1)} km straight line</small>}<EvidenceLabels record={record} /><div className="mobile-place-status"><Button size="1" variant={comparisonKeys.includes(record.key)?'soft':'surface'} aria-pressed={comparisonKeys.includes(record.key)} onClick={()=>toggleCompare(record.key)}>Compare</Button><span>Access <ReportBadge value={record.access} /></span><span>Parking <ReportBadge value={record.parking} /></span></div>
             </article>;
           })}
           {!loading && !matches.length && <div className="empty"><MagnifyingGlassIcon width="28" height="28" /><h2>{savedOnly && !savedKeys.length ? "No saved places yet" : "No places found"}</h2><p>Try another search or clear your filters.</p><Button variant="soft" onClick={reset}>Clear filters</Button></div>}
@@ -458,11 +476,13 @@ export default function Explorer() {
         </form>
       </Dialog.Content>
     </Dialog.Root>
+    <Suspense fallback={<div className="detail-loading" role="status">Loading comparison…</div>}>{compareOpen&&<ComparePlaces onClose={()=>setCompareOpen(false)} records={records} keys={comparisonKeys} onToggle={toggleCompare} onClear={()=>setComparisonKeys([])} groups={duplicates} needs={needs.enabled?needs.ids:[]} distances={comparisonDistances} now={now} onOpen={openDetails} threshold={closingThreshold} onThreshold={setClosingThreshold}/>}</Suspense>
+    <Suspense fallback={<div className="detail-loading" role="status">Loading shared outing…</div>}>{sharedOuting&&!loading&&<SharedOuting key={sharedOuting.token||'invalid'} shared={sharedOuting} records={records} onClose={()=>setSharedOuting(null)} onAdd={stops=>{const result=mergeOuting(trip,stops,new Set(records.map(r=>r.key)));setTrip(result.trip);setSavedKeys(current=>[...new Set([...current,...result.added])]);setSharedOuting(null);setTripOpen(true);setNotice({message:`${result.added.length} outing stops added; ${result.skipped} existing or unavailable stops skipped.`});}}/>}</Suspense>
     <CopyFallback text={copyFallback} onClose={()=>setCopyFallback('')} />
     {notice&&<div className="qol-toast" role="status"><span>{notice.message}</span>{notice.undo&&<Button size="1" variant="soft" onClick={()=>{notice.undo();setNotice(null);}}>Undo</Button>}<IconButton variant="ghost" color="gray" aria-label="Dismiss notification" onClick={()=>setNotice(null)}><Cross2Icon /></IconButton></div>}
     <Suspense fallback={<div className="detail-loading" role="status">Loading tools…</div>}>{toolsOpen&&<ToolsPanel onClose={()=>setToolsOpen(false)} records={records} savedKeys={savedKeys} onSaved={setSavedKeys} allowCleanup={!loading&&!failures.length&&!offlineMode} searches={searches} onSearches={setSearches} onRestore={restoreSearch} onOpen={openDetails} onSavedView={()=>{setSavedOnly(true);setPagination(current=>({...current,pageIndex:0}));}} onSavePage={()=>{setSavedKeys(current=>[...new Set([...current,...visibleRows.map(row=>row.original.key)])]);setNotice({message:'Current page added to saved places.'});}} onShare={shareResults} onExport={()=>downloadFile('access-mauritius-results.csv',recordsCSV(sortedRecords),'text/csv;charset=utf-8')} onTop={()=>{window.scrollTo({top:0});document.querySelector('.grid-scroll')?.scrollTo({top:0});}} />}</Suspense>
     <Suspense fallback={needsOpen ? <div className="detail-loading" role="status">Loading needs…</div> : null}>{needsOpen && <NeedsFilter needs={needs} onChange={updateNeeds} open={needsOpen} onOpenChange={setNeedsOpen} />}</Suspense>
     <Suspense fallback={<div className="detail-loading" role="status">Loading visit tools…</div>}>{visitOpen && <VisitFilters open={visitOpen} onClose={() => setVisitOpen(false)} selected={practical} onChange={updatePractical} nearby={nearby} onNearby={updateNearby} hoursWindow={hoursWindow} onHoursWindow={updateHoursWindow} />}{tripOpen && <TripPanel open={tripOpen} onClose={() => setTripOpen(false)} trip={trip} onChange={setTrip} records={records} savedKeys={savedKeys} onOpen={openDetails} offlineMode={offlineMode} />}</Suspense>
-    <Suspense fallback={selectedKey ? <div className="detail-loading" role="status">Loading place details…</div> : null}>{selectedRecord && <PlaceDetails key={selectedRecord.key} record={selectedRecord} resultIndex={selectedIndex} resultCount={sortedRecords.length} onPrevious={selectedIndex>0?()=>setSelectedKey(sortedRecords[selectedIndex-1].key):null} onNext={selectedIndex>=0&&selectedIndex<sortedRecords.length-1?()=>setSelectedKey(sortedRecords[selectedIndex+1].key):null} now={now} onAddToTrip={() => { if (!trip.some(stop => stop.key === selectedRecord.key) && trip.length < 50) { setTrip(current => [...current,{key:selectedRecord.key,arrival:'',duration:60}]); if (!savedSet.has(selectedRecord.key)) toggleSave(selectedRecord.key); } }} tripFull={trip.length >= 50} inTrip={trip.some(stop => stop.key === selectedRecord.key)} saved={savedSet.has(selectedRecord.key)} onToggleSave={toggleSave} onClose={() => setSelectedKey(null)} triggerRef={detailTrigger} />}</Suspense>
+    <Suspense fallback={selectedKey ? <div className="detail-loading" role="status">Loading place details…</div> : null}>{selectedRecord && <PlaceDetails key={selectedRecord.key} record={selectedRecord} needIds={needs.enabled?needs.ids:[]} hoursWindow={hoursWindow} note={notes[selectedRecord.key]||''} onNote={text=>updateNote(selectedRecord.key,text)} notesError={notesError} compared={comparisonKeys.includes(selectedRecord.key)} onCompare={()=>toggleCompare(selectedRecord.key)} relatedRecords={relatedByKey.get(selectedRecord.key)||[]} onRelated={setSelectedKey} resultIndex={selectedIndex} resultCount={sortedRecords.length} onPrevious={selectedIndex>0?()=>setSelectedKey(sortedRecords[selectedIndex-1].key):null} onNext={selectedIndex>=0&&selectedIndex<sortedRecords.length-1?()=>setSelectedKey(sortedRecords[selectedIndex+1].key):null} now={now} onAddToTrip={() => { if (!trip.some(stop => stop.key === selectedRecord.key) && trip.length < 50) { setTrip(current => [...current,{key:selectedRecord.key,arrival:'',duration:60}]); if (!savedSet.has(selectedRecord.key)) toggleSave(selectedRecord.key); } }} tripFull={trip.length >= 50} inTrip={trip.some(stop => stop.key === selectedRecord.key)} saved={savedSet.has(selectedRecord.key)} onToggleSave={toggleSave} onClose={() => setSelectedKey(null)} triggerRef={detailTrigger} />}</Suspense>
   </Theme>;
 }
