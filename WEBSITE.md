@@ -58,3 +58,52 @@ navigation restores filters, sorting, pagination, selected record and view.
 Run `node --test tests/*.test.mjs` for data, filtering, evidence and actual worker
 loading/failure tests. Build with `npm run publish:static` from `web` and commit the
 source and generated export together.
+
+## Mauritius visit planning (November 2026)
+
+The directory now has 8,574 source records, including 26 new operator/service
+entries. [Planning data and provenance](data/planning/README.md) explain the
+405 mapped hours expressions, official mall schedules, calendars, source dates,
+refresh scripts, and coverage gaps.
+
+- **Visit filters:** open now, dietary options, facilities, phone availability,
+  service information and visitor reports. Selected features combine with AND
+  and with the existing access/parking/needs filters. Unknowns do not match.
+- **Nearby:** choose a sourced town or explicitly request GPS, select a radius,
+  and sort by distance. Distances are straight line, never travel-time estimates.
+  Records without coordinates remain available when nearby filtering is cleared.
+  Town/radius filters are shareable; exact GPS is not persisted or put in the URL.
+- **Visit tab:** opening status, weekly and holiday hours, next transition,
+  contacts, arrival notes, dietary/facility facts, services, preparations and public
+  visitor report links. Raw complex or ambiguous schedules remain readable.
+- **Hours engine:** conservative weekly OSM syntax only: day ranges, lists,
+  split shifts, overnight intervals, explicit closures, `24/7` and `PH` rules.
+  Dates, seasons, solar times and unsupported expressions are unconfirmed. It
+  uses Indian/Mauritius (UTC+4), independent of the device timezone, and refreshes
+  once a minute and when the document becomes visible. Missing holiday exceptions,
+  tentative Eid dates and years outside calendar coverage stay unconfirmed.
+- **My trip:** add saved places or use Add to trip in details; reorder or remove
+  up to 50 stops, set arrival/duration, inspect closed-hours and overlap warnings,
+  open directions and export a text plan. Local plans have no account sync and
+  do not estimate traffic, accessible routes, queues or assistance time.
+- **Offline:** My trip downloads the app shell/chunks and saved-place snapshots
+  into browser Cache Storage, then installs the scoped service worker. Cached
+  place details work on a later offline visit; external links and map tiles need
+  a connection. Snapshots track saved/unsaved places and retain prior saved records
+  if a source temporarily fails. Remove offline download clears only this app's
+  caches and registration. Browser storage eviction can remove downloads.
+- **Visitor updates:** report changed hours/contacts, dietary options, facilities,
+  arrival points, broken lifts, blocked ramps and closures through the reviewed
+  GitHub draft flow. Add photos on GitHub. The import script refreshes public
+  issue metadata; reports do not automatically change facts.
+
+The source import contains no explicit WhatsApp or egg-friendly claim yet.
+These capabilities stay empty until a source records them. Exact accessible
+entrance, parking and drop-off coordinates also remain unknown unless supplied
+by a source; a venue's centre pin is not represented as an entrance.
+
+Validation includes parsing, timezones, holidays, overnight transitions, trip
+breaks/overlaps, contact safety, dietary/facility unknowns, source failure recovery,
+real dataset joins and service-worker scope/fallback tests. Local Chromium launch
+is blocked by this environment's socket restriction, so interactive browser and
+visual verification still require a browser-capable environment before merging.

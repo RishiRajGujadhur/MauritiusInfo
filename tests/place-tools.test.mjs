@@ -39,8 +39,8 @@ test('real evidence coverage and coordinate coverage keep listings distinct from
  for(const dataset of DATASETS){
   const root=dataset.path.slice(0,dataset.path.lastIndexOf('/'));
   const read=p=>parseCSV(readFileSync(new URL('../'+p,import.meta.url),'utf8'));
-  const observations=['osm','directory','health'].includes(dataset.id)?[]:read(root+'/accessibility_observations.csv');
-  const sources=['osm','directory','health'].includes(dataset.id)?[]:read(root+'/sources.csv');
+  const observations=['osm','directory','health','official'].includes(dataset.id)?[]:read(root+'/accessibility_observations.csv');
+  const sources=['osm','directory','health','official'].includes(dataset.id)?[]:read(root+'/sources.csv');
   for(const [index,row] of read(dataset.path).entries()){
    const item=attachEvidence(normalize(row,dataset,index),observations,sources);
    if(coordinates(item))mapped++;
@@ -49,5 +49,5 @@ test('real evidence coverage and coordinate coverage keep listings distinct from
    if(['directory','health'].includes(dataset.id))assert.deepEqual(item.evidence.map(e=>e.id),['listing']);
   }
  }
- assert.equal(mapped,7852);assert.equal(onsite,0);assert(counts.map>0);assert(counts.visitor>0);assert(counts.venue>0);
+ assert.equal(mapped,7876);assert.equal(onsite,0);assert(counts.map>0);assert(counts.visitor>0);assert(counts.venue>0);
 });

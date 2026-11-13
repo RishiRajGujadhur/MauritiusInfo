@@ -355,3 +355,47 @@ footer > a { order: 2; margin-left: auto; }
 .map-actions .density-toggle { display:none; }
 .leaflet-host .marker-cluster { background:rgba(60,130,190,.28); }
 .leaflet-host .marker-cluster > div { background:#d5eafa; color:#17446a; }
+
+/* Practical visit planning: compact controls and readable mobile sheets. */
+.visit-info { padding-top: 16px; }
+.visit-info section { padding: 0 0 20px; margin-bottom: 18px; border-bottom: 1px solid var(--gray-5); }
+.visit-info h2, .visit-filter-dialog h2, .trip-dialog h2 { margin: 0 0 10px; font-size: 16px; font-weight: 650; display: flex; align-items: center; gap: 8px; }
+.visit-info p { margin: 8px 0; line-height: 1.55; }
+.hours-list, .visit-facts { margin: 12px 0; }
+.hours-list > div, .visit-facts > div { display: grid; grid-template-columns: minmax(120px, 1fr) 1.5fr; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--gray-4); }
+.hours-list dt, .visit-facts dt { color: var(--gray-11); }
+.hours-list dd, .visit-facts dd { margin: 0; overflow-wrap: anywhere; }
+.visit-contact-actions, .trip-actions, .trip-saved, .nearby-controls { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+.visit-filter-options { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; margin: 24px 0; }
+.visit-filter-options label { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.visit-active-summary, .offline-banner { padding: 10px 14px; margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 13px; background: var(--blue-3); }
+.offline-banner { margin: 12px 0; border-radius: 8px; }
+.hours-badge { display: flex; width: fit-content; margin-top: 5px; font-size: 11px; }
+.place-name > span { white-space: normal; }
+.mobile-distance { display: block; color: var(--gray-11); padding: 6px 0; }
+.raw-hours { overflow-wrap: anywhere; font-family: ui-monospace, monospace; }
+.visitor-report { padding: 12px 0; }
+.trip-stops { margin: 20px 0; padding-left: 26px; }
+.trip-stop { padding: 16px 0; border-bottom: 1px solid var(--gray-5); }
+.trip-stop-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.trip-stop-heading > button { text-align: left; white-space: normal; }
+.trip-stop-heading > div { display: flex; flex-shrink: 0; gap: 5px; }
+.trip-stop p { font-size: 13px; line-height: 1.5; color: var(--gray-11); }
+.trip-schedule { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; margin: 12px 0; }
+.trip-schedule label { font-size: 13px; display: grid; gap: 6px; }
+.trip-warning { color: var(--amber-11) !important; }
+.offline-status { padding: 12px; border-radius: 8px; background: var(--gray-3); line-height: 1.6; }
+.trip-empty { padding: 20px 0; }
+@media (max-width: 700px) {
+  .visit-filter-dialog, .trip-dialog { width: calc(100vw - 20px); max-height: calc(100dvh - 32px); padding: 20px !important; }
+  .visit-filter-options { grid-template-columns: 1fr; gap: 18px; }
+  .trip-actions > button { width: 100%; min-height: 44px; }
+  .trip-stop-heading { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .trip-schedule { grid-template-columns: 1fr; }
+  .visit-info .visit-contact-actions a { min-height: 42px; }
+  .mobile-place > .hours-badge { margin: 8px 0; }
+  .hours-list > div, .visit-facts > div { grid-template-columns: 1fr 1.2fr; font-size: 14px; }
+  .grid-actions { flex-wrap: wrap; }
+}
+
+@media (max-width:700px) { .grid-actions .rt-Button[aria-label="My trip"] { width:auto; padding:0 9px; gap:5px; } .grid-actions .rt-Button[aria-label="My trip"] > span { display:inline; font-size:12px; } }

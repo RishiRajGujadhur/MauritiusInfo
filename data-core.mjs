@@ -7,7 +7,8 @@ export const DATASETS = [
   {id:'services', name:'Service research', path:'data/services/services.csv'},
   {id:'offices', name:'Office research', path:'data/offices/offices.csv'},
   {id:'entertainment', name:'Entertainment research', path:'data/entertainment/venues.csv'},
-  {id:'festivals', name:'Festival editions', path:'data/festivals/events.csv'}
+  {id:'festivals', name:'Festival editions', path:'data/festivals/events.csv'},
+  {id:'official', name:'Operator & service information', path:'data/planning/official-places.csv'}
 ];
 
 // CSV fields may contain commas, CRLFs, escaped quotes and embedded newlines.

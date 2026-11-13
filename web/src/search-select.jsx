@@ -9,7 +9,8 @@ export default function SearchSelect({ label, icon: Icon, value, options, onChan
   const [active, setActive] = useState(0);
   const id = useId();
   const choices = useMemo(() => allowAll ? [['', placeholder], ...options] : options, [options, placeholder, allowAll]);
-  const matches = choices.filter(([, text]) => fold(text).includes(fold(query)));
+  const matchedChoices = choices.filter(([, text]) => fold(text).includes(fold(query)));
+  const matches = matchedChoices.slice(0,100);
   const selected = choices.find(([key]) => key === value)?.[1] || placeholder;
   const TriggerIcon = (value && getOptionIcon?.(value)) || Icon;
   const activeIndex = Math.min(active, Math.max(0, matches.length - 1));
@@ -48,7 +49,7 @@ export default function SearchSelect({ label, icon: Icon, value, options, onChan
             <span className="option-label">{OptionIcon && <OptionIcon aria-hidden="true" />}{text}</span>{key === value && <CheckIcon />}
           </Button>;
           })}
-          {!matches.length && <p className="no-options">No matches</p>}
+          {!matches.length && <p className="no-options">No matches</p>}{matchedChoices.length > matches.length && <p className="no-options">Showing the first 100 matches. Keep typing to narrow the list.</p>}
         </div>
         <div className="menu-hint"><kbd>↑</kbd><kbd>↓</kbd> move <kbd>Enter</kbd> select <kbd>Esc</kbd> close</div>
       </Popover.Content>

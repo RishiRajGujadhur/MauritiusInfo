@@ -7,10 +7,10 @@ test('CSV preserves multiline fields, commas, escaped quotes, CRLF and BOM',()=>
   assert.throws(()=>parseCSV('a,b\n"unclosed,x'));
   assert.throws(()=>parseCSV('a,b\nx,y,z'));
 });
-test('all nine real source tables load without schema corruption',()=>{
+test('all ten real source tables load without schema corruption',()=>{
   const counts=DATASETS.map(d=>parseCSV(readFileSync(new URL('../'+d.path,import.meta.url),'utf8')).map((r,i)=>normalize(r,d,i)));
-  assert.deepEqual(counts.map(r=>r.length),[6965,1282,169,35,39,16,12,16,14]);
-  const all=counts.flat();assert.equal(all.length,8548);assert.equal(new Set(all.map(r=>r.key)).size,8548);
+  assert.deepEqual(counts.map(r=>r.length),[6965,1282,169,35,39,16,12,16,14,26]);
+  const all=counts.flat();assert.equal(all.length,8574);assert.equal(new Set(all.map(r=>r.key)).size,8574);
   assert(all.every(r=>r.name&&r.category&&r.area));
   assert(counts[1].every(r=>r.access.group==='unknown'));
   assert(counts[2].every(r=>r.parking.group==='unknown'));

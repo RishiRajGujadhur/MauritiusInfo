@@ -25,20 +25,27 @@ async function load(failPath = '', reload = false) {
 
 test('worker loads all records and joins evidence using absolute Pages URLs', async () => {
   const result = await load();
-  assert.equal(result.records.length, 8548);
+  assert.equal(result.records.length, 8574);
   assert.deepEqual(result.failures, []);
   assert.deepEqual(result.evidenceFailures, []);
 });
 
 test('failed dataset preserves successful records and supports cache-bypassing retry', async () => {
   const result = await load('data/osm/places.csv', true);
-  assert.equal(result.records.length, 1583);
+  assert.equal(result.records.length, 1609);
   assert.deepEqual(result.failures, ['Community map']);
 });
 
 test('failed evidence is disclosed without dropping places or claiming complete evidence', async () => {
   const result = await load('data/shops/accessibility_observations.csv');
-  assert.equal(result.records.length, 8548);
+  assert.equal(result.records.length, 8574);
   assert.deepEqual(result.evidenceFailures, ['Shop research']);
   assert(result.records.filter(r => r.dataset.id === 'shops').every(r => r.evidenceIncomplete));
+});
+
+test('planning-table failures preserve base places and disclose incomplete enrichment', async () => {
+  const result = await load('data/planning/records.json');
+  assert.equal(result.records.length, 8574);
+  assert(result.evidenceFailures.includes('Visit planning'));
+  assert(result.records.every(record=>record.planning===null));
 });

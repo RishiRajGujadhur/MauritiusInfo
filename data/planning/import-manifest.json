@@ -1,0 +1,106 @@
+{
+  "checked_date": "2026-11-13",
+  "sources": [
+    {
+      "extract_url": "https://download.geofabrik.de/africa/mauritius-latest.osm.pbf",
+      "extract_data_timestamp": "2026-11-11T21:22:47Z",
+      "pbf_sha256": "fc666e15ed349c68c43a793c00bcc069ceb5bf52b15c4763051fe0585264d5f6",
+      "licence": "ODbL-1.0",
+      "licence_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+      "attribution": "© OpenStreetMap contributors",
+      "id": "osm",
+      "retrieved_date": "2026-11-13"
+    },
+    {
+      "id": "ascencia",
+      "url": "https://www.ascenciamalls.com/opening-hours",
+      "retrieved_date": "2026-11-13",
+      "sha256": "ac19dbd7835fd837a33cf6773820b3bdee0ecb37716a2957dcbe0dda68439461",
+      "licence": "Published factual details; publisher retains page rights",
+      "parser": "import_planning.py"
+    },
+    {
+      "id": "myt",
+      "url": "https://www.myt.mu/support/phpsqlajax_genxml.php",
+      "retrieved_date": "2026-11-13",
+      "sha256": "520461268e481971fce9d38acf3dbdb28d1c59198096a30206fe1039fabfcd53",
+      "licence": "Published factual details; publisher retains page rights",
+      "parser": "import_planning.py"
+    },
+    {
+      "id": "mra",
+      "url": "https://eservices.mra.mu/home",
+      "retrieved_date": "2026-11-13",
+      "sha256": "c8d2f776a68ac815e223817830e2c66002a7f7e070bb3f0f55135f4b8e985184",
+      "licence": "Published factual details; publisher retains page rights",
+      "parser": "import_planning.py"
+    },
+    {
+      "id": "padharo",
+      "url": "https://padharosa.littleindiaresto.com/",
+      "retrieved_date": "2026-11-13",
+      "sha256": "7a72ba0c8b59280c9a828c65a01a9be1ed42c913581b7517d6456d977d7670b1",
+      "licence": "Published factual details; publisher retains page rights",
+      "parser": "import_planning.py"
+    },
+    {
+      "id": "padharo-contact",
+      "url": "https://padharosa.littleindiaresto.com/contact/",
+      "retrieved_date": "2026-11-13",
+      "sha256": "2bce8e768ce94d8038cc8d5960815f73bb9f6e01ab7b6caae6fa93cdb37ce0e0",
+      "licence": "Published factual details; publisher retains page rights",
+      "parser": "import_planning.py"
+    },
+    {
+      "id": "ihg",
+      "url": "https://www.ihg.com/intercontinental/hotels/us/en/balaclava/mruma/hoteldetail/accessibility",
+      "retrieved_date": "2026-11-13",
+      "sha256": "16a8fdf35603f072a8315d37431571bfd167789036af7709dc78305347fe514b",
+      "licence": "Published factual details; publisher retains page rights",
+      "parser": "import_planning.py"
+    },
+    {
+      "id": "reports",
+      "url": "https://api.github.com/repos/RishiRajGujadhur/MauritiusInfo/issues?state=all&per_page=100",
+      "retrieved_date": "2026-11-13",
+      "sha256": "d7bd988bc944bc5d21096eb2c070cdb5854a669301cbddd62c721a155488cb43",
+      "licence": "Published factual details; publisher retains page rights",
+      "parser": "import_planning.py"
+    },
+    {
+      "id": "holiday2026",
+      "url": "https://pmo.govmu.org/Communique/GN_No._611-Amendment_to_Public_Holidays_2026.pdf",
+      "retrieved_date": "2026-11-13",
+      "sha256": "5755a80e2c4ef235ec2738bdaad9aecca207d24f65eded871008fb4295d98914",
+      "licence": "Published factual details; publisher retains page rights",
+      "parser": "import_planning.py"
+    },
+    {
+      "id": "holiday2027",
+      "url": "https://dha.govmu.org/Communique/Public_Holidays_2027.pdf",
+      "retrieved_date": "2026-11-13",
+      "sha256": "df0745250209aa953b1d521e396443768893f6395682033d39d4728b92e46c2c",
+      "licence": "Published factual details; publisher retains page rights",
+      "parser": "import_planning.py"
+    },
+    {
+      "id": "holiday-amendment",
+      "url": "https://statsmauritius.govmu.org/Pages/Statistics/Publication_Programme/Pub_Prog26.aspx",
+      "retrieved_date": "2026-11-13",
+      "sha256": "54afc23924a1df762958da7c18ede90dddce573f5355b067b1b8734143407df1",
+      "licence": "Published factual details; publisher retains page rights",
+      "parser": "import_planning.py"
+    }
+  ],
+  "failures": [],
+  "enriched_records": 1168,
+  "official_records": 26,
+  "osm_opening_hours": 405,
+  "towns": 231,
+  "holidays": 32,
+  "notes": [
+    "OSM source snapshot is dated separately from extraction. Retrieval does not mean field verification.",
+    "No accessibility, dietary, contact or hours inheritance from parent malls or nearby objects.",
+    "Complex OSM expressions remain verbatim; app must not claim open/closed unless parsed."
+  ]
+}
