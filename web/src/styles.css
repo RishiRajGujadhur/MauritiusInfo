@@ -35,6 +35,20 @@ kbd { font: 10px system-ui, sans-serif; border: 1px solid var(--gray-6); border-
 .filter-trigger .chevron { margin-left: auto; width: 12px; }
 .filters .filter-caption { display: none; }
 .search-popover { padding: 10px; width: 285px; max-width: calc(100vw - 24px); }
+/* Radix owns the field shell; never draw a second ring on its input. */
+.rt-TextFieldInput:focus-visible { outline: none; }
+.search-popover:focus { outline: none; }
+.search-popover .dropdown-search { outline: none; box-shadow: inset 0 0 0 1px var(--gray-7); background: var(--gray-2); transition: box-shadow .15s ease; }
+.search-popover .dropdown-search:focus-within { outline: none; box-shadow: inset 0 0 0 1px var(--accent-8); }
+.filter-trigger.rt-Button[data-state="open"] { background: var(--gray-4); box-shadow: inset 0 0 0 1px var(--gray-8); }
+@media (max-width: 700px) {
+  .search-popover .rt-TextFieldInput { font-size: 16px; }
+  .search-popover .search-option { min-height: 44px; font-size: 14px; }
+}
+@media (prefers-reduced-motion: reduce) { .search-popover .dropdown-search { transition: none; } }
+@media (forced-colors: active) {
+  .search-popover .dropdown-search:focus-within { outline: 2px solid Highlight; outline-offset: -2px; }
+}
 .option-list { max-height: min(290px, 45dvh); overflow-y: auto; overflow-x: hidden; margin: 8px 0 0; padding: 3px; scroll-padding: 4px; }
 .search-option.rt-Button { box-sizing: border-box; min-width: 0; display: flex; justify-content: space-between; gap: 10px; width: 100%; min-height: 34px; height: auto; padding: 7px 9px; margin: 0; border-radius: 5px; text-align: left; font-size: 12px; font-weight: 400; white-space: normal; }
 .search-option > svg { flex-shrink: 0; color: var(--accent-11); }
@@ -355,3 +369,69 @@ footer > a { order: 2; margin-left: auto; }
 .map-actions .density-toggle { display:none; }
 .leaflet-host .marker-cluster { background:rgba(60,130,190,.28); }
 .leaflet-host .marker-cluster > div { background:#d5eafa; color:#17446a; }
+
+/* Practical visit planning: compact controls and readable mobile sheets. */
+.visit-info { padding-top: 16px; }
+.visit-info section { padding: 0 0 20px; margin-bottom: 18px; border-bottom: 1px solid var(--gray-5); }
+.visit-info h2, .visit-filter-dialog h2, .trip-dialog h2 { margin: 0 0 10px; font-size: 16px; font-weight: 650; display: flex; align-items: center; gap: 8px; }
+.visit-info p { margin: 8px 0; line-height: 1.55; }
+.hours-list, .visit-facts { margin: 12px 0; }
+.hours-list > div, .visit-facts > div { display: grid; grid-template-columns: minmax(120px, 1fr) 1.5fr; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--gray-4); }
+.hours-list dt, .visit-facts dt { color: var(--gray-11); }
+.hours-list dd, .visit-facts dd { margin: 0; overflow-wrap: anywhere; }
+.visit-contact-actions, .trip-actions, .trip-saved, .nearby-controls { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+.visit-filter-options { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; margin: 24px 0; }
+.visit-filter-options label { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.visit-active-summary, .offline-banner { padding: 10px 14px; margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 13px; background: var(--blue-3); }
+.offline-banner { margin: 12px 0; border-radius: 8px; }
+.hours-badge { display: flex; width: fit-content; margin-top: 5px; font-size: 11px; }
+.place-name > span { white-space: normal; }
+.mobile-distance { display: block; color: var(--gray-11); padding: 6px 0; }
+.raw-hours { overflow-wrap: anywhere; font-family: ui-monospace, monospace; }
+.visitor-report { padding: 12px 0; }
+.trip-stops { margin: 20px 0; padding-left: 26px; }
+.trip-stop { padding: 16px 0; border-bottom: 1px solid var(--gray-5); }
+.trip-stop-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.trip-stop-heading > button { text-align: left; white-space: normal; }
+.trip-stop-heading > div { display: flex; flex-shrink: 0; gap: 5px; }
+.trip-stop p { font-size: 13px; line-height: 1.5; color: var(--gray-11); }
+.trip-schedule { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; margin: 12px 0; }
+.trip-schedule label { font-size: 13px; display: grid; gap: 6px; }
+.trip-warning { color: var(--amber-11) !important; }
+.offline-status { padding: 12px; border-radius: 8px; background: var(--gray-3); line-height: 1.6; }
+.trip-empty { padding: 20px 0; }
+@media (max-width: 700px) {
+  .visit-filter-dialog, .trip-dialog { width: calc(100vw - 20px); max-height: calc(100dvh - 32px); padding: 20px !important; }
+  .visit-filter-options { grid-template-columns: 1fr; gap: 18px; }
+  .trip-actions > button { width: 100%; min-height: 44px; }
+  .trip-stop-heading { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .trip-schedule { grid-template-columns: 1fr; }
+  .visit-info .visit-contact-actions a { min-height: 42px; }
+  .mobile-place > .hours-badge { margin: 8px 0; }
+  .hours-list > div, .visit-facts > div { grid-template-columns: 1fr 1.2fr; font-size: 14px; }
+  .grid-actions { flex-wrap: wrap; }
+}
+
+@media (max-width:700px) { .grid-actions .rt-Button[aria-label="My trip"] { width:auto; padding:0 9px; gap:5px; } .grid-actions .rt-Button[aria-label="My trip"] > span { display:inline; font-size:12px; } }
+
+.desktop-sort { flex: 0 0 155px; }
+.hours-popover { width: 360px; max-width: calc(100vw - 24px); padding: 20px; }
+.hours-window { margin: 20px 0 26px; }
+.hours-popover .hours-window { margin: 0; }
+.hours-window-heading, .hours-range-labels, .hours-range-scale { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.hours-window-heading h2 { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 16px; }
+.hours-date { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 18px 0; font-size: 14px; }
+.hours-date .rt-TextFieldRoot { max-width: 180px; }
+.hours-date input { min-width: 0; font-size: 16px; color-scheme: dark; }
+.light .hours-date input { color-scheme: light; }
+.hours-range-labels { font-size: 12px; }
+.hours-range-labels strong { display: block; font-size: 18px; font-variant-numeric: tabular-nums; margin-top: 4px; }
+.hours-range-labels > :last-child { text-align: right; }
+.hours-range.rt-SliderRoot { margin: 12px 0 4px; min-height: 44px; touch-action: none; }
+.hours-range .rt-SliderThumb { min-width: 24px; min-height: 24px; }
+.hours-range .rt-SliderThumb:focus-visible { outline: 2px solid var(--accent-9); outline-offset: 4px; }
+.hours-range-scale { color: var(--gray-11); font-size: 11px; font-variant-numeric: tabular-nums; }
+.gps-summary { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px 14px; font-size: 13px; }
+.gps-summary p { flex: 1 1 220px; margin: 0; }
+@media (min-width: 701px) and (max-width: 1150px) { .filters { flex-wrap: wrap; } .filters > .filter-control { flex: 1 1 110px; } }
+@media (max-width: 700px) { .desktop-sort { display: none; } }

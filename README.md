@@ -507,3 +507,8 @@ For an update, provide the venue, a public source or dated first-hand observatio
 [S29]: https://tribecamall.mu/about-us/
 
 [S30]: https://www.top-rated.online/cities/Moka/place/p/9304501/Intermart%2BBagatelle
+
+
+## Visit-planning features and data
+
+Opening hours, holiday exceptions, contacts, nearby search, facility/food filters, trip planning, offline saved places and visitor reports are described in [WEBSITE.md](WEBSITE.md). [Planning source data](data/planning/README.md) includes refresh instructions, source dates, scope and unknowns.

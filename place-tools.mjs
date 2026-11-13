@@ -54,7 +54,7 @@ export function readSaved(value) {
   try { const parsed = JSON.parse(value); return Array.isArray(parsed) ? [...new Set(parsed.filter(key => typeof key === 'string' && key.length < 200))].slice(0, 10000) : []; } catch { return []; }
 }
 export function buildReport(record, form, siteURL) {
-  const feature = {access:'Wheelchair access',entrance:'Step-free entrance',parking:'Wheelchair parking',toilet:'Adapted toilet',other:'Other detail'}[form.feature] || 'Other detail';
+  const feature = {access:'Wheelchair access',entrance:'Step-free entrance',parking:'Wheelchair parking',toilet:'Adapted toilet',hours:'Opening hours',contact:'Contact details',diet:'Dietary options',facilities:'Venue facilities',arrival:'Arrival / drop-off',closure:'Temporary closure or barrier',other:'Other detail'}[form.feature] || 'Other detail';
   const basis = {visit:'Personal visit',venue:'Contact with venue',web:'Online source'}[form.basis] || 'Not specified';
   const link = new URL(siteURL); link.search = ''; link.hash = ''; link.searchParams.set('record', record.key);
   const body = `## Place\n${record.name}\nRecord: ${record.key}\nDataset: ${record.dataset.name}\n${link.href}\n\n## Proposed update\nFeature: ${feature}\nReported status: ${form.status}\nEvidence: ${basis}\nVisit / contact / source date: ${form.date || 'Not supplied'}\nSource: ${safeURL(form.source) || 'Not supplied'}\n\n## Details\n${form.notes.trim()}\n\n---\nSubmitted for review. This report has not yet changed the published data.`;

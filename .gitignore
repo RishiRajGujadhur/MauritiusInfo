@@ -5,3 +5,6 @@ web/.openai/
 web/dist/
 preview/
 .openai/
+
+__pycache__/
+*.pyc

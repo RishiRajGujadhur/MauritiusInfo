@@ -1,14 +1,24 @@
 import React, { lazy, Suspense, useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
-import { Button, Dialog, IconButton, Link, SegmentedControl, Skeleton, Switch, Table, TextField, Theme, Tooltip } from '@radix-ui/themes';
-import { AccessibilityIcon, ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpIcon, CaretSortIcon, ChevronRightIcon, Cross2Icon, DashboardIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon, DownloadIcon, DrawingPinIcon, ExternalLinkIcon, GlobeIcon, InfoCircledIcon, LayersIcon, MagnifyingGlassIcon, MixIcon, MoonIcon, ResetIcon, RowsIcon, SizeIcon, SunIcon, TableIcon, BookmarkIcon, BookmarkFilledIcon } from '@radix-ui/react-icons';
+import { Button, Dialog, IconButton, Link, Popover, SegmentedControl, Skeleton, Switch, Table, TextField, Theme, Tooltip } from '@radix-ui/themes';
+import { AccessibilityIcon, ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpIcon, CaretSortIcon, ClockIcon, ChevronRightIcon, Cross2Icon, DashboardIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon, DownloadIcon, DrawingPinIcon, ExternalLinkIcon, GlobeIcon, InfoCircledIcon, LayersIcon, MagnifyingGlassIcon, MixIcon, MoonIcon, ResetIcon, RowsIcon, SizeIcon, SunIcon, TableIcon, BookmarkIcon, BookmarkFilledIcon } from '@radix-ui/react-icons';
 import { flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
 import { DATASETS, filterRecords } from '../../data-core.mjs';
 import SearchSelect from './search-select';
+import HoursFilter from './hours-filter';
 import { getCategoryIcon } from './category-icons';
 import { ReportBadge, EvidenceLabels } from './ui';
-import NeedsFilter from './needs-filter';
+const NeedsFilter = lazy(() => import('./needs-filter'));
+import { PRACTICAL_FILTERS, practicalMatch, nearbyRecords, readTrip, readHoursWindow, hoursWindowMatch, windowTime, distanceKm } from '../../planning-core.mjs';
+import { requestGPS } from './geolocation.mjs';
+import { coordinates } from '../../place-tools.mjs';
+import calendar from '../../data/planning/holidays.json';
+import locations from '../../data/planning/locations.json';
+import { HoursBadge } from './visit-info';
+import { loadOfflineRecords, saveOfflineRecords, hasOfflineCopy } from './offline';
 import { matchesNeeds, validNeeds, readSaved } from '../../place-tools.mjs';
 
+const VisitFilters = lazy(() => import('./visit-filters'));
+const TripPanel = lazy(() => import('./trip-panel'));
 const MapView = lazy(() => import('./map-view'));
 const PlaceDetails = lazy(() => import('./place-details'));
 const BASE = import.meta.env.BASE_URL;
@@ -21,8 +31,8 @@ const FILTERS = [
   { key: 'parking', label: 'Parking', icon: DashboardIcon, placeholder: 'Any parking' },
   { key: 'dataset', label: 'Source', icon: LayersIcon, placeholder: 'All sources' },
 ];
-const COLUMN_LABELS = { name: 'Place', category: 'Category', area: 'Area', access: 'Access', parking: 'Parking', dataset: 'Source' };
-const COLUMN_ICONS = { name: DrawingPinIcon, category: MixIcon, area: GlobeIcon, access: AccessibilityIcon, parking: DashboardIcon, dataset: LayersIcon };
+const COLUMN_LABELS = { proximity: 'Proximity', distance: 'Distance', name: 'Place', category: 'Category', area: 'Area', access: 'Access', parking: 'Parking', dataset: 'Source' };
+const COLUMN_ICONS = { proximity: DrawingPinIcon, distance: DrawingPinIcon, name: DrawingPinIcon, category: MixIcon, area: GlobeIcon, access: AccessibilityIcon, parking: DashboardIcon, dataset: LayersIcon };
 const REPORT_RANK = { positive: 0, limited: 1, negative: 2, unknown: 3 };
 
 function readInitial() {
@@ -31,9 +41,12 @@ function readInitial() {
   const sorting = (query.get('sort') || 'name:asc').split(',').map(value => {
     const [id, direction] = value.split(':');
     return { id, desc: direction === 'desc' };
-  }).filter(value => Object.hasOwn(COLUMN_LABELS, value.id));
+  }).filter(value => Object.hasOwn(COLUMN_LABELS, value.id) && value.id !== 'proximity' && (value.id !== 'distance' || locations.some(t=>t.id===query.get('near'))));
   const size = Number(query.get('size'));
-  return { view: query.get('view') === 'map' ? 'map' : 'list', savedOnly: query.get('saved') === '1', needs: query.has('needs') ? validNeeds(query.get('needs').split(',')) : null, filters, sorting: sorting.length ? sorting : [{ id: 'name', desc: false }], pageIndex: Math.max(0, Number(query.get('page')) - 1 || 0), pageSize: [25, 50, 100].includes(size) ? size : 25, record: query.get('record') };
+  const practical = (query.get('features') || '').split(',').filter(id => PRACTICAL_FILTERS.some(([key]) => key === id));
+  const town = locations.find(t => t.id === query.get('near'));
+  const radius = [1,2,5,10,25,50].includes(Number(query.get('radius'))) ? Number(query.get('radius')) : 5;
+  return { hoursWindow: readHoursWindow(query.get('hours')), practical, nearby: town ? { id:town.id, name:town.name, point:[town.latitude,town.longitude], radius } : null, view: query.get('view') === 'map' ? 'map' : 'list', savedOnly: query.get('saved') === '1', needs: query.has('needs') ? validNeeds(query.get('needs').split(',')) : null, filters, sorting: sorting.length ? sorting : [{ id: 'name', desc: false }], pageIndex: Number.isSafeInteger(Number(query.get('page'))) ? Math.max(0, Number(query.get('page')) - 1) : 0, pageSize: [25, 50, 100].includes(size) ? size : 25, record: query.get('record') };
 }
 
 function storedValue(key, fallback) {
@@ -54,6 +67,20 @@ function downloadRows(rows) {
 
 export default function Explorer() {
   const [initial] = useState(readInitial);
+  const [practical, setPractical] = useState(initial.practical);
+  const [nearby, setNearby] = useState(initial.nearby);
+  const [hoursWindow,setHoursWindow]=useState(initial.hoursWindow);
+  const [gps,setGPS]=useState(null);
+  const [geoMessage,setGeoMessage]=useState('');
+  const [gpsPending,setGPSPending]=useState(false);
+  const gpsRequest=useRef(0);
+  useEffect(()=>()=>{gpsRequest.current++;},[]);
+  const [visitOpen, setVisitOpen] = useState(false);
+  const [tripOpen, setTripOpen] = useState(false);
+  const [trip, setTrip] = useState(() => readTrip(storedValue('mu-trip-v1', '[]')));
+  const [now, setNow] = useState(() => new Date());
+  const [offlineMode, setOfflineMode] = useState(false);
+  const [tripWarning, setTripWarning] = useState('');
   const [filters, setFilters] = useState(initial.filters);
   const [view, setView] = useState(initial.view);
   const [savedKeys, setSavedKeys] = useState(() => readSaved(storedValue('mu-saved-v1', '[]')));
@@ -81,6 +108,28 @@ export default function Explorer() {
   const detailTrigger = useRef(null);
   const searchInput = useRef(null);
   const deferredFilters = useDeferredValue(filters);
+
+  useEffect(() => {
+    const refresh = () => setNow(new Date());
+    const timer = setInterval(refresh, 60000);
+    document.addEventListener('visibilitychange', refresh);
+    return () => { clearInterval(timer); document.removeEventListener('visibilitychange', refresh); };
+  }, []);
+  useEffect(() => {
+    try { localStorage.setItem('mu-trip-v1', JSON.stringify(trip)); setTripWarning(''); }
+    catch { setTripWarning('Trip storage is unavailable. Your plan will last for this tab only.'); }
+  }, [trip]);
+  useEffect(() => {
+    if (loading || !records.length || !('caches' in window)) return;
+    let current = true;
+    Promise.all([hasOfflineCopy(), loadOfflineRecords()]).then(([exists, saved]) => {
+      if (!current || !exists) return;
+      const merged = new Map(saved.map(record => [record.key, record]));
+      records.forEach(record => merged.set(record.key, record));
+      return saveOfflineRecords(savedKeys.map(key => merged.get(key)).filter(Boolean));
+    }).catch(() => setTripWarning('Offline saved-place copy could not be updated. Reconnect and download it again in My trip.'));
+    return () => { current = false; };
+  }, [records, savedKeys, loading]);
 
   useEffect(() => {
     try { localStorage.setItem('mu-saved-v1', JSON.stringify(savedKeys)); localStorage.setItem('mu-needs-v1', JSON.stringify(needs)); setStorageWarning(''); }
@@ -122,44 +171,65 @@ export default function Explorer() {
 
   useEffect(() => {
     setLoading(true);
-    const worker = new Worker(new URL('./data-worker.js', import.meta.url), { type: 'module' });
+    let alive = true;
+    async function fallback(failures) {
+      const saved = await loadOfflineRecords();
+      if (!alive) return;
+      setRecords(saved); setOfflineMode(true); setFailures(failures); setLoading(false);
+    }
+    if (!navigator.onLine) {
+      fallback([]);
+      return () => { alive = false; };
+    }
+    setOfflineMode(false);
+    let worker;
+    try { worker = new Worker(new URL('./data-worker.js', import.meta.url), { type: 'module' }); }
+    catch { fallback(DATASETS.map(dataset => dataset.name)); return () => { alive = false; }; }
     worker.onmessage = ({ data }) => {
+      if (!data.records.length) { fallback(data.failures); return; }
       setRecords(data.records);
       setFailures([...data.failures, ...data.evidenceFailures.map(name => `${name} evidence`)]);
       setLoading(false);
     };
     worker.onerror = () => {
-      setFailures(DATASETS.map(dataset => dataset.name));
-      setLoading(false);
+      fallback(DATASETS.map(dataset => dataset.name));
     };
-    worker.postMessage({ base: BASE, reload: retry > 0 });
-    return () => worker.terminate();
+    worker.postMessage({ base: new URL(BASE, location.href).href, reload: retry > 0 });
+    return () => { alive = false; worker.terminate(); };
   }, [retry]);
 
   const areas = useMemo(() => [...new Set(records.map(record => record.area))].sort().map(value => [value, value]), [records]);
   const categories = useMemo(() => [...new Set(records.map(record => record.category))].sort().map(value => [value, value]), [records]);
   const sourceOptions = useMemo(() => DATASETS.map(dataset => [dataset.id, dataset.name]), []);
   const options = { area: areas, category: categories, access: REPORTS, parking: REPORTS, dataset: sourceOptions };
-  const eligibleRecords = useMemo(() => records.filter(record => (!savedOnly || savedSet.has(record.key)) && (!needs.enabled || matchesNeeds(record, needs.ids))), [records, savedOnly, savedSet, needs]);
-  const matches = useMemo(() => filterRecords(eligibleRecords, deferredFilters), [eligibleRecords, deferredFilters]);
-  const draftCount = useMemo(() => mobileSearchOpen ? filterRecords(eligibleRecords, { ...filters, search: deferredSearchDraft }).length : 0, [eligibleRecords, filters, deferredSearchDraft, mobileSearchOpen]);
+  const eligibleRecords = useMemo(() => records.filter(record => (!savedOnly || savedSet.has(record.key)) && (!needs.enabled || matchesNeeds(record, needs.ids)) && practicalMatch(record, practical, now, calendar) && hoursWindowMatch(record,hoursWindow,calendar)), [records, savedOnly, savedSet, needs, practical, now, hoursWindow]);
+  const nearbyResult = useMemo(() => nearby ? nearbyRecords(eligibleRecords, nearby.point, nearby.radius) : null, [eligibleRecords, nearby]);
+  const nearbyDistanceByKey = useMemo(() => new Map(nearbyResult?.map(({record,distance}) => [record.key,distance]) || []), [nearbyResult]);
+  const locatedRecords = useMemo(() => nearbyResult ? nearbyResult.map(item => item.record) : eligibleRecords, [nearbyResult, eligibleRecords]);
+  const gpsDistanceByKey=useMemo(()=>new Map(gps?records.map(record=>[record.key,distanceKm(gps.point,coordinates(record))]).filter(([,distance])=>distance!==null):[]),[records,gps]);
+  const distanceByKey=sorting[0]?.id==='proximity'||(!nearby&&gps)?gpsDistanceByKey:nearbyDistanceByKey;
+  const matches = useMemo(() => filterRecords(locatedRecords, deferredFilters, { sort: false }), [locatedRecords, deferredFilters]);
+  const draftCount = useMemo(() => mobileSearchOpen ? filterRecords(locatedRecords, { ...filters, search: deferredSearchDraft }, { sort: false }).length : 0, [locatedRecords, filters, deferredSearchDraft, mobileSearchOpen]);
   const columns = useMemo(() => [
+    { id: 'proximity', accessorFn: record => gpsDistanceByKey.get(record.key) ?? Infinity, sortingFn: 'basic', header: 'Proximity' },
+    { id: 'distance', accessorFn: record => nearbyDistanceByKey.get(record.key), sortUndefined: 'last', header: 'Distance' },
     { accessorKey: 'name', header: 'Place', sortingFn: 'alphanumeric' },
     { accessorKey: 'category', header: 'Category' },
     { accessorKey: 'area', header: 'Area' },
     { id: 'access', accessorFn: record => REPORT_RANK[record.access.group], header: 'Access' },
     { id: 'parking', accessorFn: record => REPORT_RANK[record.parking.group], header: 'Parking' },
     { id: 'dataset', accessorFn: record => record.dataset.name, header: 'Source' },
-  ], []);
+  ], [gpsDistanceByKey,nearbyDistanceByKey]);
   const table = useReactTable({
     data: matches,
     columns,
-    state: { sorting, pagination },
+    state: { sorting, pagination, columnVisibility: { distance: false, proximity: false } },
     getRowId: record => record.key,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: update => {
+      gpsRequest.current++;setGPSPending(false);setGeoMessage('');
       setSorting(update);
       setPagination(current => ({ ...current, pageIndex: 0 }));
     },
@@ -178,16 +248,35 @@ export default function Explorer() {
   useEffect(() => {
     const query = new URLSearchParams();
     for (const [key, value] of Object.entries(filters)) if (value) query.set(key, value);
-    const sortText = sorting.map(value => `${value.id}:${value.desc ? 'desc' : 'asc'}`).join(',');
-    if (sortText !== 'name:asc') query.set('sort', sortText);
-    if (pageIndex) query.set('page', String(pageIndex + 1));
+    const sortText = sorting.filter(value=>value.id!=='proximity' && !(value.id==='distance' && nearby?.id==='gps')).map(value => `${value.id}:${value.desc ? 'desc' : 'asc'}`).join(',');
+    if (sortText && sortText !== 'name:asc') query.set('sort', sortText);
+    const urlPage = loading ? pagination.pageIndex : pageIndex;
+    if (urlPage) query.set('page', String(urlPage + 1));
     if (pagination.pageSize !== 25) query.set('size', String(pagination.pageSize));
+    if(hoursWindow)query.set('hours',`${hoursWindow.date},${hoursWindow.start},${hoursWindow.end}`);
+    if (practical.length) query.set('features', practical.join(','));
+    if (nearby && nearby.id !== 'gps') { query.set('near', nearby.id); query.set('radius', String(nearby.radius)); }
     if (view === 'map') query.set('view', 'map');
     if (savedOnly) query.set('saved', '1');
-    if (needs.enabled && needs.ids.length) query.set('needs', needs.ids.join(','));
+    query.set('needs', needs.enabled ? needs.ids.join(',') : '');
     if (selectedKey) query.set('record', selectedKey);
     history.replaceState(null, '', location.pathname + (query.size ? `?${query}` : ''));
-  }, [filters, sorting, pageIndex, pagination.pageSize, selectedKey, view, savedOnly, needs]);
+  }, [filters, sorting, pageIndex, pagination.pageSize, selectedKey, view, savedOnly, needs, loading, pagination.pageIndex, practical, nearby, hoursWindow]);
+
+  useEffect(() => {
+    function restoreURL() {
+      const next = readInitial();
+      setFilters(next.filters); setSearchDraft(next.filters.search);
+      setPractical(next.practical); setNearby(next.nearby); setHoursWindow(next.hoursWindow);
+      gpsRequest.current++;setGPSPending(false);setGPS(null);setGeoMessage('');
+      setView(next.view); setSavedOnly(next.savedOnly); setSorting(next.sorting);
+      setPagination({ pageIndex: next.pageIndex, pageSize: next.pageSize });
+      setSelectedKey(next.record);
+      if (next.needs !== null) setNeeds({ ids: next.needs, enabled: next.needs.length > 0 });
+    }
+    addEventListener('popstate', restoreURL);
+    return () => removeEventListener('popstate', restoreURL);
+  }, []);
 
   function scrollToResults() {
     if (matchMedia('(max-width: 700px)').matches) {
@@ -212,6 +301,9 @@ export default function Explorer() {
     mobileFilterStrip.current?.scrollTo({ left: 0 });
     setNeeds(current => ({ ...current, enabled: false }));
     setSavedOnly(false);
+    setPractical([]); setNearby(null); setHoursWindow(null);
+    gpsRequest.current++;setGPS(null);setGPSPending(false);setGeoMessage('');
+    if(sorting.some(value=>['distance','proximity'].includes(value.id)))setSorting([{id:'name',desc:false}]);
     setFilters(DEFAULT_FILTERS);
     setPagination(current => ({ ...current, pageIndex: 0 }));
   }
@@ -220,7 +312,7 @@ export default function Explorer() {
     setSelectedKey(record.key);
   }
   function cellContent(record, column) {
-    if (column === 'name') return <div className="place-cell"><IconButton className="save-place" variant="ghost" color={savedSet.has(record.key) ? 'blue' : 'gray'} aria-label={`${savedSet.has(record.key) ? 'Unsave' : 'Save'} ${record.name}`} aria-pressed={savedSet.has(record.key)} onClick={() => toggleSave(record.key)}>{savedSet.has(record.key) ? <BookmarkFilledIcon /> : <BookmarkIcon />}</IconButton><Button variant="ghost" className="place-name" onClick={event => openDetails(record, event)}><DrawingPinIcon /><span>{record.name}</span><ExternalLinkIcon className="row-open-icon" /></Button></div>;
+    if (column === 'name') return <div className="place-cell"><IconButton className="save-place" variant="ghost" color={savedSet.has(record.key) ? 'blue' : 'gray'} aria-label={`${savedSet.has(record.key) ? 'Unsave' : 'Save'} ${record.name}`} aria-pressed={savedSet.has(record.key)} onClick={() => toggleSave(record.key)}>{savedSet.has(record.key) ? <BookmarkFilledIcon /> : <BookmarkIcon />}</IconButton><Button variant="ghost" className="place-name" onClick={event => openDetails(record, event)}><DrawingPinIcon /><span>{record.name}<HoursBadge record={record} now={now} />{distanceByKey.has(record.key) && <small>{distanceByKey.get(record.key).toFixed(1)} km straight line</small>}</span><ExternalLinkIcon className="row-open-icon" /></Button></div>;
     if (column === 'category') {
       const CategoryIcon = getCategoryIcon(record.category);
       return <span className="muted"><span className="category-label"><CategoryIcon aria-hidden="true" />{record.category}</span><small>{record.type !== record.category ? record.type : ''}</small></span>;
@@ -233,42 +325,64 @@ export default function Explorer() {
   const activeFilters = FILTERS.filter(filter => filters[filter.key]);
   const visibleRows = table.getRowModel().rows;
   const start = matches.length ? pageIndex * pagination.pageSize + 1 : 0;
-  function filterControls() {
-    return <><Button className="needs-trigger" variant={needs.enabled && needs.ids.length ? "soft" : "surface"} color={needs.enabled && needs.ids.length ? "blue" : "gray"} onClick={() => setNeedsOpen(true)}><AccessibilityIcon />My needs{needs.enabled && needs.ids.length > 0 && <span className="control-count">{needs.ids.length}</span>}</Button>{FILTERS.map(filter => <SearchSelect key={filter.key} {...filter} getOptionIcon={filter.key === 'category' ? getCategoryIcon : undefined} value={filters[filter.key]} options={options[filter.key]} onChange={value => updateFilter(filter.key, value)} />)}</>;
+  function updatePractical(next) { setPractical(next); setPagination(current => ({ ...current, pageIndex: 0 })); }
+  function updateNearby(next) { gpsRequest.current++;setGPSPending(false);setGeoMessage('');setNearby(next); setSorting([{ id: next ? 'distance' : 'name', desc:false }]); setPagination(current => ({ ...current, pageIndex: 0 })); }
+  function updateHoursWindow(next){setHoursWindow(next);setPagination(current=>({...current,pageIndex:0}));}
+  async function changeSort(value) {
+    const [id,direction]=value.split(':');
+    const request=++gpsRequest.current;
+    setGPSPending(false);setGeoMessage('');
+    if(id!=='proximity'){table.setSorting([{id,desc:direction==='desc'}]);return;}
+    setGPSPending(true);setGeoMessage('Finding your GPS location…');
+    try {
+      const position=await requestGPS();
+      if(request!==gpsRequest.current)return;
+      setGPS(position);setSorting([{id:'proximity',desc:false},{id:'name',desc:false}]);setPagination(current=>({...current,pageIndex:0}));
+      setGeoMessage('Sorted nearest first using your GPS location. Distances are straight line; places without coordinates appear last.');
+    } catch(error){if(request===gpsRequest.current)setGeoMessage(error.message);}
+    finally{if(request===gpsRequest.current)setGPSPending(false);}
   }
-  const mobileSortOptions = Object.entries(COLUMN_LABELS).flatMap(([key, label]) => [[`${key}:asc`, `${label} · ascending`], [`${key}:desc`, `${label} · descending`]]);
+  function clearGPS(){gpsRequest.current++;setGPS(null);setGPSPending(false);setGeoMessage('');if(nearby?.id==='gps')setNearby(null);if(sorting.some(value=>value.id==='proximity'||(value.id==='distance'&&nearby?.id==='gps')))table.setSorting([{id:'name',desc:false}]);setPagination(current=>({...current,pageIndex:0}));}
+  function sortControl(){return <SearchSelect label="Sort" icon={CaretSortIcon} value={`${sorting[0]?.id || 'name'}:${sorting[0]?.desc ? 'desc' : 'asc'}`} options={mobileSortOptions} placeholder="Place · ascending" allowAll={false} onChange={changeSort} />;}
+  function filterControls() {
+    return <><Popover.Root><Popover.Trigger><Button variant={hoursWindow?'soft':'surface'} color={hoursWindow?'blue':'gray'}><ClockIcon />Hours</Button></Popover.Trigger><Popover.Content className="hours-popover" aria-label="Filter by opening hours" sideOffset={7} align="start"><HoursFilter value={hoursWindow} onChange={updateHoursWindow} /></Popover.Content></Popover.Root><Button variant={practical.length || nearby || hoursWindow ? "soft" : "surface"} color={practical.length || nearby || hoursWindow ? "blue" : "gray"} onClick={() => setVisitOpen(true)}><MagnifyingGlassIcon />Visit filters{(practical.length > 0 || nearby || hoursWindow) && <span className="control-count">{practical.length + (nearby ? 1 : 0) + (hoursWindow ? 1 : 0)}</span>}</Button><Button className="needs-trigger" variant={needs.enabled && needs.ids.length ? "soft" : "surface"} color={needs.enabled && needs.ids.length ? "blue" : "gray"} onClick={() => setNeedsOpen(true)}><AccessibilityIcon />My needs{needs.enabled && needs.ids.length > 0 && <span className="control-count">{needs.ids.length}</span>}</Button>{FILTERS.map(filter => <SearchSelect key={filter.key} {...filter} getOptionIcon={filter.key === 'category' ? getCategoryIcon : undefined} value={filters[filter.key]} options={options[filter.key]} onChange={value => updateFilter(filter.key, value)} />)}</>;
+  }
+  const mobileSortOptions = [['proximity:asc','Nearest to me (GPS)'],...Object.entries(COLUMN_LABELS).filter(([key])=>key!=='proximity' && (key!=='distance'||nearby)).flatMap(([key, label]) => [[`${key}:asc`, `${label} · ascending`], [`${key}:desc`, `${label} · descending`]])];
 
   return <Theme className="app-theme" appearance={appearance} accentColor="blue" grayColor="slate" radius="medium">
     <Link className="skip-link" href="#results">Skip to places</Link>
     <header className="site-header"><div className="shell header-inner">
       <Link href={BASE} className="brand"><GlobeIcon className="brand-icon" width="23" height="23" /><span className="desktop-brand">Access Mauritius</span><span className="mobile-brand">Places</span></Link>
-      <div className="header-actions">{(activeFilters.length > 0 || filters.search || savedOnly || (needs.enabled && needs.ids.length > 0)) && <IconButton className="mobile-clear-all" variant="ghost" color="gray" aria-label="Clear all filters" onClick={reset}><ResetIcon /></IconButton>}<Link href="https://github.com/RishiRajGujadhur/MauritiusInfo" className="data-link"><LayersIcon />Data<ExternalLinkIcon /></Link><label className="theme-switch"><span className="sr-only">Dark mode</span>{appearance === 'dark' ? <MoonIcon /> : <SunIcon />}<Switch size="1" aria-label="Dark mode" checked={appearance === 'dark'} onCheckedChange={checked => setAppearance(checked ? 'dark' : 'light')} /></label></div>
+      <div className="header-actions">{(activeFilters.length > 0 || filters.search || savedOnly || practical.length > 0 || nearby || hoursWindow || gps || (needs.enabled && needs.ids.length > 0)) && <IconButton className="mobile-clear-all" variant="ghost" color="gray" aria-label="Clear all filters" onClick={reset}><ResetIcon /></IconButton>}<Link href="https://github.com/RishiRajGujadhur/MauritiusInfo" className="data-link"><LayersIcon />Data<ExternalLinkIcon /></Link><label className="theme-switch"><span className="sr-only">Dark mode</span>{appearance === 'dark' ? <MoonIcon /> : <SunIcon />}<Switch size="1" aria-label="Dark mode" checked={appearance === 'dark'} onCheckedChange={checked => setAppearance(checked ? 'dark' : 'light')} /></label></div>
     </div></header>
     <main className="shell">
       <section className="workspace" aria-label="Find places">
         <div className="search-toolbar"><h1><DrawingPinIcon />Find a place</h1><TextField.Root ref={searchInput} aria-label="Search places" type="search" className="main-search" size="3" placeholder="Place, town or address" value={filters.search} onChange={event => updateFilter('search', event.target.value)}>
           <TextField.Slot><MagnifyingGlassIcon width="19" height="19" /></TextField.Slot><TextField.Slot side="right">{filters.search ? <IconButton size="1" variant="ghost" color="gray" aria-label="Clear search" onClick={() => { updateFilter('search', ''); searchInput.current?.focus(); }}><Cross2Icon /></IconButton> : <kbd>/</kbd>}</TextField.Slot>
         </TextField.Root><Tooltip content="Access can change. Confirm the facilities you need with the venue before visiting."><IconButton variant="ghost" color="gray" aria-label="About access reports"><InfoCircledIcon width="18" height="18" /></IconButton></Tooltip></div>
-        <div className="filters">{filterControls()}<Tooltip content="Clear search and filters"><IconButton variant="ghost" color="gray" aria-label="Reset filters" disabled={!activeFilters.length && !filters.search && !savedOnly && !(needs.enabled && needs.ids.length)} onClick={reset}><ResetIcon /></IconButton></Tooltip></div>
+        <div className="filters">{filterControls()}<div className="desktop-sort">{sortControl()}</div><Tooltip content="Clear search and filters"><IconButton variant="ghost" color="gray" aria-label="Reset filters" disabled={!activeFilters.length && !filters.search && !savedOnly && !practical.length && !nearby && !hoursWindow && !gps && !(needs.enabled && needs.ids.length)} onClick={reset}><ResetIcon /></IconButton></Tooltip></div>
         {activeFilters.length > 0 && <div className="active-filters" aria-label="Active filters">{activeFilters.map(filter => <Button key={filter.key} size="1" variant="soft" onClick={() => updateFilter(filter.key, '')} aria-label={`Remove ${filter.label} filter`}><filter.icon />{filter.label} · {options[filter.key].find(([key]) => key === filters[filter.key])?.[1] || filters[filter.key]}<Cross2Icon /></Button>)}</div>}
       </section>
       <section className="mobile-controls" aria-label="Place filters">
         <div className="mobile-filter-strip" ref={mobileFilterStrip}>
           {filterControls()}
-          <SearchSelect label="Sort" icon={CaretSortIcon} value={`${sorting[0]?.id || 'name'}:${sorting[0]?.desc ? 'desc' : 'asc'}`} options={mobileSortOptions} placeholder="Name · ascending" allowAll={false} onChange={value => { const [id, direction] = value.split(':'); table.setSorting([{ id, desc: direction === 'desc' }]); }} />
+          <SearchSelect label="Sort" icon={CaretSortIcon} value={`${sorting[0]?.id || 'name'}:${sorting[0]?.desc ? 'desc' : 'asc'}`} options={mobileSortOptions} placeholder="Name · ascending" allowAll={false} onChange={changeSort} />
           <SearchSelect label="Rows" icon={TableIcon} value={String(pagination.pageSize)} options={['25', '50', '100'].map(value => [value, value])} placeholder="25" allowAll={false} onChange={value => table.setPageSize(Number(value))} />
-          {(activeFilters.length > 0 || filters.search || savedOnly || (needs.enabled && needs.ids.length > 0)) && <Button className="mobile-reset" variant="ghost" color="gray" onClick={reset} aria-label="Reset filters"><ResetIcon />Clear</Button>}
+          {(activeFilters.length > 0 || filters.search || savedOnly || practical.length > 0 || nearby || hoursWindow || gps || (needs.enabled && needs.ids.length > 0)) && <Button className="mobile-reset" variant="ghost" color="gray" onClick={reset} aria-label="Reset filters"><ResetIcon />Clear</Button>}
         </div>
         {filters.search && <div className="mobile-query"><Button variant="ghost" color="gray" onClick={() => changeMobileSearchOpen(true)}><MagnifyingGlassIcon /><span>{filters.search}</span></Button><IconButton variant="ghost" color="gray" aria-label="Clear search" onClick={() => updateFilter('search', '')}><Cross2Icon /></IconButton></div>}
       </section>
+      {offlineMode && <p className="offline-banner" role="status">Saved offline copy · {records.length} downloaded places. Reconnect to refresh hours, reports and other data.<Button variant="soft" onClick={() => setRetry(value => value + 1)}>Retry connection</Button></p>}{tripWarning && <p role="status">{tripWarning}</p>}
+      {(geoMessage||gps) && <div className="gps-summary"><p role="status">{geoMessage||'GPS location is active for this tab.'}{gps?.accuracy!=null&&` GPS accuracy: about ${Math.round(gps.accuracy)} m.`}</p>{gps&&<Button variant="ghost" size="1" onClick={clearGPS}>Clear GPS</Button>}{!gpsPending&&geoMessage&&!gps&&<Button variant="soft" size="1" onClick={()=>changeSort('proximity:asc')}>Try GPS again</Button>}</div>}
       {storageWarning && <p className="storage-warning" role="status">{storageWarning}</p>}
       {failures.length > 0 && <div className="load-error" role="alert"><InfoCircledIcon /><span>Some sources could not load. {records.length.toLocaleString()} records available.</span><Tooltip content={failures.join(', ')}><Button size="1" variant="soft" onClick={() => setRetry(value => value + 1)}><ResetIcon />Retry</Button></Tooltip></div>}
       <section id="results" tabIndex={-1} aria-label="Places">
-        <div className="grid-toolbar"><p role="status" aria-live="polite">{loading ? 'Loading places…' : <><strong>{matches.length.toLocaleString()}</strong> {matches.length === 1 ? 'result' : 'results'} <span>· {records.length.toLocaleString()} source records</span></>}</p><div className={`grid-actions ${view === 'map' ? 'map-actions' : ''}`}><Button className="saved-view-toggle" size="2" variant={savedOnly ? 'soft' : 'ghost'} color={savedOnly ? 'blue' : 'gray'} aria-pressed={savedOnly} onClick={toggleSavedOnly} aria-label={`Saved places (${savedKeys.length})`}>{savedOnly ? <BookmarkFilledIcon /> : <BookmarkIcon />}<span>Saved</span>{savedKeys.length > 0 && <span className="saved-count">{savedKeys.length}</span>}</Button><SegmentedControl.Root className="view-toggle" size="2" aria-label="Place view" value={view} onValueChange={setView}><SegmentedControl.Item value="list" aria-label="List view"><RowsIcon /><span className="view-label">List</span></SegmentedControl.Item><SegmentedControl.Item value="map" aria-label="Map view"><GlobeIcon /><span className="view-label">Map</span></SegmentedControl.Item></SegmentedControl.Root><Tooltip content="Row spacing"><SegmentedControl.Root className="density-toggle" size="1" value={density} aria-label="Row density" onValueChange={setDensity}><SegmentedControl.Item value="compact" aria-label="Compact rows"><RowsIcon /></SegmentedControl.Item><SegmentedControl.Item value="comfortable" aria-label="Comfortable rows"><SizeIcon /></SegmentedControl.Item></SegmentedControl.Root></Tooltip><Tooltip content="Download all filtered results in sort order"><Button variant="ghost" color="gray" size="1" aria-label="Export CSV" disabled={loading || !matches.length} onClick={() => downloadRows(table.getSortedRowModel().rows)}><DownloadIcon /><span>Export CSV</span></Button></Tooltip></div></div>
+        <div className="grid-toolbar"><p role="status" aria-live="polite">{loading ? 'Loading places…' : <><strong>{matches.length.toLocaleString()}</strong> {matches.length === 1 ? 'result' : 'results'} <span>· {records.length.toLocaleString()} source records</span></>}</p><div className={`grid-actions ${view === 'map' ? 'map-actions' : ''}`}><Button size="2" variant="soft" onClick={() => setTripOpen(true)} aria-label="My trip"><DrawingPinIcon /><span>My trip</span>{trip.length > 0 && <span>{trip.length}</span>}</Button><Button className="saved-view-toggle" size="2" variant={savedOnly ? 'soft' : 'ghost'} color={savedOnly ? 'blue' : 'gray'} aria-pressed={savedOnly} onClick={toggleSavedOnly} aria-label={`Saved places (${savedKeys.length})`}>{savedOnly ? <BookmarkFilledIcon /> : <BookmarkIcon />}<span>Saved</span>{savedKeys.length > 0 && <span className="saved-count">{savedKeys.length}</span>}</Button><SegmentedControl.Root className="view-toggle" size="2" aria-label="Place view" value={view} onValueChange={setView}><SegmentedControl.Item value="list" aria-label="List view"><RowsIcon /><span className="view-label">List</span></SegmentedControl.Item><SegmentedControl.Item value="map" aria-label="Map view"><GlobeIcon /><span className="view-label">Map</span></SegmentedControl.Item></SegmentedControl.Root><Tooltip content="Row spacing"><SegmentedControl.Root className="density-toggle" size="1" value={density} aria-label="Row density" onValueChange={setDensity}><SegmentedControl.Item value="compact" aria-label="Compact rows"><RowsIcon /></SegmentedControl.Item><SegmentedControl.Item value="comfortable" aria-label="Comfortable rows"><SizeIcon /></SegmentedControl.Item></SegmentedControl.Root></Tooltip><Tooltip content="Download all filtered results in sort order"><Button variant="ghost" color="gray" size="1" aria-label="Export CSV" disabled={loading || !matches.length} onClick={() => downloadRows(table.getSortedRowModel().rows)}><DownloadIcon /><span>Export CSV</span></Button></Tooltip></div></div>
+        {(practical.length > 0 || nearby || hoursWindow) && <p className="visit-active-summary">{practical.map(id => PRACTICAL_FILTERS.find(([key]) => key === id)?.[1]).join(' · ')}{nearby && ` · Within ${nearby.radius} km of ${nearby.name}`}{hoursWindow&&` · Open ${windowTime(hoursWindow.start)}–${windowTime(hoursWindow.end)} on ${hoursWindow.date} (Mauritius)`}<Button variant="ghost" size="1" onClick={() => setVisitOpen(true)}>Edit</Button></p>}
         {savedOnly && !loading && <p className="saved-explainer">Saved on this browser only.{!savedKeys.length && ' Open a place and tap Save place to start your shortlist.'}</p>}
         {needs.enabled && needs.ids.length > 0 && <p className="needs-summary">Matching all {needs.ids.length} selected needs · reported availability only<Button variant="ghost" size="1" onClick={() => setNeedsOpen(true)}>Edit</Button></p>}
         {view === 'map' ? <Suspense fallback={<div className="map-loading" role="status">Loading map…</div>}><MapView records={matches} onOpen={openDetails} onList={() => setView('list')} /></Suspense> : <>
-        <div className="mobile-sort"><SearchSelect label="Sort" icon={CaretSortIcon} value={`${sorting[0]?.id || 'name'}:${sorting[0]?.desc ? 'desc' : 'asc'}`} options={mobileSortOptions} placeholder="Name · ascending" allowAll={false} onChange={value => { const [id, direction] = value.split(':'); table.setSorting([{ id, desc: direction === 'desc' }]); }} /></div>
+        <div className="mobile-sort"><SearchSelect label="Sort" icon={CaretSortIcon} value={`${sorting[0]?.id || 'name'}:${sorting[0]?.desc ? 'desc' : 'asc'}`} options={mobileSortOptions} placeholder="Name · ascending" allowAll={false} onChange={changeSort} /></div>
         <div className={`grid-scroll ${density}`} tabIndex={0} role="region" aria-label="Location grid" aria-busy={loading}>
           <Table.Root className="places-table" variant="surface" size="1"><Table.Header>{table.getHeaderGroups().map(group => <Table.Row key={group.id}>{group.headers.map(header => {
             const direction = header.column.getIsSorted();
@@ -290,7 +404,7 @@ export default function Explorer() {
                 <span className="mobile-place-text"><strong>{record.name}</strong><span>{record.type || record.category} · {area}</span></span>
                 <ChevronRightIcon className="mobile-place-chevron" />
               </Button><IconButton className="mobile-save-place" variant="ghost" color={savedSet.has(record.key) ? "blue" : "gray"} aria-label={`${savedSet.has(record.key) ? "Unsave" : "Save"} ${record.name}`} aria-pressed={savedSet.has(record.key)} onClick={() => toggleSave(record.key)}>{savedSet.has(record.key) ? <BookmarkFilledIcon /> : <BookmarkIcon />}</IconButton>
-              <EvidenceLabels record={record} /><div className="mobile-place-status"><span>Access <ReportBadge value={record.access} /></span><span>Parking <ReportBadge value={record.parking} /></span></div>
+              <HoursBadge record={record} now={now} />{distanceByKey.has(record.key) && <small className="mobile-distance">{distanceByKey.get(record.key).toFixed(1)} km straight line</small>}<EvidenceLabels record={record} /><div className="mobile-place-status"><span>Access <ReportBadge value={record.access} /></span><span>Parking <ReportBadge value={record.parking} /></span></div>
             </article>;
           })}
           {!loading && !matches.length && <div className="empty"><MagnifyingGlassIcon width="28" height="28" /><h2>{savedOnly && !savedKeys.length ? "No saved places yet" : "No places found"}</h2><p>Try another search or clear your filters.</p><Button variant="soft" onClick={reset}>Clear filters</Button></div>}
@@ -313,7 +427,8 @@ export default function Explorer() {
         </form>
       </Dialog.Content>
     </Dialog.Root>
-    <NeedsFilter needs={needs} onChange={updateNeeds} open={needsOpen} onOpenChange={setNeedsOpen} />
-    <Suspense fallback={selectedKey ? <div className="detail-loading" role="status">Loading place details…</div> : null}>{selectedRecord && <PlaceDetails key={selectedRecord.key} record={selectedRecord} saved={savedSet.has(selectedRecord.key)} onToggleSave={toggleSave} onClose={() => setSelectedKey(null)} triggerRef={detailTrigger} />}</Suspense>
+    <Suspense fallback={needsOpen ? <div className="detail-loading" role="status">Loading needs…</div> : null}>{needsOpen && <NeedsFilter needs={needs} onChange={updateNeeds} open={needsOpen} onOpenChange={setNeedsOpen} />}</Suspense>
+    <Suspense fallback={<div className="detail-loading" role="status">Loading visit tools…</div>}>{visitOpen && <VisitFilters open={visitOpen} onClose={() => setVisitOpen(false)} selected={practical} onChange={updatePractical} nearby={nearby} onNearby={updateNearby} hoursWindow={hoursWindow} onHoursWindow={updateHoursWindow} />}{tripOpen && <TripPanel open={tripOpen} onClose={() => setTripOpen(false)} trip={trip} onChange={setTrip} records={records} savedKeys={savedKeys} onOpen={openDetails} offlineMode={offlineMode} />}</Suspense>
+    <Suspense fallback={selectedKey ? <div className="detail-loading" role="status">Loading place details…</div> : null}>{selectedRecord && <PlaceDetails key={selectedRecord.key} record={selectedRecord} now={now} onAddToTrip={() => { if (!trip.some(stop => stop.key === selectedRecord.key) && trip.length < 50) { setTrip(current => [...current,{key:selectedRecord.key,arrival:'',duration:60}]); if (!savedSet.has(selectedRecord.key)) toggleSave(selectedRecord.key); } }} tripFull={trip.length >= 50} inTrip={trip.some(stop => stop.key === selectedRecord.key)} saved={savedSet.has(selectedRecord.key)} onToggleSave={toggleSave} onClose={() => setSelectedKey(null)} triggerRef={detailTrigger} />}</Suspense>
   </Theme>;
 }

@@ -1,4 +1,4 @@
-import { ArchiveIcon, BackpackIcon, BadgeIcon, BlendingModeIcon, BookmarkIcon, BoxIcon, CalendarIcon, Component1Icon, CookieIcon, DashboardIcon, DesktopIcon, DiscIcon, EnvelopeClosedIcon, ExclamationTriangleIcon, FaceIcon, FrameIcon, GearIcon, GlobeIcon, GridIcon, GroupIcon, HeartIcon, HomeIcon, IdCardIcon, ImageIcon, LaptopIcon, LightningBoltIcon, LockClosedIcon, MixIcon, OpacityIcon, PaperPlaneIcon, ReaderIcon, RowsIcon, StackIcon, SunIcon, TargetIcon, TriangleUpIcon, VideoIcon } from '@radix-ui/react-icons';
+import { ArchiveIcon, BackpackIcon, BadgeIcon, BlendingModeIcon, BookmarkIcon, BoxIcon, CalendarIcon, Component1Icon, CookieIcon, DashboardIcon, DesktopIcon, DiscIcon, EnvelopeClosedIcon, ExclamationTriangleIcon, FaceIcon, FrameIcon, GearIcon, GlobeIcon, GridIcon, GroupIcon, HeartIcon, HomeIcon, IdCardIcon, ImageIcon, LaptopIcon, LightningBoltIcon, LockClosedIcon, MixIcon, MobileIcon, OpacityIcon, PaperPlaneIcon, ReaderIcon, RowsIcon, StackIcon, SunIcon, TargetIcon, TriangleUpIcon, VideoIcon } from '@radix-ui/react-icons';
 
 export const CATEGORY_ICONS = {
   'Amenity': HomeIcon,
@@ -15,6 +15,8 @@ export const CATEGORY_ICONS = {
   'Garden': BlendingModeIcon,
   'Grocery Store': StackIcon,
   'Healthcare': HeartIcon,
+  'Telecom Services': MobileIcon,
+  'Government Services': IdCardIcon,
   'Heritage Site': BookmarkIcon,
   'Leisure': FaceIcon,
   'Museum': FrameIcon,
