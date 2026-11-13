@@ -137,3 +137,11 @@ and overnight carry-over. Unknown schedules and breaks during the window are
 excluded. The date and time window are shareable through the `hours` URL query;
 invalid ranges are ignored. Search badges continue to describe opening now,
 while this filter describes the selected visit date.
+
+### Quality-of-life follow-up
+
+See [the 100-item implementation checklist](QOL-IMPROVEMENTS-100.md) for the
+search, shortlist, keyboard, dropdown, hours, details, map, trip, report and
+resilience changes. Tools are available from the header or `?`. Backups stay
+local; imports preview or merge explicitly, and unsupported records are disclosed.
+Browser visual and interactive acceptance checks remain pending.
